@@ -1,9 +1,14 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { nom, email, telephone, formule, bien } = req.body;
+  const {
+    prenom, nom, email, telephone,
+    adresse_demandeur, adresse_bien, parcelles,
+    type_bien, surface_bien, prix_estime,
+    objet_demande, contexte, formule,
+  } = req.body;
 
-  if (!nom || !email || !bien) {
+  if (!nom || !email || !adresse_bien) {
     return res.status(400).json({ error: 'Champs obligatoires manquants' });
   }
 
@@ -17,12 +22,21 @@ export default async function handler(req, res) {
       'Prefer': 'return=minimal',
     },
     body: JSON.stringify({
+      prenom:            prenom || '',
       nom,
       email,
-      telephone: telephone || '',
-      adresse_bien: bien,
-      message: formule || '',
-      statut: 'nouveau',
+      telephone:         telephone || '',
+      adresse_demandeur: adresse_demandeur || '',
+      adresse_bien,
+      parcelles:         parcelles || '',
+      type_bien:         type_bien || '',
+      surface_bien:      surface_bien || '',
+      prix_estime:       prix_estime || '',
+      objet_demande:     objet_demande || '',
+      contexte:          contexte || '',
+      message:           formule || '',
+      formule:           formule || '',
+      statut:            'nouveau',
     }),
   });
 
@@ -35,14 +49,24 @@ export default async function handler(req, res) {
   // 2. Notification à Laurent
   await sendEmail({
     to: 'laurentbuffard69250@gmail.com',
-    subject: `[Valorimmo] Nouvelle demande — ${formule || 'non précisée'}`,
+    subject: `[Valorimmo] Nouvelle demande — ${formule || 'non précisée'} — ${prenom || ''} ${nom}`,
     html: `
       <h2>Nouvelle demande de diagnostic</h2>
-      <p><strong>Nom :</strong> ${nom}</p>
+      <h3>👤 Demandeur</h3>
+      <p><strong>Nom :</strong> ${prenom || ''} ${nom}</p>
       <p><strong>Email :</strong> ${email}</p>
       <p><strong>Téléphone :</strong> ${telephone || 'non renseigné'}</p>
+      <p><strong>Adresse :</strong> ${adresse_demandeur || 'non renseignée'}</p>
+      <h3>🏠 Bien immobilier</h3>
+      <p><strong>Adresse :</strong> ${adresse_bien}</p>
+      <p><strong>Parcelle(s) :</strong> ${parcelles || 'non renseigné'}</p>
+      <p><strong>Type :</strong> ${type_bien || 'non précisé'}</p>
+      <p><strong>Surface :</strong> ${surface_bien || 'non renseignée'}</p>
+      <p><strong>Prix envisagé :</strong> ${prix_estime || 'non renseigné'}</p>
+      <h3>📋 Contexte</h3>
+      <p><strong>Objet :</strong> ${objet_demande || 'non précisé'}</p>
+      <p><strong>Contexte :</strong> ${contexte || 'non renseigné'}</p>
       <p><strong>Formule :</strong> ${formule || 'non précisée'}</p>
-      <p><strong>Bien :</strong><br>${bien}</p>
     `,
   });
 
@@ -51,7 +75,7 @@ export default async function handler(req, res) {
     to: email,
     subject: 'Votre demande Valorimmo a bien été reçue',
     html: `
-      <p>Bonjour ${nom},</p>
+      <p>Bonjour ${prenom || nom},</p>
       <p>Nous avons bien reçu votre demande de diagnostic immobilier.</p>
       <p>Nous vous recontactons sous <strong>24h ouvrées</strong> pour organiser votre dossier.</p>
       <br>
