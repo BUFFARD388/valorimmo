@@ -13,10 +13,25 @@ export default async function handler(req, res) {
 Génère le contenu HTML des 7 sections d'un rapport de diagnostic Valorimmo basé sur ces informations :
 
 DOSSIER CLIENT :
-- Nom : ${demande.nom}
-- Formule : ${demande.message || 'Non précisée'}
-- Description du bien : ${demande.adresse_bien}
-- Notes internes de l'expert : ${demande.notes_internes || 'Aucune'}
+- Demandeur : ${demande.prenom || ''} ${demande.nom}
+- Email : ${demande.email}
+- Téléphone : ${demande.telephone || 'Non renseigné'}
+- Adresse du demandeur : ${demande.adresse_demandeur || 'Non renseignée'}
+
+BIEN IMMOBILIER :
+- Adresse : ${demande.adresse_bien}
+- Parcelle(s) cadastrale(s) : ${demande.parcelles || 'Non renseigné'}
+- Type de bien : ${demande.type_bien || 'Non précisé'}
+- Surface : ${demande.surface_bien || 'Non renseignée'}
+- Prix envisagé par le propriétaire : ${demande.prix_estime || 'Non renseigné'}
+
+CONTEXTE DE LA DEMANDE :
+- Objet de la demande : ${demande.objet_demande || 'Non précisé'}
+- Formule choisie : ${demande.formule || demande.message || 'Non précisée'}
+- Explications du propriétaire : ${demande.contexte || 'Aucune'}
+
+NOTES INTERNES DE L'EXPERT :
+${demande.notes_internes || 'Aucune'}
 
 Génère UNIQUEMENT le HTML des 7 sections (sans html/head/body), en utilisant EXACTEMENT ces classes CSS :
 

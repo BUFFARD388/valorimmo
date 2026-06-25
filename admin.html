@@ -303,7 +303,7 @@
     <div class="panel-left">
 
       <div class="panel-card">
-        <div class="panel-card-title">Dossier client</div>
+        <div class="panel-card-title">👤 Demandeur</div>
         <div class="info-row">
           <span class="info-label">Nom</span>
           <span class="info-value" id="d-nom"></span>
@@ -317,16 +317,52 @@
           <span class="info-value" id="d-tel"></span>
         </div>
         <div class="info-row">
-          <span class="info-label">Formule</span>
-          <span class="info-value" id="d-formule"></span>
-        </div>
-        <div class="info-row">
-          <span class="info-label">Description du bien</span>
-          <span class="info-value bien" id="d-bien"></span>
+          <span class="info-label">Adresse</span>
+          <span class="info-value" id="d-adresse-demandeur"></span>
         </div>
         <div class="info-row">
           <span class="info-label">Date</span>
           <span class="info-value" id="d-date"></span>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-card-title">🏠 Bien immobilier</div>
+        <div class="info-row">
+          <span class="info-label">Adresse du bien</span>
+          <span class="info-value bien" id="d-bien"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Parcelle(s)</span>
+          <span class="info-value" id="d-parcelles"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Type de bien</span>
+          <span class="info-value" id="d-type-bien"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Surface</span>
+          <span class="info-value" id="d-surface"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Prix envisagé</span>
+          <span class="info-value" id="d-prix"></span>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-card-title">📋 Contexte</div>
+        <div class="info-row">
+          <span class="info-label">Objet</span>
+          <span class="info-value" id="d-objet"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Formule</span>
+          <span class="info-value" id="d-formule"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Description du propriétaire</span>
+          <span class="info-value bien" id="d-contexte"></span>
         </div>
       </div>
 
@@ -473,12 +509,19 @@
 
     currentDemande = d;
 
-    document.getElementById('d-nom').textContent = d.nom;
+    document.getElementById('d-nom').textContent = (d.prenom ? d.prenom + ' ' : '') + d.nom;
     document.getElementById('d-email').textContent = d.email;
     document.getElementById('d-tel').textContent = d.telephone || 'Non renseigné';
-    document.getElementById('d-formule').textContent = d.message || 'Non précisée';
-    document.getElementById('d-bien').textContent = d.adresse_bien;
+    document.getElementById('d-adresse-demandeur').textContent = d.adresse_demandeur || 'Non renseignée';
     document.getElementById('d-date').textContent = formatDate(d.created_at);
+    document.getElementById('d-bien').textContent = d.adresse_bien;
+    document.getElementById('d-parcelles').textContent = d.parcelles || 'Non renseigné';
+    document.getElementById('d-type-bien').textContent = d.type_bien || 'Non précisé';
+    document.getElementById('d-surface').textContent = d.surface_bien || 'Non renseignée';
+    document.getElementById('d-prix').textContent = d.prix_estime || 'Non renseigné';
+    document.getElementById('d-objet').textContent = d.objet_demande || 'Non précisé';
+    document.getElementById('d-formule').textContent = d.formule || d.message || 'Non précisée';
+    document.getElementById('d-contexte').textContent = d.contexte || 'Non renseigné';
     document.getElementById('notes-textarea').value = d.notes_internes || '';
     document.getElementById('statut-select').value = d.statut || 'nouveau';
     document.getElementById('save-status').textContent = '';
