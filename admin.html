@@ -448,12 +448,12 @@
       }
       const demandes = allDemandes;
       sub.textContent = `${demandes.length} demande${demandes.length > 1 ? 's' : ''} reçue${demandes.length > 1 ? 's' : ''}`;
-      list.innerHTML = demandes.map(d => `
-        <div class="demande-card" onclick="showDetail('${d.id}')">
+      list.innerHTML = demandes.map((d, i) => `
+        <div class="demande-card" onclick="showDetail(${i})">
           <div class="demande-statut ${statutClass(d.statut)}"></div>
           <div class="demande-info">
-            <div class="demande-nom">${d.nom}</div>
-            <div class="demande-meta">${d.email} · ${d.telephone || 'Pas de tél.'}</div>
+            <div class="demande-nom">${d.nom || '(sans nom)'}</div>
+            <div class="demande-meta">${d.email || ''} · ${d.telephone || 'Pas de tél.'}</div>
           </div>
           <div class="demande-formule">${d.message || 'Formule nc'}</div>
           <div class="demande-date">${formatDate(d.created_at)}</div>
@@ -466,20 +466,10 @@
   }
 
   // ── DETAIL ──
-  async function showDetail(id) {
+  function showDetail(index) {
+    const d = allDemandes[index];
+    if (!d) { alert('Dossier introuvable (index: ' + index + ')'); return; }
     show('view-detail');
-    // Utiliser les demandes déjà chargées, sinon refetch
-    let d = allDemandes.find(x => x.id === id);
-    if (!d) {
-      try {
-        const res = await fetch('/api/admin-demandes', {
-          headers: { 'x-admin-password': currentPwd },
-        });
-        allDemandes = await res.json();
-        d = allDemandes.find(x => x.id === id);
-      } catch(e) { console.error(e); }
-    }
-    if (!d) { alert('Dossier introuvable'); return; }
 
     currentDemande = d;
 
