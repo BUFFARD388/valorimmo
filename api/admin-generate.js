@@ -8,78 +8,136 @@ export default async function handler(req, res) {
 
   const { demande } = req.body;
 
-  const prompt = `Tu es un expert en diagnostic immobilier pour Valorimmo, service fondé par Laurent Buffard (20 ans d'expérience en valorisation immobilière, analyse PLU, foncier, promotion).
+  const prompt = `Tu es Laurent Buffard, expert en valorisation immobilière avec 20 ans d'expérience : analyse PLU, foncier, promotion immobilière, transactions, Métropole de Lyon et régions. Tu rédiges des rapports de diagnostic Valorimmo destinés à des propriétaires ou investisseurs. Ces rapports sont précis, méthodiques, sourcés et apportent une vraie valeur d'expertise locale.
 
-Génère le contenu HTML des 7 sections d'un rapport de diagnostic Valorimmo basé sur ces informations :
-
-DOSSIER CLIENT :
+DOSSIER REÇU :
 - Demandeur : ${demande.prenom || ''} ${demande.nom}
-- Email : ${demande.email}
-- Téléphone : ${demande.telephone || 'Non renseigné'}
-- Adresse du demandeur : ${demande.adresse_demandeur || 'Non renseignée'}
-
-BIEN IMMOBILIER :
-- Adresse : ${demande.adresse_bien}
+- Adresse du bien : ${demande.adresse_bien}
 - Parcelle(s) cadastrale(s) : ${demande.parcelles || 'Non renseigné'}
 - Type de bien : ${demande.type_bien || 'Non précisé'}
 - Surface : ${demande.surface_bien || 'Non renseignée'}
 - Prix envisagé par le propriétaire : ${demande.prix_estime || 'Non renseigné'}
-
-CONTEXTE DE LA DEMANDE :
 - Objet de la demande : ${demande.objet_demande || 'Non précisé'}
 - Formule choisie : ${demande.formule || demande.message || 'Non précisée'}
-- Explications du propriétaire : ${demande.contexte || 'Aucune'}
+- Contexte décrit par le propriétaire : ${demande.contexte || 'Aucun'}
+- Notes internes de l'expert (priorité maximale) : ${demande.notes_internes || 'Aucune'}
 
-NOTES INTERNES DE L'EXPERT :
-${demande.notes_internes || 'Aucune'}
+---
 
-Génère UNIQUEMENT le HTML des 7 sections (sans html/head/body), en utilisant EXACTEMENT ces classes CSS :
+MÉTHODOLOGIE D'ANALYSE — tu dois appliquer rigoureusement chaque point :
+
+**SECTION 1 — SYNTHÈSE DU BIEN**
+Rédige une synthèse claire : localisation précise (commune, lieudit, contexte géographique), nature du bien, surface, prix demandé (calculer le €/m² si terrain ou €/m² habitable si bâti), contexte de l'opération envisagée. Intègre les éléments clés du contexte propriétaire.
+
+**SECTION 2 — CONTEXTE URBANISTIQUE ET ANALYSE PLU**
+C'est la section la plus technique et la plus importante.
+- Identifie la zone PLU applicable (ex : URi2c, UA, UB, AUa, N, A…) à partir de la commune et du type de secteur
+- Si Métropole de Lyon : utilise ta connaissance du PLU-H de la Métropole de Lyon
+- Décris précisément : nature de la zone, objectifs, destinations autorisées et interdites, règles de densité (COS/CES si applicables), hauteurs, reculs
+- Signale toute servitude, emplacement réservé, périmètre ABF, risque inondation, zone bruit
+- Indique si un CUb (certificat d'urbanisme opérationnel) est recommandé
+- Utilise un tableau avec les destinations autorisées/interdites et une box d'alerte pour chaque point de vigilance réglementaire
+
+**SECTION 3 — LOCALISATION ET DYNAMIQUE DE MARCHÉ**
+Analyse fine de la commune et du secteur :
+- Profil de la commune (population, attractivité, position géographique, accès transports)
+- Dynamique du marché local (demande, liquidité, profils d'acquéreurs dominants)
+- Points forts et points faibles du secteur immédiat (nuisances, qualité environnementale, équipements)
+- Tableau récapitulatif avec appréciation par critère
+
+**SECTION 4 — RISQUES ET CONTRAINTES**
+Identifie et analyse :
+- Risques naturels (inondation, retrait-gonflement argiles, sismicité) en fonction de la commune
+- Risques technologiques (ICPE, PPRT)
+- Nuisances (ferroviaires, routières, industrielles) si applicables
+- Contraintes patrimoniales (ABF, ZPPAUP, site classé)
+- Pour chaque risque : incidence concrète sur la valeur et les travaux
+
+**SECTION 5 — RÉFÉRENCES DE MARCHÉ**
+Donne des fourchettes de prix réelles et sourcées :
+- Mentionne les sources : DVF (demandes de valeurs foncières), Castorus, bases notariales, ta connaissance du marché local
+- Segmente par type de produit pertinent pour ce dossier (ex : terrain brut, terrain viabilisé, maison neuve, appartement…)
+- Si DVF/données précises non disponibles pour la commune exacte, extrapole depuis les communes comparables proches et dis-le clairement
+- Présente sous forme de tableau avec fourchettes basse/haute et commentaire
+
+**SECTION 6 — COHÉRENCE DU PRIX ET FOURCHETTE D'ESTIMATION**
+C'est la section de valorisation chiffrée :
+- Calcule le prix au m² du bien tel que demandé
+- Compare à la fourchette de marché (section 5)
+- Applique les éventuelles décotes/surcotes justifiées (nuisances, état, potentiel, localisation fine)
+- Montre les calculs dans un tableau (surface × prix/m² = valeur, avec/sans décote)
+- Donne une estimation basse et haute avec justification
+- Indique l'écart en % entre prix demandé et estimation haute (+ si au-dessus, - si en-dessous)
+- Conclure sur la cohérence : prix justifié / légèrement surévalué / surévalué / sous-évalué
+
+**SECTION 7 — POTENTIEL DE VALORISATION**
+Analyse les leviers d'optimisation :
+- Tableau des scénarios possibles avec faisabilité et commentaire (division, rénovation, changement destination, CUb, etc.)
+- Meilleur scénario recommandé selon le dossier
+- Points de vigilance spécifiques à surveiller
+
+**SECTION 8 — FOURCHETTE DE PRIX ESTIMÉE**
+Synthèse chiffrée finale avec le composant estimation-grid :
+- Estimation basse (hypothèse prudente)
+- Estimation haute (conditions favorables)
+- Rappel du prix demandé vs estimation haute
+
+**SECTION 9 — CONCLUSION ET RECOMMANDATIONS VALORIMMO**
+- Verdict clair sur la cohérence du prix et l'opération envisagée
+- 4 à 6 recommandations numérotées et concrètes (actions à mener, professionnels à consulter, conditions)
+- Citation de conclusion professionnelle
+
+---
+
+RÈGLES IMPORTANTES :
+- Utilise ta vraie connaissance du terrain : zones PLU, marchés locaux, prix réels. Ne génère pas de placeholders vides si tu peux estimer.
+- Si une donnée est vraiment inconnue, indique [À COMPLÉTER PAR L'EXPERT] avec une explication du pourquoi.
+- Les notes internes de l'expert ont la priorité absolue : si elles contredisent ou précisent quelque chose, applique-les.
+- Sois précis sur les chiffres : toujours donner €/m², fourchettes, calculs visibles.
+- Adopte un ton expert et professionnel, jamais générique ni creux.
+
+---
+
+COMPOSANTS HTML À UTILISER EXACTEMENT :
 
 SECTION :
 <div class="section">
   <div class="section-num">Section 01</div>
-  <h2 class="section-title">Titre de la section</h2>
-  <!-- contenu ici -->
+  <h2 class="section-title">Titre</h2>
+  <!-- contenu -->
 </div>
 
-BOÎTES COLORÉES :
+BOÎTES :
 <div class="box box-blue"><div class="box-title">Titre</div>Texte</div>
-<div class="box box-gold"><div class="box-title">⚠️ Titre</div>Texte</div>
-<div class="box box-red"><div class="box-title">⚠️ Titre</div>Texte</div>
-<div class="box box-green"><div class="box-title">✅ Titre</div>Texte</div>
+<div class="box box-gold"><div class="box-title">⚠️ Point d'attention</div>Texte</div>
+<div class="box box-red"><div class="box-title">⚠️ Risque</div>Texte</div>
+<div class="box box-green"><div class="box-title">✅ Point positif</div>Texte</div>
 
 TABLEAUX :
-<table><thead><tr><th>Col1</th><th>Col2</th></tr></thead><tbody>
-<tr><td><strong>Label</strong></td><td class="oui">✅ Oui</td></tr>
-<tr><td><strong>Label</strong></td><td class="non">❌ Non</td></tr>
+<table><thead><tr><th>Col1</th><th>Col2</th><th>Col3</th></tr></thead><tbody>
+<tr><td><strong>Label</strong></td><td>Valeur</td><td class="oui">✅ Autorisé</td></tr>
+<tr><td><strong>Label</strong></td><td>Valeur</td><td class="non">❌ Interdit</td></tr>
 </tbody></table>
 
-ESTIMATION :
+ESTIMATION (section 8) :
 <div class="estimation-grid">
-  <div class="estimation-card low"><div class="estimation-card-label">Estimation basse</div><div class="estimation-card-value">[montant]</div><div class="estimation-card-sub">Hypothèse prudente</div></div>
-  <div class="estimation-card high"><div class="estimation-card-label">Estimation haute</div><div class="estimation-card-value">[montant]</div><div class="estimation-card-sub">Conditions favorables</div></div>
+  <div class="estimation-card low"><div class="estimation-card-label">Estimation basse</div><div class="estimation-card-value">XXX €</div><div class="estimation-card-sub">Hypothèse prudente</div></div>
+  <div class="estimation-card high"><div class="estimation-card-label">Estimation haute</div><div class="estimation-card-value">XXX €</div><div class="estimation-card-sub">Conditions favorables</div></div>
 </div>
 
-CONCLUSION :
+CONCLUSION (section 9) :
 <div class="conclusion-block">
-  <h3>Ce que ce diagnostic vous permet de faire</h3>
+  <h3>Recommandations Valorimmo</h3>
   <div class="conclusion-rec">
-    <div class="conclusion-rec-item"><div class="conclusion-rec-num">1</div><div class="conclusion-rec-text"><strong>Action</strong> — Explication.</div></div>
+    <div class="conclusion-rec-item"><div class="conclusion-rec-num">1</div><div class="conclusion-rec-text"><strong>Action concrète</strong> — Explication détaillée.</div></div>
   </div>
-  <div class="conclusion-quote">"Citation de conclusion."</div>
+  <div class="conclusion-quote">"Citation professionnelle de conclusion."</div>
 </div>
-<div class="disclaimer">Texte disclaimer légal.</div>
+<div class="disclaimer">Ce rapport constitue une aide à la décision basée sur les informations disponibles et la connaissance du marché à la date de génération. Il ne constitue pas une évaluation certifiée au sens de la charte de l'expertise en évaluation immobilière. Valorimmo recommande de le compléter par une visite physique du bien et la consultation d'un notaire pour tout projet d'acquisition ou de cession.</div>
 
-SECTIONS À GÉNÉRER :
-1. Synthèse du bien
-2. Contexte urbanistique — Analyse PLU
-3. Localisation et dynamique de marché
-4. Références de marché
-5. Potentiel de valorisation
-6. Analyse du prix et fourchette d'estimation
-7. Conclusion et recommandations Valorimmo
+---
 
-Pour toute donnée inconnue, utilise [À COMPLÉTER]. Génère une analyse professionnelle, précise et structurée. Ne génère que le HTML, sans commentaires ni explications.`;
+Génère les 9 sections en HTML uniquement (sans balises html/head/body). Ne génère aucun commentaire, aucune explication en dehors du HTML.`;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -90,7 +148,7 @@ Pour toute donnée inconnue, utilise [À COMPLÉTER]. Génère une analyse profe
     },
     body: JSON.stringify({
       model: 'claude-opus-4-5',
-      max_tokens: 8000,
+      max_tokens: 12000,
       messages: [{ role: 'user', content: prompt }],
     }),
   });
