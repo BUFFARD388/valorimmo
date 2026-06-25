@@ -746,7 +746,17 @@
         <div class="form-section-label">🏠 Le bien immobilier</div>
         <div class="form-group">
           <label>Adresse du bien</label>
-          <input type="text" name="adresse_bien" placeholder="Lieu-dit, rue, commune, département" required />
+          <input type="text" name="adresse_bien" placeholder="Numéro, rue, lieu-dit" required />
+        </div>
+        <div class="form-row">
+          <div class="form-group" style="flex:0 0 140px;">
+            <label>Code postal</label>
+            <input type="text" name="cp_bien" placeholder="69250" maxlength="5" />
+          </div>
+          <div class="form-group" style="flex:1;">
+            <label>Ville</label>
+            <input type="text" name="ville_bien" placeholder="Albigny-sur-Saône" />
+          </div>
         </div>
         <div class="form-group">
           <label>Numéro(s) de parcelle cadastrale <span class="opt">(optionnel)</span></label>
@@ -889,7 +899,7 @@
       email:             form.email.value,
       telephone:         form.tel.value,
       adresse_demandeur: form.adresse_demandeur.value,
-      adresse_bien:      form.adresse_bien.value,
+      adresse_bien:      [form.adresse_bien.value, form.cp_bien.value, form.ville_bien.value].filter(v => v.trim()).join(' – '),
       parcelles:         parcelles.join(', '),
       type_bien:         form.type_bien.value,
       surface_bien:      form.surface.value,
