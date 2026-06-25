@@ -764,10 +764,35 @@
   function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
   function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    document.getElementById('form-wrap').style.display = 'none';
-    document.getElementById('form-success').style.display = 'block';
+    const form = e.target;
+    const btn = form.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
+    const data = {
+      nom:       form.nom.value,
+      email:     form.email.value,
+      telephone: form.tel.value,
+      formule:   form.formule.value,
+      bien:      form.bien.value,
+    };
+
+    try {
+      const res = await fetch('/api/demande', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Erreur serveur');
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Envoyer ma demande';
+      alert('Une erreur est survenue. Merci de réessayer ou de nous contacter par email.');
+    }
   }
 </script>
 </body>

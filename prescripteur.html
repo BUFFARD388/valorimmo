@@ -527,10 +527,41 @@
 </footer>
 
 <script>
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    document.getElementById('form-wrap').style.display = 'none';
-    document.getElementById('form-success').style.display = 'block';
+    const form = e.target;
+    const btn = form.querySelector('.btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
+    const data = {
+      presc_nom:     form.presc_nom.value,
+      presc_type:    form.presc_type.value,
+      presc_cabinet: form.presc_cabinet.value,
+      presc_email:   form.presc_email.value,
+      presc_tel:     form.presc_tel.value,
+      client_nom:    form.client_nom.value,
+      client_email:  form.client_email.value,
+      client_tel:    form.client_tel.value,
+      formule:       form.formule.value,
+      bien:          form.bien.value,
+      commission:    form.commission.checked,
+    };
+
+    try {
+      const res = await fetch('/api/prescripteur', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Erreur serveur');
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Transmettre le dossier';
+      alert('Une erreur est survenue. Merci de réessayer ou de nous contacter par email.');
+    }
   }
 </script>
 </body>
