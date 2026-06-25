@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valorimmo — Administration</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F4F7FB; color: #4B5563; font-size: 15px; line-height: 1.6; }
+
+  :root {
+    --blue: #1B3F6E; --blue-mid: #2557A0; --blue-light: #EBF2FB;
+    --gold: #D4891A; --gold-light: #FEF3E2;
+    --green: #15803D; --green-light: #F0FDF4;
+    --red: #B91C1C; --red-light: #FEF2F2;
+    --text-dark: #1A2535; --text-body: #4B5563; --text-muted: #6B7280;
+    --border: #E2E8F0; --bg-alt: #F4F7FB;
+  }
+
+  /* ── LOGIN ── */
+  #view-login {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--blue) 0%, #0f2a50 100%);
+  }
+  .login-card {
+    background: #fff; border-radius: 14px; padding: 48px 40px; width: 100%; max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  }
+  .login-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+  .login-logo-text { font-family: Georgia, serif; font-size: 1.4rem; color: var(--blue); font-style: italic; }
+  .login-logo-text em { font-style: normal; color: var(--gold); }
+  .login-badge {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 24px;
+  }
+  .login-card h1 { font-family: Georgia, serif; font-size: 1.4rem; color: var(--text-dark); font-weight: 400; margin-bottom: 24px; }
+  .login-card input {
+    width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 7px;
+    font-size: 1rem; color: var(--text-dark); background: var(--bg-alt); outline: none;
+    transition: border-color 0.2s; margin-bottom: 14px;
+  }
+  .login-card input:focus { border-color: var(--blue); background: #fff; }
+  .btn-login {
+    width: 100%; background: var(--blue); color: #fff; border: none; padding: 13px;
+    font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    border-radius: 7px; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-login:hover { background: var(--blue-mid); }
+  .login-error { color: var(--red); font-size: 0.85rem; margin-top: 10px; text-align: center; min-height: 20px; }
+
+  /* ── HEADER ── */
+  .admin-header {
+    background: #fff; border-bottom: 1.5px solid var(--border);
+    padding: 14px 28px; display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-logo { display: flex; align-items: center; gap: 10px; }
+  .header-logo-text { font-family: Georgia, serif; font-size: 1.2rem; color: var(--blue); font-style: italic; }
+  .header-logo-text em { font-style: normal; color: var(--gold); }
+  .header-badge {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    background: var(--blue-light); color: var(--blue); border: 1px solid #BFDBF7;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .header-right { display: flex; align-items: center; gap: 14px; }
+  .btn-back {
+    font-size: 0.82rem; color: var(--text-muted); background: none; border: none;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 0;
+  }
+  .btn-back:hover { color: var(--blue); }
+  .btn-logout {
+    font-size: 0.78rem; color: var(--text-muted); background: none; border: 1px solid var(--border);
+    padding: 7px 14px; border-radius: 5px; cursor: pointer;
+  }
+  .btn-logout:hover { color: var(--red); border-color: var(--red); }
+
+  /* ── DASHBOARD ── */
+  .dashboard-wrap { max-width: 1000px; margin: 0 auto; padding: 36px 24px; }
+  .dashboard-title {
+    font-family: Georgia, serif; font-size: 1.5rem; color: var(--text-dark); font-weight: 400; margin-bottom: 6px;
+  }
+  .dashboard-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 28px; }
+  .demandes-grid { display: flex; flex-direction: column; gap: 12px; }
+  .demande-card {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 20px 24px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .demande-card:hover { border-color: var(--blue); box-shadow: 0 4px 16px rgba(27,63,110,0.08); }
+  .demande-statut {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .statut-nouveau { background: #FBBF24; }
+  .statut-en_cours { background: #3B82F6; }
+  .statut-rapport_genere { background: var(--green); }
+  .statut-envoye { background: #8B5CF6; }
+  .demande-info { flex: 1; }
+  .demande-nom { font-weight: 600; color: var(--text-dark); font-size: 0.95rem; }
+  .demande-meta { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+  .demande-formule {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--blue); background: var(--blue-light); border: 1px solid #BFDBF7;
+    padding: 3px 10px; border-radius: 4px; white-space: nowrap;
+  }
+  .demande-date { font-size: 0.78rem; color: var(--text-muted); white-space: nowrap; }
+  .demande-arrow { color: var(--text-muted); font-size: 1.1rem; }
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  /* ── DETAIL VIEW ── */
+  .detail-wrap { max-width: 1280px; margin: 0 auto; padding: 28px 24px; display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; }
+
+  /* Left panel */
+  .panel-left { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 80px; }
+  .panel-card {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 20px 22px;
+  }
+  .panel-card-title {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 14px;
+  }
+  .info-row { display: flex; flex-direction: column; gap: 2px; margin-bottom: 12px; }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .info-value { font-size: 0.9rem; color: var(--text-dark); }
+  .info-value.bien { font-size: 0.85rem; color: var(--text-body); line-height: 1.6; }
+  .notes-textarea {
+    width: 100%; min-height: 120px; padding: 10px 12px; border: 1.5px solid var(--border);
+    border-radius: 7px; font-size: 0.87rem; font-family: inherit; color: var(--text-dark);
+    background: var(--bg-alt); resize: vertical; outline: none; transition: border-color 0.2s;
+    line-height: 1.6;
+  }
+  .notes-textarea:focus { border-color: var(--blue); background: #fff; }
+  .statut-select {
+    width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 7px;
+    font-size: 0.87rem; font-family: inherit; color: var(--text-dark); background: var(--bg-alt);
+    outline: none; cursor: pointer;
+  }
+  .btn-generate {
+    width: 100%; background: var(--blue); color: #fff; border: none; padding: 13px;
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    border-radius: 7px; cursor: pointer; transition: background 0.2s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-generate:hover:not(:disabled) { background: var(--blue-mid); }
+  .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-save {
+    width: 100%; background: var(--green); color: #fff; border: none; padding: 13px;
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    border-radius: 7px; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-save:hover:not(:disabled) { background: #166534; }
+  .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
+  .save-status { font-size: 0.78rem; color: var(--text-muted); text-align: center; min-height: 18px; }
+
+  /* Right panel — report */
+  .panel-right { display: flex; flex-direction: column; gap: 16px; }
+  .report-tabs { display: flex; gap: 0; background: #fff; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .report-tab {
+    flex: 1; padding: 10px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; border: none; cursor: pointer; background: none;
+    color: var(--text-muted); transition: all 0.15s;
+  }
+  .report-tab.active { background: var(--blue); color: #fff; }
+  .report-tab:not(.active):hover { background: var(--bg-alt); }
+  .report-preview-wrap {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 40px; min-height: 400px;
+  }
+  .report-empty {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 300px; color: var(--text-muted); text-align: center; gap: 12px;
+  }
+  .report-empty-icon { font-size: 3rem; opacity: 0.3; }
+  .report-html-textarea {
+    width: 100%; min-height: 600px; padding: 16px; border: 1.5px solid var(--border);
+    border-radius: 10px; font-size: 0.82rem; font-family: 'Courier New', monospace;
+    color: var(--text-dark); background: #1A2535; color: #E2E8F0;
+    resize: vertical; outline: none; line-height: 1.6;
+  }
+  .report-html-textarea:focus { border-color: var(--blue); }
+
+  /* Spinner */
+  .spinner {
+    width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff; border-radius: 50%;
+    animation: spin 0.7s linear infinite; flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Report styles (copied from rapport-exemple) */
+  .report-preview-wrap .section { margin-bottom: 40px; }
+  .report-preview-wrap .section:last-child { margin-bottom: 0; }
+  .report-preview-wrap .section-num {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 6px;
+  }
+  .report-preview-wrap .section-title {
+    font-family: Georgia, serif; font-size: 1.1rem; color: var(--text-dark);
+    font-weight: 400; margin-bottom: 16px; padding-bottom: 10px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .report-preview-wrap table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 14px 0; }
+  .report-preview-wrap thead th {
+    background: var(--blue-light); color: var(--blue); font-weight: 700;
+    padding: 9px 13px; text-align: left; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .report-preview-wrap tbody td { padding: 9px 13px; border-bottom: 1px solid var(--border); color: var(--text-body); vertical-align: top; }
+  .report-preview-wrap tbody tr:last-child td { border-bottom: none; }
+  .report-preview-wrap tbody tr:nth-child(even) td { background: #FAFBFD; }
+  .report-preview-wrap td strong { color: var(--text-dark); font-weight: 600; }
+  .report-preview-wrap td.non { color: var(--red); font-weight: 600; }
+  .report-preview-wrap td.oui { color: var(--green); font-weight: 600; }
+  .report-preview-wrap .box { border-radius: 8px; padding: 16px 20px; margin: 14px 0; font-size: 0.88rem; line-height: 1.7; }
+  .report-preview-wrap .box-blue { background: var(--blue-light); border: 1px solid #BFDBF7; color: var(--text-dark); }
+  .report-preview-wrap .box-gold { background: var(--gold-light); border: 1px solid #F6D5A0; color: #92400E; }
+  .report-preview-wrap .box-red { background: var(--red-light); border: 1px solid #FECACA; color: var(--red); }
+  .report-preview-wrap .box-green { background: var(--green-light); border: 1px solid #BBF7D0; color: var(--green); }
+  .report-preview-wrap .box-title { font-weight: 700; margin-bottom: 6px; font-size: 0.82rem; }
+  .report-preview-wrap .estimation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  .report-preview-wrap .estimation-card { border-radius: 8px; padding: 18px 20px; text-align: center; border: 1.5px solid var(--border); }
+  .report-preview-wrap .estimation-card.low { background: #F8FAFF; border-color: #BFDBF7; }
+  .report-preview-wrap .estimation-card.high { background: var(--blue); border-color: var(--blue); }
+  .report-preview-wrap .estimation-card-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .report-preview-wrap .estimation-card.high .estimation-card-label { color: #93C5FD; }
+  .report-preview-wrap .estimation-card-value { font-family: Georgia, serif; font-size: 1.8rem; color: var(--blue); line-height: 1; }
+  .report-preview-wrap .estimation-card.high .estimation-card-value { color: #fff; }
+  .report-preview-wrap .estimation-card-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+  .report-preview-wrap .estimation-card.high .estimation-card-sub { color: #94A3B8; }
+  .report-preview-wrap .conclusion-block { background: var(--blue); border-radius: 10px; padding: 28px 32px; color: #fff; margin-top: 8px; }
+  .report-preview-wrap .conclusion-block h3 { font-family: Georgia, serif; font-size: 1.05rem; color: #fff; font-weight: 400; margin-bottom: 16px; }
+  .report-preview-wrap .conclusion-rec { display: flex; flex-direction: column; gap: 10px; }
+  .report-preview-wrap .conclusion-rec-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 7px; padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start; }
+  .report-preview-wrap .conclusion-rec-num { background: #FBBF24; color: #0F2A50; font-size: 0.7rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .report-preview-wrap .conclusion-rec-text { font-size: 0.85rem; color: #E2E8F0; line-height: 1.6; }
+  .report-preview-wrap .conclusion-rec-text strong { color: #fff; }
+  .report-preview-wrap .conclusion-quote { border-left: 3px solid #FBBF24; padding: 12px 18px; margin-top: 20px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.92rem; color: #CBD5E1; line-height: 1.7; }
+  .report-preview-wrap .disclaimer { margin-top: 28px; padding: 14px 18px; background: var(--bg-alt); border-radius: 7px; font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; border: 1px solid var(--border); font-style: italic; }
+
+  [hidden] { display: none !important; }
+
+  @media (max-width: 900px) {
+    .detail-wrap { grid-template-columns: 1fr; }
+    .panel-left { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ LOGIN ═══ -->
+<div id="view-login">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg width="40" height="28" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+      <span class="login-logo-text">Valor<em>immo</em></span>
+    </div>
+    <div class="login-badge">Administration</div>
+    <h1>Connexion</h1>
+    <input type="password" id="pwd-input" placeholder="Mot de passe" autocomplete="current-password" />
+    <button class="btn-login" id="login-btn">Accéder au tableau de bord</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div id="view-dashboard" hidden>
+  <div class="admin-header">
+    <div class="header-logo">
+      <svg width="36" height="25" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+      <span class="header-logo-text">Valor<em>immo</em></span>
+      <span class="header-badge">Admin</span>
+    </div>
+    <div class="header-right">
+      <button class="btn-logout" onclick="logout()">Déconnexion</button>
+    </div>
+  </div>
+  <div class="dashboard-wrap">
+    <h1 class="dashboard-title">Tableau de bord</h1>
+    <p class="dashboard-sub" id="dashboard-sub">Chargement des demandes…</p>
+    <div class="demandes-grid" id="demandes-list"></div>
+  </div>
+</div>
+
+<!-- ═══ DETAIL ═══ -->
+<div id="view-detail" hidden>
+  <div class="admin-header">
+    <div class="header-logo">
+      <svg width="36" height="25" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+      <span class="header-logo-text">Valor<em>immo</em></span>
+      <span class="header-badge">Admin</span>
+    </div>
+    <div class="header-right">
+      <button class="btn-back" onclick="showDashboard()">← Retour</button>
+      <button class="btn-logout" onclick="logout()">Déconnexion</button>
+    </div>
+  </div>
+  <div class="detail-wrap">
+
+    <!-- Colonne gauche -->
+    <div class="panel-left">
+
+      <div class="panel-card">
+        <div class="panel-card-title">Dossier client</div>
+        <div class="info-row">
+          <span class="info-label">Nom</span>
+          <span class="info-value" id="d-nom"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-value" id="d-email"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Téléphone</span>
+          <span class="info-value" id="d-tel"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Formule</span>
+          <span class="info-value" id="d-formule"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Description du bien</span>
+          <span class="info-value bien" id="d-bien"></span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Date</span>
+          <span class="info-value" id="d-date"></span>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-card-title">Notes internes</div>
+        <textarea class="notes-textarea" id="notes-textarea" placeholder="Ajoutez vos observations, infos PLU, données de marché, remarques pour enrichir le rapport…"></textarea>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-card-title">Statut du dossier</div>
+        <select class="statut-select" id="statut-select">
+          <option value="nouveau">🟡 Nouveau</option>
+          <option value="en_cours">🔵 En cours</option>
+          <option value="rapport_genere">🟢 Rapport généré</option>
+          <option value="envoye">🟣 Envoyé au client</option>
+        </select>
+      </div>
+
+      <button class="btn-generate" id="btn-generate" onclick="generateReport()">
+        <span id="generate-icon">✦</span>
+        <span id="generate-label">Générer le rapport avec l'IA</span>
+      </button>
+
+      <button class="btn-save" id="btn-save" onclick="saveReport()">
+        Sauvegarder
+      </button>
+      <div class="save-status" id="save-status"></div>
+
+    </div>
+
+    <!-- Colonne droite -->
+    <div class="panel-right">
+      <div class="report-tabs">
+        <button class="report-tab active" id="tab-preview" onclick="switchTab('preview')">Aperçu du rapport</button>
+        <button class="report-tab" id="tab-html" onclick="switchTab('html')">Modifier le HTML</button>
+      </div>
+
+      <div id="report-preview-container" class="report-preview-wrap">
+        <div class="report-empty" id="report-empty">
+          <div class="report-empty-icon">📋</div>
+          <p>Cliquez sur <strong>"Générer le rapport avec l'IA"</strong><br>pour créer le rapport de ce dossier.</p>
+        </div>
+        <div id="report-preview-content" hidden></div>
+      </div>
+
+      <textarea
+        class="report-html-textarea"
+        id="report-html-textarea"
+        hidden
+        placeholder="Le HTML du rapport apparaîtra ici après génération."
+        oninput="syncPreviewFromHtml()"
+      ></textarea>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let currentPwd = sessionStorage.getItem('admin_pwd') || '';
+  let currentDemande = null;
+
+  // ── AUTO LOGIN ──
+  if (currentPwd) verifyAndEnter(currentPwd);
+
+  // ── LOGIN ──
+  document.getElementById('pwd-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') login();
+  });
+  document.getElementById('login-btn').addEventListener('click', login);
+
+  async function login() {
+    const pwd = document.getElementById('pwd-input').value;
+    await verifyAndEnter(pwd);
+  }
+
+  async function verifyAndEnter(pwd) {
+    try {
+      const res = await fetch('/api/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwd }),
+      });
+      if (res.ok) {
+        currentPwd = pwd;
+        sessionStorage.setItem('admin_pwd', pwd);
+        showDashboard();
+      } else {
+        document.getElementById('login-error').textContent = 'Mot de passe incorrect.';
+        sessionStorage.removeItem('admin_pwd');
+      }
+    } catch {
+      document.getElementById('login-error').textContent = 'Erreur de connexion.';
+    }
+  }
+
+  function logout() {
+    sessionStorage.removeItem('admin_pwd');
+    currentPwd = '';
+    show('view-login');
+  }
+
+  // ── DASHBOARD ──
+  async function showDashboard() {
+    show('view-dashboard');
+    const sub = document.getElementById('dashboard-sub');
+    const list = document.getElementById('demandes-list');
+    sub.textContent = 'Chargement…';
+    list.innerHTML = '';
+
+    try {
+      const res = await fetch('/api/admin-demandes', {
+        headers: { 'x-admin-password': currentPwd },
+      });
+      const demandes = await res.json();
+      if (!demandes.length) {
+        sub.textContent = 'Aucune demande reçue pour l\'instant.';
+        return;
+      }
+      sub.textContent = `${demandes.length} demande${demandes.length > 1 ? 's' : ''} reçue${demandes.length > 1 ? 's' : ''}`;
+      list.innerHTML = demandes.map(d => `
+        <div class="demande-card" onclick="showDetail('${d.id}')">
+          <div class="demande-statut ${statutClass(d.statut)}"></div>
+          <div class="demande-info">
+            <div class="demande-nom">${d.nom}</div>
+            <div class="demande-meta">${d.email} · ${d.telephone || 'Pas de tél.'}</div>
+          </div>
+          <div class="demande-formule">${d.message || 'Formule nc'}</div>
+          <div class="demande-date">${formatDate(d.created_at)}</div>
+          <div class="demande-arrow">→</div>
+        </div>
+      `).join('');
+    } catch {
+      sub.textContent = 'Erreur de chargement.';
+    }
+  }
+
+  // ── DETAIL ──
+  async function showDetail(id) {
+    show('view-detail');
+    const res = await fetch('/api/admin-demandes', {
+      headers: { 'x-admin-password': currentPwd },
+    });
+    const demandes = await res.json();
+    const d = demandes.find(x => x.id === id);
+    if (!d) return;
+
+    currentDemande = d;
+
+    document.getElementById('d-nom').textContent = d.nom;
+    document.getElementById('d-email').textContent = d.email;
+    document.getElementById('d-tel').textContent = d.telephone || 'Non renseigné';
+    document.getElementById('d-formule').textContent = d.message || 'Non précisée';
+    document.getElementById('d-bien').textContent = d.adresse_bien;
+    document.getElementById('d-date').textContent = formatDate(d.created_at);
+    document.getElementById('notes-textarea').value = d.notes_internes || '';
+    document.getElementById('statut-select').value = d.statut || 'nouveau';
+    document.getElementById('save-status').textContent = '';
+
+    // Charger rapport existant
+    if (d.rapport_html) {
+      setReportHtml(d.rapport_html);
+    } else {
+      document.getElementById('report-empty').hidden = false;
+      document.getElementById('report-preview-content').hidden = true;
+      document.getElementById('report-preview-content').innerHTML = '';
+      document.getElementById('report-html-textarea').value = '';
+    }
+
+    switchTab('preview');
+  }
+
+  // ── GENERATE ──
+  async function generateReport() {
+    const btn = document.getElementById('btn-generate');
+    const icon = document.getElementById('generate-icon');
+    const label = document.getElementById('generate-label');
+
+    btn.disabled = true;
+    icon.innerHTML = '<div class="spinner"></div>';
+    label.textContent = 'Génération en cours…';
+
+    // Mettre à jour les notes dans currentDemande
+    currentDemande.notes_internes = document.getElementById('notes-textarea').value;
+
+    try {
+      const res = await fetch('/api/admin-generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': currentPwd,
+        },
+        body: JSON.stringify({ demande: currentDemande }),
+      });
+
+      if (!res.ok) throw new Error('Erreur API');
+      const { html } = await res.json();
+      setReportHtml(html);
+      document.getElementById('statut-select').value = 'rapport_genere';
+    } catch {
+      alert('Erreur lors de la génération. Vérifiez votre connexion et réessayez.');
+    } finally {
+      btn.disabled = false;
+      icon.textContent = '✦';
+      label.textContent = 'Régénérer le rapport';
+    }
+  }
+
+  // ── SAVE ──
+  async function saveReport() {
+    const btn = document.getElementById('btn-save');
+    const status = document.getElementById('save-status');
+    btn.disabled = true;
+    btn.textContent = 'Sauvegarde…';
+    status.textContent = '';
+
+    try {
+      const res = await fetch('/api/admin-save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-password': currentPwd,
+        },
+        body: JSON.stringify({
+          id: currentDemande.id,
+          rapport_html: document.getElementById('report-html-textarea').value,
+          notes_internes: document.getElementById('notes-textarea').value,
+          statut: document.getElementById('statut-select').value,
+        }),
+      });
+
+      if (!res.ok) throw new Error();
+      status.textContent = '✓ Sauvegardé';
+      status.style.color = 'var(--green)';
+    } catch {
+      status.textContent = '✗ Erreur de sauvegarde';
+      status.style.color = 'var(--red)';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Sauvegarder';
+    }
+  }
+
+  // ── HELPERS ──
+  function setReportHtml(html) {
+    document.getElementById('report-html-textarea').value = html;
+    document.getElementById('report-preview-content').innerHTML = html;
+    document.getElementById('report-preview-content').hidden = false;
+    document.getElementById('report-empty').hidden = true;
+  }
+
+  function syncPreviewFromHtml() {
+    const html = document.getElementById('report-html-textarea').value;
+    document.getElementById('report-preview-content').innerHTML = html;
+    document.getElementById('report-preview-content').hidden = !html.trim();
+    document.getElementById('report-empty').hidden = !!html.trim();
+  }
+
+  function switchTab(tab) {
+    const isPreview = tab === 'preview';
+    document.getElementById('tab-preview').classList.toggle('active', isPreview);
+    document.getElementById('tab-html').classList.toggle('active', !isPreview);
+    document.getElementById('report-preview-container').hidden = !isPreview;
+    document.getElementById('report-html-textarea').hidden = isPreview;
+  }
+
+  function show(viewId) {
+    ['view-login', 'view-dashboard', 'view-detail'].forEach(id => {
+      document.getElementById(id).hidden = (id !== viewId);
+    });
+  }
+
+  function statutClass(s) {
+    const map = { nouveau: 'statut-nouveau', en_cours: 'statut-en_cours', rapport_genere: 'statut-rapport_genere', envoye: 'statut-envoye' };
+    return map[s] || 'statut-nouveau';
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+</script>
+</body>
+</html>
