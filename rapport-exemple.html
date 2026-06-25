@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Exemple de rapport — Valorimmo</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F4F7FB; color: #4B5563; font-size: 15px; line-height: 1.7; }
+
+  :root {
+    --blue: #1B3F6E;
+    --blue-mid: #2557A0;
+    --blue-light: #EBF2FB;
+    --gold: #D4891A;
+    --gold-light: #FEF3E2;
+    --green: #15803D;
+    --green-light: #F0FDF4;
+    --red: #B91C1C;
+    --red-light: #FEF2F2;
+    --text-dark: #1A2535;
+    --text-body: #4B5563;
+    --text-muted: #6B7280;
+    --border: #E2E8F0;
+    --bg-alt: #F4F7FB;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border); padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+  .nav-logo-text { font-family: Georgia, serif; font-size: 1.25rem; color: var(--blue); font-style: italic; }
+  .nav-logo-text em { font-style: normal; color: var(--gold); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-back { font-size: 0.82rem; color: var(--text-muted); text-decoration: none; }
+  .nav-back:hover { color: var(--blue); }
+  .nav-cta {
+    background: var(--blue); color: #fff; font-size: 0.78rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 18px;
+    border-radius: 5px; text-decoration: none;
+  }
+  .nav-cta:hover { background: var(--blue-mid); }
+
+  /* ── BANNER EXEMPLE ── */
+  .banner-exemple {
+    background: var(--gold-light); border-bottom: 1px solid #F6D5A0;
+    padding: 12px 24px; text-align: center;
+    font-size: 0.85rem; color: #92400E;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .banner-exemple strong { font-weight: 700; }
+
+  /* ── WRAPPER ── */
+  .page-wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── REPORT HEADER ── */
+  .report-header {
+    background: var(--blue); border-radius: 12px 12px 0 0;
+    padding: 40px 48px 36px; color: #fff; margin-bottom: 0;
+  }
+  .report-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+  .report-brand-text { font-family: Georgia, serif; font-size: 1.1rem; color: #fff; font-style: italic; opacity: 0.9; }
+  .report-brand-text em { font-style: normal; color: #FBBF24; }
+  .report-type {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase;
+    color: #93C5FD; margin-bottom: 12px;
+  }
+  .report-title { font-family: Georgia, serif; font-size: 1.55rem; color: #fff; font-weight: 400; line-height: 1.3; margin-bottom: 6px; }
+  .report-address { font-size: 0.88rem; color: #94A3B8; margin-bottom: 24px; }
+  .report-meta { display: flex; gap: 24px; flex-wrap: wrap; }
+  .report-meta-item { font-size: 0.8rem; color: #CBD5E1; }
+  .report-meta-item strong { color: #fff; font-weight: 600; display: block; font-size: 0.85rem; }
+
+  /* ── VERDICT BANNER ── */
+  .verdict-banner {
+    background: #fff; border: 1.5px solid var(--border); border-top: none;
+    padding: 24px 48px; display: flex; align-items: center; gap: 20px;
+    flex-wrap: wrap; border-radius: 0;
+  }
+  .verdict-item { display: flex; flex-direction: column; gap: 2px; }
+  .verdict-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+  .verdict-value { font-family: Georgia, serif; font-size: 1.4rem; color: var(--text-dark); font-weight: 400; }
+  .verdict-value.red { color: var(--red); }
+  .verdict-value.green { color: var(--green); }
+  .verdict-sep { width: 1px; height: 40px; background: var(--border); flex-shrink: 0; }
+
+  /* ── REPORT BODY ── */
+  .report-body {
+    background: #fff; border: 1.5px solid var(--border); border-top: none;
+    border-radius: 0 0 12px 12px; padding: 48px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { margin-bottom: 48px; }
+  .section:last-child { margin-bottom: 0; }
+  .section-num {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 6px;
+  }
+  .section-title {
+    font-family: Georgia, serif; font-size: 1.15rem; color: var(--text-dark);
+    font-weight: 400; margin-bottom: 20px; padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--border);
+  }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 16px 0; }
+  thead th {
+    background: var(--blue-light); color: var(--blue); font-weight: 700;
+    padding: 10px 14px; text-align: left; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-body); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:nth-child(even) td { background: #FAFBFD; }
+  td strong { color: var(--text-dark); font-weight: 600; }
+  td.non { color: var(--red); font-weight: 600; }
+  td.oui { color: var(--green); font-weight: 600; }
+
+  /* ── HIGHLIGHT BOXES ── */
+  .box { border-radius: 8px; padding: 18px 22px; margin: 16px 0; font-size: 0.9rem; line-height: 1.7; }
+  .box-blue { background: var(--blue-light); border: 1px solid #BFDBF7; color: var(--text-dark); }
+  .box-gold { background: var(--gold-light); border: 1px solid #F6D5A0; color: #92400E; }
+  .box-red { background: var(--red-light); border: 1px solid #FECACA; color: var(--red); }
+  .box-green { background: var(--green-light); border: 1px solid #BBF7D0; color: var(--green); }
+  .box-title { font-weight: 700; margin-bottom: 6px; font-size: 0.85rem; letter-spacing: 0.04em; }
+
+  /* ── ESTIMATION ── */
+  .estimation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .estimation-card {
+    border-radius: 8px; padding: 20px 22px; text-align: center;
+    border: 1.5px solid var(--border);
+  }
+  .estimation-card.low { background: #F8FAFF; border-color: #BFDBF7; }
+  .estimation-card.high { background: var(--blue); border-color: var(--blue); }
+  .estimation-card-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .estimation-card.high .estimation-card-label { color: #93C5FD; }
+  .estimation-card-value { font-family: Georgia, serif; font-size: 2rem; color: var(--blue); line-height: 1; }
+  .estimation-card.high .estimation-card-value { color: #fff; }
+  .estimation-card-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+  .estimation-card.high .estimation-card-sub { color: #94A3B8; }
+
+  /* ── CONCLUSION ── */
+  .conclusion-block {
+    background: var(--blue); border-radius: 10px; padding: 32px 36px; color: #fff; margin-top: 8px;
+  }
+  .conclusion-block h3 { font-family: Georgia, serif; font-size: 1.15rem; color: #fff; font-weight: 400; margin-bottom: 18px; }
+  .conclusion-rec { display: flex; flex-direction: column; gap: 12px; }
+  .conclusion-rec-item {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 7px; padding: 14px 18px; display: flex; gap: 12px; align-items: flex-start;
+  }
+  .conclusion-rec-num {
+    background: #FBBF24; color: #0F2A50; font-size: 0.72rem; font-weight: 800;
+    width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .conclusion-rec-text { font-size: 0.88rem; color: #E2E8F0; line-height: 1.6; }
+  .conclusion-rec-text strong { color: #fff; }
+  .conclusion-quote {
+    border-left: 3px solid #FBBF24; padding: 14px 20px; margin-top: 24px;
+    background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0;
+    font-family: Georgia, serif; font-style: italic; font-size: 0.95rem; color: #CBD5E1; line-height: 1.7;
+  }
+
+  /* ── DISCLAIMER ── */
+  .disclaimer {
+    margin-top: 32px; padding: 16px 20px; background: var(--bg-alt); border-radius: 7px;
+    font-size: 0.78rem; color: var(--text-muted); line-height: 1.6; border: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  /* ── CTA ── */
+  .report-cta {
+    margin-top: 40px; background: var(--gold-light); border: 1.5px solid #F6D5A0;
+    border-radius: 10px; padding: 28px 32px; text-align: center;
+  }
+  .report-cta h3 { font-family: Georgia, serif; font-size: 1.1rem; color: var(--text-dark); font-weight: 400; margin-bottom: 8px; }
+  .report-cta p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
+  .btn-cta {
+    display: inline-block; background: var(--blue); color: #fff;
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 13px 28px; border-radius: 6px; text-decoration: none; transition: background 0.2s;
+  }
+  .btn-cta:hover { background: var(--blue-mid); }
+
+  @media (max-width: 640px) {
+    .report-header, .report-body, .verdict-banner { padding: 24px 20px; }
+    .estimation-grid { grid-template-columns: 1fr; }
+    .report-meta { gap: 14px; }
+    .verdict-sep { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg width="40" height="28" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+    <span class="nav-logo-text">Valor<em>immo</em></span>
+  </a>
+  <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);">Ce que votre bien vaut vraiment</div>
+  <div class="nav-right">
+    <a href="particulier.html" class="nav-back">← Retour</a>
+    <a href="particulier.html#formules" class="nav-cta">Demander mon diagnostic</a>
+  </div>
+</nav>
+
+<div class="banner-exemple">
+  📋 <strong>Exemple de rapport anonymisé</strong> — Ce document illustre le contenu et le niveau d'analyse d'un rapport Valorimmo réel.
+</div>
+
+<div class="page-wrap">
+
+  <!-- EN-TÊTE DU RAPPORT -->
+  <div class="report-header">
+    <div class="report-brand">
+      <svg width="40" height="28" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+      <span class="report-brand-text">Valor<em>immo</em></span>
+    </div>
+    <div class="report-type">Rapport d'analyse expert</div>
+    <h1 class="report-title">Terrain à bâtir — deux parcelles</h1>
+    <p class="report-address">Commune résidentielle du Val de Saône, Métropole de Lyon · Exemple anonymisé</p>
+    <div class="report-meta">
+      <div class="report-meta-item"><strong>2 997 m²</strong>Surface totale</div>
+      <div class="report-meta-item"><strong>2 parcelles</strong>Parcelle A + Parcelle B</div>
+      <div class="report-meta-item"><strong>Janvier 2025</strong>Date d'analyse</div>
+      <div class="report-meta-item"><strong>5 jours ouvrés</strong>Délai de livraison</div>
+    </div>
+  </div>
+
+  <!-- VERDICT RAPIDE -->
+  <div class="verdict-banner">
+    <div class="verdict-item">
+      <span class="verdict-label">Prix demandé</span>
+      <span class="verdict-value red">200 000 €</span>
+    </div>
+    <div class="verdict-sep"></div>
+    <div class="verdict-item">
+      <span class="verdict-label">Estimation basse</span>
+      <span class="verdict-value">100 000 €</span>
+    </div>
+    <div class="verdict-sep"></div>
+    <div class="verdict-item">
+      <span class="verdict-label">Estimation haute</span>
+      <span class="verdict-value">150 000 €</span>
+    </div>
+    <div class="verdict-sep"></div>
+    <div class="verdict-item">
+      <span class="verdict-label">Écart constaté</span>
+      <span class="verdict-value red">+33 % de surestimation</span>
+    </div>
+    <div class="verdict-sep"></div>
+    <div class="verdict-item">
+      <span class="verdict-label">Stratégie recommandée</span>
+      <span class="verdict-value green" style="font-size:1rem;">Vente à un particulier</span>
+    </div>
+  </div>
+
+  <!-- CORPS DU RAPPORT -->
+  <div class="report-body">
+
+    <!-- 1. SYNTHÈSE -->
+    <div class="section">
+      <div class="section-num">Section 01</div>
+      <h2 class="section-title">Synthèse du bien</h2>
+      <p style="margin-bottom:14px;">Ensemble de deux parcelles cadastrées, soit <strong>2 997 m² au total</strong>. Opération envisagée : acquisition groupée pour édifier un seul lot d'habitation sur la partie constructible.</p>
+      <div class="box box-gold">
+        <div class="box-title">⚠️ Particularité majeure</div>
+        Les deux parcelles appartiennent à deux propriétaires distincts. La parcelle Parcelle A est enclavée et ne dispose d'aucun accès propre à la voie publique.
+      </div>
+    </div>
+
+    <!-- 2. URBANISME -->
+    <div class="section">
+      <div class="section-num">Section 02</div>
+      <h2 class="section-title">Contexte urbanistique — Analyse PLU</h2>
+      <p style="margin-bottom:16px;">Zonage applicable : PLUH Métropole de Lyon.</p>
+
+      <table>
+        <thead><tr><th>Parcelle</th><th>Superficie</th><th>Zone(s) PLU</th><th>Constructibilité</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Parcelle A</strong></td>
+            <td>1 770 m²</td>
+            <td>N2 (zone naturelle et forestière)</td>
+            <td class="non">Non constructible</td>
+          </tr>
+          <tr>
+            <td><strong>Parcelle B</strong></td>
+            <td>1 227 m²</td>
+            <td>URi2c (~¼) + UCe4a partiel + N2</td>
+            <td class="oui">Constructible sur ~300 m² seulement</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p style="margin:16px 0 10px;font-weight:600;color:var(--text-dark);">Prescriptions identifiées :</p>
+      <table>
+        <thead><tr><th>Contrainte</th><th>Impact opérationnel</th></tr></thead>
+        <tbody>
+          <tr><td><strong>EVV — Espace Végétalisé à Valoriser</strong></td><td>Grève les deux parcelles — impose le maintien du caractère végétal</td></tr>
+          <tr><td><strong>EBC — Espace Boisé Classé</strong></td><td>Interdit tout défrichement et toute construction sur les emprises concernées</td></tr>
+          <tr><td><strong>Enclavement Parcelle A</strong></td><td>Nécessite une servitude de passage formalisée sur Parcelle B</td></tr>
+          <tr><td><strong>Division parcellaire</strong></td><td class="non">Impossible — EBC + EVV + N2 interdisent toute division à fin de construction</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-blue" style="margin-top:20px;">
+        <div class="box-title">Conclusion urbanistique</div>
+        Le foncier exploitable pour une construction se limite à <strong>environ 300 m² sur la parcelle Parcelle B</strong> (soit 10 % de la surface totale). La parcelle Parcelle A, qui représente 59 % de la surface, n'apporte <strong>aucun droit à construire</strong>. L'opération se résume à l'édification d'une maison individuelle sur un terrain constructible effectif très réduit.
+      </div>
+    </div>
+
+    <!-- 3. MARCHÉ -->
+    <div class="section">
+      <div class="section-num">Section 03</div>
+      <h2 class="section-title">Localisation et dynamique de marché</h2>
+      <p style="margin-bottom:14px;">Commune résidentielle prisée du Val de Saône, à 12 km au nord de Lyon. Cadre verdoyant, bords de Saône, tissu pavillonnaire de qualité. Gare SNCF à proximité (Lyon Part-Dieu en ~25 min). Commune recherchée par les familles CSP+ ; tension foncière modérée mais offre constructible rare.</p>
+
+      <table>
+        <thead><tr><th>Profil d'acquéreur</th><th>Intérêt</th><th>Commentaire</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Marchands de biens / Promoteurs</strong></td><td class="non">Très faible</td><td>L'emprise constructible (~300 m²) ne permet pas d'opération rentable</td></tr>
+          <tr><td><strong>Foncières / Investisseurs locatifs</strong></td><td class="non">Aucun</td><td>Pas de flux locatifs envisageables</td></tr>
+          <tr><td><strong>Particuliers — résidence principale</strong></td><td class="oui">Fort</td><td>Seule cible pertinente : acquéreur souhaitant construire dans un cadre naturel</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. RÉFÉRENCES DE MARCHÉ -->
+    <div class="section">
+      <div class="section-num">Section 04</div>
+      <h2 class="section-title">Références de marché</h2>
+      <p style="margin-bottom:16px;">Données DVF non disponibles pour ce secteur précis. Références reconstituées à partir des annonces actives et transactions récentes sur le secteur (2023–2024).</p>
+
+      <table>
+        <thead><tr><th>Type de bien</th><th>Surface</th><th>Prix</th><th>Prix/m²</th></tr></thead>
+        <tbody>
+          <tr><td>Terrain viabilisé constructible (communes voisines)</td><td>400–600 m²</td><td>150 000 – 220 000 €</td><td><strong>250 – 400 €/m²</strong></td></tr>
+          <tr><td>Terrain à bâtir (annonces actives)</td><td>500 m²</td><td>180 000 €</td><td>360 €/m²</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-blue" style="margin-top:16px;">
+        <div class="box-title">Décote pour contraintes EVV / EBC</div>
+        Les terrains grevés d'Espaces Boisés Classés ou d'EVV subissent une décote de <strong>40 à 60 %</strong> sur la partie non constructible, voire une valeur quasi nulle si aucune jouissance privative n'est possible.
+      </div>
+    </div>
+
+    <!-- 5. POTENTIEL DE VALORISATION -->
+    <div class="section">
+      <div class="section-num">Section 05</div>
+      <h2 class="section-title">Potentiel de valorisation</h2>
+
+      <table>
+        <thead><tr><th>Levier</th><th>Faisabilité</th><th>Commentaire</th></tr></thead>
+        <tbody>
+          <tr><td>Division parcellaire</td><td class="non">❌ Impossible</td><td>EBC + EVV + N2 interdisent toute division à fin de construction</td></tr>
+          <tr><td>Promotion immobilière</td><td class="non">❌ Non viable</td><td>Emprise constructible trop faible (~300 m²)</td></tr>
+          <tr><td>Surélévation / Extension</td><td class="non">❌ Non applicable</td><td>Terrain nu sans bâti existant</td></tr>
+          <tr><td>Changement de destination</td><td class="non">❌ Non applicable</td><td>Terrain nu</td></tr>
+          <tr><td><strong>Construction d'une maison individuelle</strong></td><td class="oui">✅ Possible</td><td>Seul scénario réaliste — maison de 100–150 m² hab. sur ~300 m² constructibles</td></tr>
+        </tbody>
+      </table>
+
+      <div class="box box-blue" style="margin-top:16px;">
+        Aucun levier de valorisation professionnelle. Le bien s'adresse exclusivement à un <strong>particulier souhaitant construire sa résidence principale</strong> dans un cadre naturel préservé.
+      </div>
+    </div>
+
+    <!-- 6. ESTIMATION -->
+    <div class="section">
+      <div class="section-num">Section 06</div>
+      <h2 class="section-title">Analyse du prix et fourchette d'estimation</h2>
+
+      <table style="margin-bottom:24px;">
+        <thead><tr><th>Composante</th><th>Surface</th><th>Valeur estimée</th></tr></thead>
+        <tbody>
+          <tr><td>Emprise constructible (Parcelle B – zone URi2c)</td><td>~300 m²</td><td><strong>90 000 – 120 000 €</strong> (300–400 €/m²)</td></tr>
+          <tr><td>Foncier naturel non constructible (Parcelle A + reste Parcelle B)</td><td>~2 700 m²</td><td>10 000 – 30 000 € (valeur d'agrément uniquement)</td></tr>
+          <tr style="background:#F0F9FF"><td><strong>Total estimé</strong></td><td>2 997 m²</td><td><strong>100 000 – 150 000 €</strong></td></tr>
+        </tbody>
+      </table>
+
+      <div class="estimation-grid">
+        <div class="estimation-card low">
+          <div class="estimation-card-label">Estimation basse</div>
+          <div class="estimation-card-value">100 000 €</div>
+          <div class="estimation-card-sub">Hypothèse prudente</div>
+        </div>
+        <div class="estimation-card high">
+          <div class="estimation-card-label">Estimation haute</div>
+          <div class="estimation-card-value">150 000 €</div>
+          <div class="estimation-card-sub">Conditions favorables</div>
+        </div>
+      </div>
+
+      <div class="box box-red" style="margin-top:16px;">
+        <div class="box-title">⚠️ Écart constaté avec le prix demandé</div>
+        Le prix demandé de <strong>200 000 €</strong> est surestimé de <strong>+33 %</strong> par rapport à l'estimation haute (150 000 €). Le vendeur valorise la surface totale comme si elle était intégralement constructible, ce qui n'est pas le cas au regard du PLU.
+      </div>
+    </div>
+
+    <!-- 7. CONCLUSION -->
+    <div class="section">
+      <div class="section-num">Section 07</div>
+      <h2 class="section-title">Conclusion et recommandations Valorimmo</h2>
+
+      <div class="conclusion-block">
+        <h3>Ce que ce diagnostic vous permet de faire</h3>
+        <div class="conclusion-rec">
+          <div class="conclusion-rec-item">
+            <div class="conclusion-rec-num">1</div>
+            <div class="conclusion-rec-text"><strong>Repositionner le prix de vente</strong> — Une fourchette de 100 000 à 130 000 € est nécessaire pour susciter l'intérêt d'un acquéreur particulier et conclure dans des délais raisonnables.</div>
+          </div>
+          <div class="conclusion-rec-item">
+            <div class="conclusion-rec-num">2</div>
+            <div class="conclusion-rec-text"><strong>Clarifier la structure juridique</strong> — Deux propriétaires distincts : prévoir une promesse synallagmatique liant les deux vendeurs, ou une cession groupée via une SCI.</div>
+          </div>
+          <div class="conclusion-rec-item">
+            <div class="conclusion-rec-num">3</div>
+            <div class="conclusion-rec-text"><strong>Obtenir un Certificat d'Urbanisme opérationnel (CUb)</strong> — Confirmer la surface de plancher autorisée et les conditions de raccordement aux réseaux avant toute commercialisation.</div>
+          </div>
+          <div class="conclusion-rec-item">
+            <div class="conclusion-rec-num">4</div>
+            <div class="conclusion-rec-text"><strong>Cibler les bons acquéreurs</strong> — Ce bien s'adresse à des particuliers souhaitant construire dans un cadre naturel, et non à des investisseurs professionnels. La commercialisation doit être orientée en conséquence.</div>
+          </div>
+        </div>
+        <div class="conclusion-quote">
+          "Avec les bons éléments en main — prix ajusté, cadre juridique clarifié, droits à construire certifiés — ce bien a toutes les qualités pour trouver preneur rapidement auprès d'une famille en quête d'un cadre de vie exceptionnel."
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        Rapport établi sur la base des données urbanistiques disponibles (PLUH Métropole de Lyon) et des références de marché collectées. Une vérification en mairie et l'obtention d'un Certificat d'Urbanisme opérationnel (CUb) restent indispensables avant tout engagement. Ce rapport est un outil d'aide à la décision et ne constitue pas une expertise judiciaire.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="report-cta">
+    <h3>Vous souhaitez un rapport de ce niveau pour votre bien ?</h3>
+    <p>Diagnostic complet livré en 5 jours ouvrés. Analyse PLU, estimation de marché et stratégie de commercialisation par un expert.</p>
+    <a href="particulier.html#formules" class="btn-cta">Demander mon diagnostic</a>
+  </div>
+
+</div>
+</body>
+</html>

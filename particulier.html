@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valorimmo — Diagnostic pour les particuliers</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #4B5563; font-size: 16px; line-height: 1.7; }
+
+  /* ── Tokens ── */
+  :root {
+    --blue: #1B3F6E;
+    --blue-mid: #2557A0;
+    --blue-light: #EBF2FB;
+    --gold: #D4891A;
+    --gold-light: #FEF3E2;
+    --text-dark: #1A2535;
+    --text-body: #4B5563;
+    --text-muted: #6B7280;
+    --border: #E2E8F0;
+    --bg-alt: #F4F7FB;
+  }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 80px 0; }
+  section:nth-child(even) { background: var(--bg-alt); }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.96);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-text { font-family: Georgia, serif; font-size: 1.35rem; color: var(--blue); font-style: italic; }
+  .nav-logo-text em { font-style: normal; color: var(--gold); }
+  .nav-back { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; }
+  .nav-back:hover { color: var(--blue); }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+  .nav-cta {
+    background: var(--blue); color: #fff;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 10px 22px; border: none; cursor: pointer; text-decoration: none; border-radius: 5px;
+  }
+  .nav-cta:hover { background: var(--blue-mid); }
+
+  /* ── HERO ── */
+  #hero {
+    background: linear-gradient(135deg, var(--blue) 0%, #0f2a50 100%);
+    padding: 96px 0 80px;
+    color: #fff;
+  }
+  .hero-inner { max-width: 720px; }
+  .hero-eyebrow {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #93C5FD; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-eyebrow::before { content: ''; width: 32px; height: 1.5px; background: #93C5FD; display: block; }
+  .hero-logo {
+    font-family: Georgia, serif; font-style: italic;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    color: #fff; line-height: 1; margin-bottom: 10px;
+  }
+  .hero-logo em { font-style: normal; color: #FBBF24; }
+  .hero-tagline {
+    font-family: Georgia, serif; font-style: italic;
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    color: #CBD5E1; margin: 24px 0 16px;
+  }
+  .hero-pitch { font-size: 1rem; color: #94A3B8; max-width: 580px; margin-bottom: 36px; line-height: 1.8; }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-block; background: #FBBF24; color: #1A2535;
+    font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 14px 30px; border-radius: 6px; text-decoration: none; transition: background 0.2s;
+  }
+  .btn-primary:hover { background: #F59E0B; text-decoration: none; }
+  .btn-ghost-white {
+    display: inline-block; background: transparent; color: #fff;
+    font-size: 0.85rem; padding: 14px 30px; border: 1.5px solid rgba(255,255,255,0.3);
+    border-radius: 6px; text-decoration: none; transition: border-color 0.2s;
+  }
+  .btn-ghost-white:hover { border-color: #fff; text-decoration: none; }
+
+  /* ── LABELS ── */
+  .section-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+  }
+  h2.section-title {
+    font-family: Georgia, serif; font-size: clamp(1.5rem, 3vw, 2.1rem);
+    color: var(--text-dark); font-weight: 400; margin-bottom: 12px;
+  }
+  .section-sub { color: var(--text-muted); max-width: 540px; margin-bottom: 48px; }
+
+  /* ── QUALIFICATION ── */
+  .qual-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px;
+  }
+  .qual-card {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 28px 22px; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .qual-card:hover { border-color: var(--blue); box-shadow: 0 4px 20px rgba(27,63,110,0.08); }
+  .qual-icon { font-size: 1.6rem; margin-bottom: 14px; display: block; }
+  .qual-card h3 { font-size: 0.98rem; color: var(--text-dark); margin-bottom: 8px; font-weight: 600; }
+  .qual-card p { font-size: 0.87rem; color: var(--text-muted); margin: 0; line-height: 1.6; }
+
+  /* ── FORMULES ── */
+  .formules-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(275px, 1fr));
+    gap: 24px; align-items: start;
+  }
+  .formule-card {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 36px 28px; position: relative; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .formule-card:hover { border-color: var(--blue); box-shadow: 0 6px 28px rgba(27,63,110,0.09); }
+  .formule-card.featured { border-color: var(--blue); box-shadow: 0 8px 36px rgba(27,63,110,0.13); }
+  .badge-featured {
+    position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--blue); color: #fff;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 5px 16px; border-radius: 20px; white-space: nowrap;
+  }
+  .formule-name {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 14px;
+  }
+  .formule-card.featured .formule-name { color: var(--blue); }
+  .formule-price { font-family: Georgia, serif; font-size: 2.8rem; color: var(--text-dark); line-height: 1; margin-bottom: 4px; }
+  .formule-price sup { font-size: 1.2rem; vertical-align: super; }
+  .formule-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 26px; }
+  .formule-features { list-style: none; margin-bottom: 30px; }
+  .formule-features li {
+    font-size: 0.9rem; color: var(--text-body); padding: 8px 0;
+    border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 10px;
+  }
+  .formule-features li:last-child { border-bottom: none; }
+  .formule-features li::before { content: '→'; color: var(--blue); flex-shrink: 0; margin-top: 1px; }
+  .btn-formule {
+    width: 100%; display: block; text-align: center; padding: 13px;
+    font-size: 0.8rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer; border-radius: 6px; text-decoration: none; transition: all 0.2s;
+    border: 1.5px solid var(--blue); color: var(--blue); background: transparent;
+  }
+  .btn-formule:hover { background: var(--blue); color: #fff; text-decoration: none; }
+  .formule-card.featured .btn-formule { background: var(--blue); color: #fff; }
+  .formule-card.featured .btn-formule:hover { background: var(--blue-mid); }
+
+  /* ── EXPERT ── */
+  .expert-inner { max-width: 700px; }
+  .expert-intro { font-size: 1.03rem; color: var(--text-body); margin-bottom: 28px; line-height: 1.8; }
+  .expert-list { list-style: none; margin-bottom: 28px; }
+  .expert-list li {
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    display: flex; gap: 12px; font-size: 0.95rem; color: var(--text-body);
+  }
+  .expert-list li:last-child { border-bottom: none; }
+  .expert-list li::before { content: '→'; color: var(--gold); flex-shrink: 0; font-weight: 700; }
+  .expert-highlight { font-size: 1rem; color: var(--text-dark); font-weight: 600; margin-bottom: 28px; line-height: 1.7; }
+  .expert-quote {
+    border-left: 3px solid var(--gold); padding: 16px 20px;
+    background: var(--gold-light); border-radius: 0 8px 8px 0;
+    font-family: Georgia, serif; font-style: italic; font-size: 1.02rem;
+    color: var(--text-dark); line-height: 1.8;
+  }
+
+  /* ── QUI SOMMES-NOUS ── */
+  .about-grid {
+    display: grid; grid-template-columns: 280px 1fr; gap: 64px; align-items: start;
+  }
+  .about-photo-col { position: sticky; top: 100px; }
+  .about-photo {
+    width: 100%; border-radius: 10px; display: block;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 8px 32px rgba(27,63,110,0.1);
+  }
+  .about-name {
+    font-family: Georgia, serif; font-size: 1.15rem; color: var(--text-dark);
+    font-weight: 400; margin-top: 16px;
+  }
+  .about-title { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px;
+  }
+  .about-stat {
+    background: var(--blue-light); border: 1px solid #BFDBF7; border-radius: 8px;
+    padding: 14px 12px; text-align: center;
+  }
+  .about-stat-num { font-family: Georgia, serif; font-size: 1.5rem; color: var(--blue); line-height: 1; }
+  .about-stat-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; line-height: 1.3; }
+  .about-intro { font-size: 1.03rem; color: var(--text-body); margin-bottom: 28px; line-height: 1.8; }
+  .about-pillars { list-style: none; margin-bottom: 28px; }
+  .about-pillars li {
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+    display: flex; gap: 12px; font-size: 0.95rem; color: var(--text-body);
+  }
+  .about-pillars li:last-child { border-bottom: none; }
+  .about-pillars li::before { content: '→'; color: var(--gold); flex-shrink: 0; font-weight: 700; }
+  .about-highlight {
+    font-size: 1rem; color: var(--text-dark); font-weight: 600; margin-bottom: 28px; line-height: 1.7;
+  }
+  .about-quote {
+    border-left: 3px solid var(--gold); padding: 18px 22px;
+    background: var(--gold-light); border-radius: 0 8px 8px 0;
+    font-family: Georgia, serif; font-style: italic; font-size: 1.05rem;
+    color: var(--text-dark); line-height: 1.8;
+  }
+  @media (max-width: 760px) {
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-photo-col { position: static; display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+    .about-photo { width: 140px; border-radius: 8px; }
+    .about-stats { grid-template-columns: repeat(4, 1fr); margin-top: 0; }
+  }
+
+  /* ── PRESCRIPTEURS ── */
+  .presc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+  .presc-card {
+    background: var(--blue-light); border: 1.5px solid #BFDBF7;
+    border-radius: 10px; padding: 28px 22px; text-align: center;
+  }
+  .presc-icon { font-size: 2rem; margin-bottom: 14px; display: block; }
+  .presc-card h3 { font-size: 1rem; color: var(--blue); margin-bottom: 6px; font-weight: 600; }
+  .presc-card p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+
+  /* ── FAQ ── */
+  .faq-list { max-width: 720px; }
+  .faq-item { border-bottom: 1px solid var(--border); padding: 22px 0; }
+  .faq-item:first-child { border-top: 1px solid var(--border); }
+  .faq-q {
+    font-size: 1rem; color: var(--text-dark); font-weight: 600; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 16px; user-select: none;
+  }
+  .faq-q::after { content: '+'; color: var(--blue); font-size: 1.4rem; font-weight: 300; flex-shrink: 0; transition: transform 0.2s; }
+  .faq-item.open .faq-q::after { transform: rotate(45deg); }
+  .faq-a { font-size: 0.92rem; color: var(--text-muted); margin-top: 12px; line-height: 1.75; display: none; }
+  .faq-item.open .faq-a { display: block; }
+
+  /* ── CTA FINAL ── */
+  #cta-final { background: var(--blue); color: #fff; text-align: center; padding: 96px 24px; }
+  #cta-final .section-label { color: #93C5FD; }
+  #cta-final h2 { font-family: Georgia, serif; font-size: clamp(1.5rem, 3vw, 2rem); color: #fff; font-weight: 400; margin-bottom: 14px; }
+  #cta-final p { color: #94A3B8; max-width: 480px; margin: 0 auto 32px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0F1E33; border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 32px 24px; text-align: center; font-size: 0.8rem; color: #6B7280;
+  }
+  .footer-logo { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .footer-logo-text { font-family: Georgia, serif; font-style: italic; color: #CBD5E1; font-size: 1.1rem; }
+  .footer-logo-text em { font-style: normal; color: #FBBF24; }
+  footer a { color: #6B7280; text-decoration: none; }
+  footer a:hover { color: #CBD5E1; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+    align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #fff; border-radius: 12px; border: 1.5px solid var(--border);
+    max-width: 540px; width: 100%; padding: 40px; position: relative;
+    max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+  .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+  .modal-close:hover { color: var(--text-dark); }
+  .modal h3 { font-family: Georgia, serif; font-size: 1.4rem; color: var(--text-dark); margin-bottom: 6px; font-weight: 400; }
+  .modal-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+  .modal-badge {
+    display: inline-block; background: var(--blue-light); border: 1px solid #BFDBF7;
+    color: var(--blue); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 4px; margin-bottom: 24px;
+  }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; background: var(--bg-alt); border: 1.5px solid var(--border);
+    color: var(--text-dark); padding: 11px 13px; font-size: 0.92rem; font-family: inherit;
+    outline: none; transition: border-color 0.2s; border-radius: 7px; appearance: none;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--blue); background: #fff; }
+  .form-group textarea { min-height: 110px; resize: vertical; }
+  .btn-submit {
+    width: 100%; background: var(--blue); color: #fff; font-size: 0.85rem;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 14px;
+    border: none; cursor: pointer; margin-top: 8px; border-radius: 7px; transition: background 0.2s;
+  }
+  .btn-submit:hover { background: var(--blue-mid); }
+  .form-mention { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 12px; }
+  .form-success { display: none; text-align: center; padding: 20px 0; }
+  .form-success .success-icon { font-size: 2.5rem; margin-bottom: 14px; display: block; }
+  .form-success h3 { color: var(--blue); font-family: Georgia, serif; font-weight: 400; margin-bottom: 10px; }
+  .form-success p { font-size: 0.9rem; color: var(--text-muted); }
+
+  @media (max-width: 640px) {
+    section { padding: 56px 0; }
+    nav { padding: 14px 16px; }
+    .nav-cta { padding: 9px 16px; font-size: 0.72rem; }
+    .modal { padding: 28px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg width="43" height="30" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+    <span class="nav-logo-text">Valor<em>immo</em></span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">← Accueil</a>
+    <a href="#formules" class="nav-cta" onclick="openModal('Rapport + appel conseil — 390€')">Demander un diagnostic</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Pour les propriétaires particuliers</div>
+      <div class="hero-logo">Valor<em>immo</em></div>
+      <p style="font-size:0.78rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#FBBF24;margin-bottom:10px;margin-top:6px;">Ce que votre bien vaut vraiment</p>
+      <p class="hero-tagline">"Avant de vendre, comprenez ce que vous avez vraiment."</p>
+      <p class="hero-pitch">Un diagnostic d'expert pour les biens que les estimations en ligne et les agents généralistes ne savent pas évaluer correctement.</p>
+      <div class="hero-actions">
+        <a href="#formules" class="btn-primary">Découvrir les formules</a>
+        <a href="#expert" class="btn-ghost-white">L'expert</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUALIFICATION -->
+<section id="qualification">
+  <div class="container">
+    <p class="section-label">Votre bien est-il concerné ?</p>
+    <h2 class="section-title">Certains biens méritent une lecture plus fine</h2>
+    <p class="section-sub">Une estimation classique ne suffit pas lorsque votre bien cache un potentiel que seul un œil expert peut identifier.</p>
+    <div class="qual-grid">
+      <div class="qual-card">
+        <span class="qual-icon">🗺️</span>
+        <h3>Terrain divisible ou contraintes PLU</h3>
+        <p>Votre terrain pourrait accueillir plusieurs lots constructibles. La lecture du PLU conditionne tout — et sa complexité échappe souvent aux évaluations standard.</p>
+      </div>
+      <div class="qual-card">
+        <span class="qual-icon">🏚️</span>
+        <h3>Bien atypique, mixte ou ancien</h3>
+        <p>Corps de ferme, maison de maître, bien à usage mixte, logement avec annexes… Ces profils déjouent les références du marché classique.</p>
+      </div>
+      <div class="qual-card">
+        <span class="qual-icon">⚖️</span>
+        <h3>Succession ou indivision complexe</h3>
+        <p>Entre indivisaires, la valorisation objective du bien est indispensable avant toute décision — vente, rachat de soulte ou partage.</p>
+      </div>
+      <div class="qual-card">
+        <span class="qual-icon">🔍</span>
+        <h3>Potentiel de transformation inconnu</h3>
+        <p>Surélévation, changement d'usage, réhabilitation… Vous pressentez que votre bien vaut plus que ce qu'on vous a dit, sans savoir pourquoi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULES -->
+<section id="formules">
+  <div class="container">
+    <p class="section-label">Nos formules</p>
+    <h2 class="section-title">Choisissez votre niveau d'accompagnement</h2>
+    <p class="section-sub">Trois formules conçues pour répondre à des besoins différents — du propriétaire qui veut comprendre à celui qui veut être guidé jusqu'à la signature.</p>
+    <div class="formules-grid">
+      <div class="formule-card">
+        <div class="formule-name">Rapport d'analyse</div>
+        <div class="formule-price"><sup>€</sup>250</div>
+        <div class="formule-desc">Diagnostic écrit complet, livré en 5 jours ouvrés</div>
+        <ul class="formule-features">
+          <li>Diagnostic écrit complet de votre bien</li>
+          <li>Analyse PLU et contraintes réglementaires</li>
+          <li>Estimation du potentiel réel de valorisation</li>
+          <li>Rapport PDF détaillé</li>
+          <li>Livré en 5 jours ouvrés</li>
+        </ul>
+        <a href="#" class="btn-formule" onclick="openModal('Rapport d\'analyse — 250€'); return false;">Commander</a>
+      </div>
+      <div class="formule-card featured">
+        <div class="badge-featured">★ Le plus choisi</div>
+        <div class="formule-name">Rapport + appel conseil</div>
+        <div class="formule-price"><sup>€</sup>390</div>
+        <div class="formule-desc">Le rapport complet, expliqué et discuté en direct</div>
+        <ul class="formule-features">
+          <li>Tout le contenu du rapport d'analyse</li>
+          <li>30 min d'appel avec l'expert</li>
+          <li>Stratégie de commercialisation adaptée</li>
+          <li>Recommandation : vente seul ou avec un professionnel</li>
+        </ul>
+        <a href="#" class="btn-formule" onclick="openModal('Rapport + appel conseil — 390€'); return false;">Commander</a>
+      </div>
+      <div class="formule-card">
+        <div class="formule-name">Accompagnement complet</div>
+        <div class="formule-price"><sup>€</sup>950</div>
+        <div class="formule-desc">De l'analyse jusqu'à la signature du mandat, on reste à vos côtés</div>
+        <ul class="formule-features">
+          <li>Rapport complet + 3 mois d'accompagnement</li>
+          <li>Appels illimités jusqu'à la signature du mandat</li>
+          <li>Stratégie de commercialisation personnalisée</li>
+          <li>Diffusion prioritaire sur Closia.net si le bien correspond aux acheteurs pros</li>
+          <li>CUb en complément à 390€ si nécessaire (au lieu de 490€ sur Closia.net)</li>
+        </ul>
+        <a href="#" class="btn-formule" onclick="openModal('Accompagnement complet — 950€'); return false;">Commander</a>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:28px;font-size:0.8rem;color:#9CA3AF;">
+      🔒 Paiement sécurisé par Stripe à la livraison du rapport — rien à régler maintenant.
+    </p>
+  </div>
+</section>
+
+<!-- QUI SOMMES-NOUS -->
+<section id="expert">
+  <div class="container">
+    <p class="section-label">Qui sommes-nous</p>
+    <h2 class="section-title">L'expertise au service des propriétaires</h2>
+    <div class="about-grid">
+
+      <!-- Colonne photo -->
+      <div class="about-photo-col">
+        <img src="https://closia.net/laurent.jpg" alt="Laurent Buffard — Expert Valorimmo" class="about-photo" />
+        <p class="about-name">Laurent Buffard</p>
+        <p class="about-title">Expert valorisation immobilière · Fondateur de Valorimmo</p>
+        <div class="about-stats">
+          <div class="about-stat">
+            <div class="about-stat-num">20</div>
+            <div class="about-stat-label">ans d'expérience terrain</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">100%</div>
+            <div class="about-stat-label">analyse humaine, pas algorithmique</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">PLU</div>
+            <div class="about-stat-label">lecture urbanistique intégrée</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat-num">5j</div>
+            <div class="about-stat-label">délai de livraison du rapport</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Colonne texte -->
+      <div>
+        <p class="about-intro">
+          Professionnel de l'immobilier avec une vision globale du marché, j'ai évolué sur l'ensemble des dimensions du secteur — de l'accompagnement de propriétaires vendeurs aux opérations les plus complexes de transformation foncière.
+        </p>
+        <ul class="about-pillars">
+          <li>Transaction immobilière — accompagnement de vendeurs et acquéreurs particuliers</li>
+          <li>Analyse foncière et interprétation opérationnelle des règles d'urbanisme (PLU)</li>
+          <li>Collaboration avec marchands de biens, investisseurs et promoteurs</li>
+          <li>Détection des opportunités de transformation : division, surélévation, changement d'usage</li>
+          <li>Compréhension des logiques d'acheteurs professionnels — pour mieux défendre vos intérêts</li>
+        </ul>
+        <p class="about-highlight">
+          Au fil de ces expériences, j'ai développé une expertise spécifique : <strong>l'identification et la valorisation du potentiel caché des biens complexes.</strong><br><br>
+          Ce que les outils en ligne ne feront jamais — lire un PLU, anticiper la stratégie d'un promoteur, identifier une division parcellaire, calculer des droits à bâtir résiduels — c'est précisément ce que j'apporte à chaque diagnostic Valorimmo.
+        </p>
+        <blockquote class="about-quote">
+          "Cette vision transversale me permet d'appréhender votre bien non pas seulement comme un produit à vendre, mais comme une opération à valoriser — et de vous donner les clés pour prendre la bonne décision."
+        </blockquote>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CUB -->
+<section id="cub">
+  <div class="container">
+    <p class="section-label">Service complémentaire</p>
+    <h2 class="section-title">Certificat d'Urbanisme Opérationnel (CUb)</h2>
+    <p class="section-sub" style="margin-bottom:36px;">Avant de vendre ou de décider, obtenez la certitude juridique sur la constructibilité de votre bien. Nous préparons et déposons le dossier complet en mairie — clé en main.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;max-width:880px;">
+
+      <!-- Carte CUb -->
+      <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:36px 32px;box-shadow:0 4px 20px rgba(27,63,110,0.07);">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Clé en main</div>
+        <div style="font-family:Georgia,serif;font-size:1.15rem;color:var(--text-dark);font-weight:400;margin-bottom:4px;">Certificat d'Urbanisme<br>Opérationnel (CUb)</div>
+        <div style="display:flex;align-items:baseline;gap:6px;margin:16px 0;">
+          <span style="font-family:Georgia,serif;font-size:2.6rem;color:var(--text-dark);line-height:1;">490 €</span>
+          <span style="font-size:0.85rem;color:var(--text-muted);">HT · service complet</span>
+        </div>
+        <ul style="list-style:none;margin-bottom:28px;">
+          <li style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;min-width:20px;">01</span>
+            <span><strong style="color:var(--text-dark);">CERFA 13410 complété</strong><br><span style="font-size:0.83rem;color:var(--text-muted);">Formulaire réglementaire intégralement rempli</span></span>
+          </li>
+          <li style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;min-width:20px;">02</span>
+            <span><strong style="color:var(--text-dark);">Plans + insertion cadastrale</strong><br><span style="font-size:0.83rem;color:var(--text-muted);">Plans de situation et de masse réalisés</span></span>
+          </li>
+          <li style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;min-width:20px;">03</span>
+            <span><strong style="color:var(--text-dark);">Validation avant dépôt</strong><br><span style="font-size:0.83rem;color:var(--text-muted);">Échange avec vous pour relire et valider avant envoi</span></span>
+          </li>
+          <li style="display:flex;gap:10px;padding:9px 0;font-size:0.9rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;min-width:20px;">04</span>
+            <span><strong style="color:var(--text-dark);">Dépôt officiel en mairie</strong><br><span style="font-size:0.83rem;color:var(--text-muted);">Délai d'instruction : 2 mois</span></span>
+          </li>
+        </ul>
+        <a href="#contact-cub" class="btn-formule" onclick="openModalCub(); return false;" style="display:block;width:100%;text-align:center;padding:13px;font-size:0.8rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer;border-radius:6px;text-decoration:none;border:1.5px solid var(--blue);color:var(--blue);background:transparent;transition:all 0.2s;">Déposer mon dossier CUb</a>
+      </div>
+
+      <!-- Informations -->
+      <div style="padding-top:8px;">
+        <div style="font-family:Georgia,serif;font-size:1.05rem;color:var(--text-dark);margin-bottom:16px;line-height:1.5;">Pourquoi obtenir un CUb avant de vendre ?</div>
+        <ul style="list-style:none;margin-bottom:28px;">
+          <li style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Confirmer qu'un terrain ou une partie de votre bien est constructible
+          </li>
+          <li style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Valider la faisabilité d'une division parcellaire avant de commercialiser
+          </li>
+          <li style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Rassurer un acquéreur potentiel avec une réponse officielle de la mairie
+          </li>
+          <li style="display:flex;gap:10px;padding:9px 0;font-size:0.9rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Sécuriser une vente ou un projet de construction neuve ou de changement de destination
+          </li>
+        </ul>
+        <div style="background:var(--blue-light);border:1px solid #BFDBF7;border-radius:8px;padding:18px 20px;font-size:0.88rem;color:var(--text-dark);line-height:1.7;">
+          <strong>🏗️ Combinable avec un rapport Valorimmo</strong><br>
+          Le CUb vient compléter votre diagnostic : là où le rapport identifie le potentiel, le CUb obtient la confirmation officielle de la mairie. Les deux ensemble vous donnent un dossier vendeur solide et crédible.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EXEMPLE DE RAPPORT -->
+<section id="exemple">
+  <div class="container">
+    <p class="section-label">Exemple de rapport</p>
+    <h2 class="section-title">Voyez exactement ce que vous recevrez</h2>
+    <p class="section-sub" style="margin-bottom:36px;">Un rapport réel, anonymisé. Analyse PLU, estimation de marché, potentiel de valorisation et recommandations concrètes.</p>
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(27,63,110,0.07);max-width:720px;">
+      <!-- Aperçu -->
+      <div style="background:var(--blue);padding:28px 32px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#93C5FD;margin-bottom:8px;">Rapport d'analyse expert · Exemple anonymisé</div>
+          <div style="font-family:Georgia,serif;font-size:1.15rem;color:#fff;font-weight:400;margin-bottom:4px;">Terrain à bâtir — deux parcelles</div>
+          <div style="font-size:0.82rem;color:#94A3B8;">Commune du Val de Saône, Métropole de Lyon · 2 997 m²</div>
+        </div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-family:Georgia,serif;font-size:1.4rem;color:#FBBF24;line-height:1;">150 000 €</div>
+            <div style="font-size:0.7rem;color:#94A3B8;margin-top:2px;">Estimation haute</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:Georgia,serif;font-size:1.4rem;color:#F87171;line-height:1;">+33 %</div>
+            <div style="font-size:0.7rem;color:#94A3B8;margin-top:2px;">Surestimation constatée</div>
+          </div>
+        </div>
+      </div>
+      <!-- Sections listées -->
+      <div style="padding:24px 32px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Synthèse du bien et particularités
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Analyse PLU et contraintes urbanistiques
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Références de marché et dynamique locale
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Potentiel de valorisation (tous leviers)
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Analyse de cohérence du prix demandé
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Fourchette d'estimation et recommandations
+          </div>
+        </div>
+        <a href="rapport-exemple.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:12px 22px;border-radius:6px;text-decoration:none;">
+          Voir le rapport complet →
+        </a>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:16px;">Lecture libre · aucun engagement</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRESCRIPTEURS -->
+<section id="prescripteurs">
+  <div class="container">
+    <p class="section-label">Ils nous recommandent</p>
+    <h2 class="section-title">Des professionnels qui nous font confiance</h2>
+    <p class="section-sub">Notaires, géomètres et experts-comptables orientent vers Valorimmo les propriétaires dont le bien dépasse les outils d'évaluation standards.</p>
+    <div class="presc-grid">
+      <div class="presc-card">
+        <span class="presc-icon">⚖️</span>
+        <h3>Notaires</h3>
+        <p>Successions, indivisions</p>
+      </div>
+      <div class="presc-card">
+        <span class="presc-icon">📐</span>
+        <h3>Géomètres-experts</h3>
+        <p>Bornage, division parcellaire</p>
+      </div>
+      <div class="presc-card">
+        <span class="presc-icon">📊</span>
+        <h3>Experts-comptables</h3>
+        <p>Biens professionnels, SCI</p>
+      </div>
+    </div>
+    <p style="margin-top:32px;font-size:0.88rem;color:var(--text-muted);">
+      Vous êtes un professionnel et souhaitez orienter un client ? <a href="prescripteur.html" style="color:var(--blue);font-weight:600;">Accédez à l'espace prescripteur →</a>
+    </p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <p class="section-label">Questions fréquentes</p>
+    <h2 class="section-title">Ce que vous vous demandez</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Valorimmo remplace-t-il une agence immobilière ?</div>
+        <div class="faq-a">Non. Valorimmo vous aide à comprendre votre bien avant de choisir comment le vendre — seul ou avec un professionnel. Nous ne sommes pas une agence : nous sommes l'étape qui précède ce choix, pour qu'il soit éclairé.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Combien de temps pour recevoir le rapport ?</div>
+        <div class="faq-a">5 jours ouvrés après réception des documents de votre bien. Pour les formules incluant un appel conseil, un créneau est planifié dans la foulée.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Mon bien est-il assez complexe pour Valorimmo ?</div>
+        <div class="faq-a">Si vous avez un doute sur sa valorisation ou sur la stratégie de vente à adopter, c'est probablement le bon signe. Valorimmo est fait pour les propriétaires qui sentent que leur bien vaut plus que ce qu'on leur dit — sans disposer des outils pour le démontrer.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Comment se déroule le paiement ?</div>
+        <div class="faq-a">Aucun paiement n'est demandé à la soumission de votre demande. Une fois votre rapport prêt (sous 5 jours ouvrés), vous recevez un lien de paiement sécurisé Stripe. Après règlement, votre rapport PDF est disponible en téléchargement immédiat.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Quels documents faut-il fournir ?</div>
+        <div class="faq-a">Un titre de propriété ou acte de vente, le plan cadastral, et toute information disponible (surface, état, servitudes, projets envisagés). Plus votre dossier est complet, plus le diagnostic sera précis.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="cta-final">
+  <div class="container">
+    <p class="section-label">Passer à l'action</p>
+    <h2>Votre bien a peut-être plus de valeur que vous ne le pensez.</h2>
+    <p>Un diagnostic, une heure de lecture, et vous saurez enfin à quoi vous avez vraiment affaire.</p>
+    <a href="#" class="btn-primary" onclick="openModal('Rapport + appel conseil — 390€'); return false;">Demander un diagnostic</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg width="29" height="20" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+    <span class="footer-logo-text">Valor<em>immo</em></span>
+  </div>
+  <p>Diagnostic expert immobilier · Biens complexes &amp; potentiels de valorisation</p>
+  <p style="margin-top:6px;"><a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a></p>
+  <p style="margin-top:8px;">© 2026 Valorimmo. Tous droits réservés.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h3>Demande de diagnostic</h3>
+    <p class="modal-subtitle">Nous vous recontactons sous 24h pour organiser votre dossier.</p>
+    <div class="modal-badge" id="modal-badge">Rapport + appel conseil — 390€</div>
+    <div id="form-wrap">
+      <form onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label>Nom complet</label>
+          <input type="text" name="nom" placeholder="Jean Dupont" required />
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="jean@email.fr" required />
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="tel" name="tel" placeholder="06 XX XX XX XX" required />
+        </div>
+        <div class="form-group">
+          <label>Formule souhaitée</label>
+          <select id="f-formule" name="formule" required>
+            <option value="">Sélectionner…</option>
+            <option value="rapport">Rapport d'analyse — 250€</option>
+            <option value="rapport-appel">Rapport + appel conseil — 390€</option>
+            <option value="complet">Accompagnement complet — 950€</option>
+            <option value="cub">Certificat d'Urbanisme opérationnel (CUb) — 490€ HT</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Description de votre bien</label>
+          <textarea name="bien" placeholder="Type de bien, localisation, surface approximative, situation particulière (succession, division envisagée…)" required></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Envoyer ma demande</button>
+        <p class="form-mention">Vos informations restent confidentielles et ne sont utilisées qu'aux fins de votre diagnostic.</p>
+      </form>
+    </div>
+    <div class="form-success" id="form-success">
+      <span class="success-icon">✓</span>
+      <h3>Demande reçue</h3>
+      <p>Nous analysons votre bien sous 5 jours ouvrés. Vous recevrez ensuite un lien Stripe pour régler et télécharger votre rapport directement.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openModalCub() {
+    document.getElementById('modal-badge').textContent = 'Certificat d\'Urbanisme Opérationnel (CUb) — 490€ HT';
+    document.getElementById('f-formule').value = 'cub';
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function openModal(formule) {
+    document.getElementById('modal-badge').textContent = formule;
+    const sel = document.getElementById('f-formule');
+    if (formule.includes('250')) sel.value = 'rapport';
+    else if (formule.includes('390')) sel.value = 'rapport-appel';
+    else if (formule.includes('950')) sel.value = 'complet';
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Synchronise le badge quand l'utilisateur change la formule dans le select
+  const badgeLabels = {
+    'rapport':       'Rapport d\'analyse — 250€',
+    'rapport-appel': 'Rapport + appel conseil — 390€',
+    'complet':       'Accompagnement complet — 950€',
+    'cub':           'Certificat d\'Urbanisme Opérationnel (CUb) — 490€ HT',
+  };
+  document.getElementById('f-formule').addEventListener('change', function() {
+    const label = badgeLabels[this.value];
+    if (label) document.getElementById('modal-badge').textContent = label;
+  });
+  function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  function toggleFaq(el) { el.parentElement.classList.toggle('open'); }
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('form-wrap').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
+</script>
+</body>
+</html>

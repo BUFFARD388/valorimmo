@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Valorimmo — Espace prescripteurs</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #4B5563; font-size: 16px; line-height: 1.7; }
+
+  :root {
+    --blue: #1B3F6E;
+    --blue-mid: #2557A0;
+    --blue-light: #EBF2FB;
+    --gold: #D4891A;
+    --gold-light: #FEF3E2;
+    --text-dark: #1A2535;
+    --text-body: #4B5563;
+    --text-muted: #6B7280;
+    --border: #E2E8F0;
+    --bg-alt: #F4F7FB;
+  }
+
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 80px 0; }
+  section:nth-child(even) { background: var(--bg-alt); }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo-text { font-family: Georgia, serif; font-size: 1.35rem; color: var(--blue); font-style: italic; }
+  .nav-logo-text em { font-style: normal; color: var(--gold); }
+  .nav-right { display: flex; align-items: center; gap: 20px; }
+  .nav-back { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; }
+  .nav-back:hover { color: var(--blue); }
+  .nav-pill {
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--gold-light); color: var(--gold); border: 1px solid #F6D5A0;
+    padding: 5px 12px; border-radius: 20px;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    background: linear-gradient(135deg, #0F2A50 0%, var(--blue) 100%);
+    padding: 96px 0 80px; color: #fff;
+  }
+  .hero-eyebrow {
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #FBBF24; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .hero-eyebrow::before { content: ''; width: 32px; height: 1.5px; background: #FBBF24; display: block; }
+  h1 {
+    font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: #fff; font-weight: 400; line-height: 1.2; margin-bottom: 16px; max-width: 680px;
+  }
+  .hero-sub { font-size: 1rem; color: #94A3B8; max-width: 580px; margin-bottom: 36px; line-height: 1.8; }
+  .hero-badges { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-badge {
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18);
+    color: #CBD5E1; font-size: 0.8rem; padding: 7px 14px; border-radius: 20px;
+  }
+
+  /* ── LABELS ── */
+  .section-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.26em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+  }
+  h2.section-title {
+    font-family: Georgia, serif; font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--text-dark); font-weight: 400; margin-bottom: 12px;
+  }
+  .section-sub { color: var(--text-muted); max-width: 560px; margin-bottom: 48px; }
+
+  /* ── POURQUOI ── */
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+  .why-card {
+    background: var(--blue-light); border: 1.5px solid #BFDBF7; border-radius: 10px; padding: 28px 24px;
+  }
+  .why-num {
+    font-family: Georgia, serif; font-size: 2rem; color: var(--blue); opacity: 0.25;
+    line-height: 1; margin-bottom: 10px; font-weight: 400;
+  }
+  .why-card h3 { font-size: 1rem; color: var(--blue); font-weight: 600; margin-bottom: 8px; }
+  .why-card p { font-size: 0.88rem; color: var(--text-muted); margin: 0; line-height: 1.65; }
+
+  /* ── COMMENT ÇA MARCHE ── */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0; }
+  .step { padding: 36px 28px; position: relative; }
+  .step:not(:last-child)::after {
+    content: '→'; position: absolute; right: -8px; top: 50%;
+    transform: translateY(-50%); color: var(--gold); font-size: 1.2rem;
+  }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--blue);
+    color: #fff; font-size: 0.85rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; margin-bottom: 14px;
+  }
+  .step h3 { font-size: 0.95rem; color: var(--text-dark); font-weight: 600; margin-bottom: 8px; }
+  .step p { font-size: 0.87rem; color: var(--text-muted); margin: 0; line-height: 1.6; }
+
+  /* ── COMMISSION ── */
+  .commission-block {
+    background: var(--gold-light); border: 1.5px solid #F6D5A0; border-radius: 12px;
+    padding: 40px; max-width: 680px;
+  }
+  .commission-block h3 {
+    font-family: Georgia, serif; font-size: 1.3rem; color: var(--text-dark);
+    font-weight: 400; margin-bottom: 12px;
+  }
+  .commission-block p { color: var(--text-body); margin-bottom: 16px; font-size: 0.95rem; }
+  .commission-block p:last-of-type { margin-bottom: 0; }
+  .commission-block strong { color: var(--text-dark); }
+  .commission-highlight {
+    background: #fff; border: 1.5px solid #F6D5A0; border-radius: 8px;
+    padding: 16px 20px; margin: 20px 0; font-size: 0.92rem; color: var(--text-dark);
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .commission-highlight::before { content: '💡'; flex-shrink: 0; }
+
+  /* ── FORMULAIRE ── */
+  #formulaire { background: var(--bg-alt); }
+  .form-card {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+    padding: 48px 40px; max-width: 640px;
+    box-shadow: 0 4px 24px rgba(27,63,110,0.07);
+  }
+  .form-card h3 { font-family: Georgia, serif; font-size: 1.4rem; color: var(--text-dark); font-weight: 400; margin-bottom: 6px; }
+  .form-card-sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 28px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label { font-size: 0.78rem; font-weight: 600; color: var(--text-dark); }
+  .form-group input, .form-group select, .form-group textarea {
+    background: var(--bg-alt); border: 1.5px solid var(--border); color: var(--text-dark);
+    padding: 11px 13px; font-size: 0.92rem; font-family: inherit; outline: none;
+    transition: border-color 0.2s; border-radius: 7px; appearance: none; width: 100%;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--blue); background: #fff; }
+  .form-group textarea { min-height: 100px; resize: vertical; }
+  .form-divider { grid-column: 1 / -1; border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+  .form-section-label { grid-column: 1 / -1; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); padding-top: 4px; }
+  .btn-submit {
+    grid-column: 1 / -1; background: var(--blue); color: #fff; font-size: 0.85rem;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 14px;
+    border: none; cursor: pointer; border-radius: 7px; transition: background 0.2s; margin-top: 8px;
+  }
+  .btn-submit:hover { background: var(--blue-mid); }
+  .form-mention { grid-column: 1 / -1; font-size: 0.75rem; color: var(--text-muted); text-align: center; }
+  .form-success { display: none; text-align: center; padding: 40px 20px; }
+  .form-success .icon { font-size: 2.5rem; margin-bottom: 16px; display: block; }
+  .form-success h3 { font-family: Georgia, serif; color: var(--blue); font-weight: 400; margin-bottom: 10px; font-size: 1.3rem; }
+  .form-success p { color: var(--text-muted); font-size: 0.9rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0F1E33; border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 32px 24px; text-align: center; font-size: 0.8rem; color: #6B7280;
+  }
+  .footer-logo { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .footer-logo-text { font-family: Georgia, serif; font-style: italic; color: #CBD5E1; font-size: 1.1rem; }
+  .footer-logo-text em { font-style: normal; color: #FBBF24; }
+  footer a { color: #6B7280; text-decoration: none; }
+  footer a:hover { color: #CBD5E1; }
+
+  @media (max-width: 640px) {
+    section { padding: 56px 0; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-card { padding: 28px 18px; }
+    .steps { grid-template-columns: 1fr; }
+    .step::after { display: none; }
+    .commission-block { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg width="43" height="30" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+    <span class="nav-logo-text">Valor<em>immo</em></span>
+  </a>
+  <div class="nav-right">
+    <a href="index.html" class="nav-back">← Accueil</a>
+    <span class="nav-pill">Espace prescripteurs</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-eyebrow">Espace prescripteurs</div>
+    <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#FBBF24;margin-bottom:10px;">Ce que votre bien vaut vraiment</div>
+    <h1>Orientez vos clients vers une expertise immobilière indépendante</h1>
+    <p class="hero-sub">Lorsqu'un client hérite d'un bien complexe, fait face à une indivision ou s'interroge sur le potentiel de son terrain, Valorimmo apporte la réponse que les outils classiques ne donnent pas.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">⚖️ Notaires</span>
+      <span class="hero-badge">📐 Géomètres-experts</span>
+      <span class="hero-badge">🔍 Diagnostiqueurs</span>
+      <span class="hero-badge">📊 Experts-comptables</span>
+    </div>
+  </div>
+</section>
+
+<!-- POURQUOI -->
+<section id="pourquoi">
+  <div class="container">
+    <p class="section-label">Pourquoi Valorimmo</p>
+    <h2 class="section-title">Ce que nous apportons que les autres n'apportent pas</h2>
+    <p class="section-sub">Les estimations en ligne s'appuient uniquement sur des bases de données de transactions (DVF). Valorimmo ajoute l'analyse urbanistique, foncière et stratégique que seul un expert peut réaliser.</p>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-num">01</div>
+        <h3>Analyse PLU et potentiel foncier</h3>
+        <p>Identification des droits à construire, divisions possibles, changements de destination — ce que DVF ne peut pas révéler.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">02</div>
+        <h3>Prix de marché contextualisé</h3>
+        <p>Une estimation qui tient compte du potentiel réel du bien, pas uniquement des comparables de surface.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">03</div>
+        <h3>Stratégie de commercialisation</h3>
+        <p>Recommandation claire : vente seul, via un agent, ou accès à un réseau de marchands/promoteurs selon le profil du bien.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-num">04</div>
+        <h3>Rapport écrit structuré</h3>
+        <p>Un document PDF exploitable dans le cadre d'une succession, d'un partage ou d'une décision d'investissement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMENT ÇA MARCHE -->
+<section id="process">
+  <div class="container">
+    <p class="section-label">Comment ça marche</p>
+    <h2 class="section-title">Un processus simple en 3 étapes</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Vous transmettez le dossier</h3>
+        <p>Remplissez le formulaire ci-dessous avec les coordonnées de votre client et une description du bien. Nous prenons le relais.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>L'expert analyse le bien</h3>
+        <p>Diagnostic complet sous 5 jours ouvrés : PLU, potentiel foncier, valeur de marché, stratégie de vente.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Le rapport est livré</h3>
+        <p>Votre client reçoit un rapport PDF structuré. Pour les formules avec appel conseil, un rendez-vous téléphonique est planifié.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXEMPLE DE RAPPORT -->
+<section id="exemple">
+  <div class="container">
+    <p class="section-label">Exemple de rapport</p>
+    <h2 class="section-title">Le niveau d'analyse que reçoit votre client</h2>
+    <p class="section-sub" style="margin-bottom:36px;">Un rapport réel, anonymisé. Vos clients reçoivent une analyse complète : PLU, estimation de marché, potentiel de valorisation et recommandations concrètes.</p>
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(27,63,110,0.07);max-width:720px;">
+      <div style="background:var(--blue);padding:28px 32px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#93C5FD;margin-bottom:8px;">Rapport d'analyse expert · Exemple anonymisé</div>
+          <div style="font-family:Georgia,serif;font-size:1.15rem;color:#fff;font-weight:400;margin-bottom:4px;">Terrain à bâtir — deux parcelles</div>
+          <div style="font-size:0.82rem;color:#94A3B8;">Commune du Val de Saône, Métropole de Lyon · 2 997 m²</div>
+        </div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-family:Georgia,serif;font-size:1.4rem;color:#FBBF24;line-height:1;">150 000 €</div>
+            <div style="font-size:0.7rem;color:#94A3B8;margin-top:2px;">Estimation haute</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:Georgia,serif;font-size:1.4rem;color:#F87171;line-height:1;">+33 %</div>
+            <div style="font-size:0.7rem;color:#94A3B8;margin-top:2px;">Surestimation constatée</div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:24px 32px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Synthèse du bien et particularités
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Analyse PLU et contraintes urbanistiques
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Références de marché et dynamique locale
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Potentiel de valorisation (tous leviers)
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Analyse de cohérence du prix demandé
+          </div>
+          <div style="display:flex;gap:10px;align-items:flex-start;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;flex-shrink:0;">→</span>Fourchette d'estimation et recommandations
+          </div>
+        </div>
+        <a href="rapport-exemple.html" style="display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:12px 22px;border-radius:6px;text-decoration:none;">
+          Voir le rapport complet →
+        </a>
+        <span style="font-size:0.78rem;color:var(--text-muted);margin-left:16px;">Lecture libre · aucun engagement</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CUB -->
+<section id="cub">
+  <div class="container">
+    <p class="section-label">Service complémentaire</p>
+    <h2 class="section-title">Certificat d'Urbanisme Opérationnel (CUb)</h2>
+    <p class="section-sub" style="margin-bottom:36px;">Votre client s'interroge sur la constructibilité ou le potentiel de division d'un bien ? Nous préparons et déposons le dossier complet en mairie — clé en main.</p>
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:36px 40px;max-width:760px;box-shadow:0 4px 20px rgba(27,63,110,0.07);display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;">
+      <div>
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Clé en main · 490 € HT</div>
+        <div style="font-family:Georgia,serif;font-size:1.1rem;color:var(--text-dark);font-weight:400;margin-bottom:20px;line-height:1.4;">Certificat d'Urbanisme<br>Opérationnel (CUb)</div>
+        <ul style="list-style:none;">
+          <li style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;min-width:20px;flex-shrink:0;">01</span>CERFA 13410 complété intégralement
+          </li>
+          <li style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;min-width:20px;flex-shrink:0;">02</span>Plans de situation et de masse réalisés
+          </li>
+          <li style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;min-width:20px;flex-shrink:0;">03</span>Validation avant dépôt avec vous et votre client
+          </li>
+          <li style="display:flex;gap:10px;padding:8px 0;font-size:0.88rem;color:var(--text-body);">
+            <span style="color:var(--blue);font-weight:700;min-width:20px;flex-shrink:0;">04</span>Dépôt officiel en mairie · Délai d'instruction : 2 mois
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:0.88rem;color:var(--text-body);margin-bottom:16px;line-height:1.7;">Idéal lorsque votre client a besoin d'une <strong style="color:var(--text-dark);">réponse officielle de la mairie</strong> pour :</div>
+        <ul style="list-style:none;margin-bottom:22px;">
+          <li style="display:flex;gap:8px;padding:6px 0;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Valider la constructibilité avant une vente ou un achat
+          </li>
+          <li style="display:flex;gap:8px;padding:6px 0;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Confirmer une division ou un changement de destination
+          </li>
+          <li style="display:flex;gap:8px;padding:6px 0;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Sécuriser une succession avec un bien à potentiel incertain
+          </li>
+          <li style="display:flex;gap:8px;padding:6px 0;font-size:0.87rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Confirmer les droits à construire avant un projet de promotion
+          </li>
+        </ul>
+        <a href="#formulaire" style="display:inline-block;background:var(--gold);color:#fff;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:11px 22px;border-radius:6px;text-decoration:none;">Déposer un dossier CUb</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUI SOMMES-NOUS -->
+<section id="expert">
+  <div class="container">
+    <p class="section-label">Qui sommes-nous</p>
+    <h2 class="section-title">L'expert derrière Valorimmo</h2>
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:48px;align-items:start;max-width:860px;">
+      <div>
+        <img src="https://closia.net/laurent.jpg" alt="Laurent Buffard" style="width:100%;border-radius:8px;border:1.5px solid var(--border);box-shadow:0 4px 20px rgba(27,63,110,0.1);" />
+        <p style="font-family:Georgia,serif;font-size:1rem;color:var(--text-dark);margin-top:12px;font-weight:400;">Laurent Buffard</p>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-top:3px;">Expert valorisation immobilière<br>Fondateur de Valorimmo</p>
+      </div>
+      <div>
+        <p style="font-size:1rem;color:var(--text-body);margin-bottom:22px;line-height:1.8;">
+          Professionnel de l'immobilier depuis plus de 20 ans, j'ai évolué sur l'ensemble des dimensions du secteur — de l'accompagnement de vendeurs particuliers aux opérations complexes de transformation foncière avec marchands de biens, promoteurs et foncières.
+        </p>
+        <ul style="list-style:none;margin-bottom:24px;">
+          <li style="padding:9px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;font-size:0.93rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Analyse foncière et interprétation opérationnelle des règles d'urbanisme (PLU)
+          </li>
+          <li style="padding:9px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;font-size:0.93rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Collaboration avec marchands de biens, investisseurs et promoteurs
+          </li>
+          <li style="padding:9px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;font-size:0.93rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Détection des opportunités de valorisation : division, surélévation, changement d'usage
+          </li>
+          <li style="padding:9px 0;display:flex;gap:10px;font-size:0.93rem;color:var(--text-body);">
+            <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Compréhension des logiques d'acheteurs pros — pour identifier la meilleure stratégie de sortie
+          </li>
+        </ul>
+        <blockquote style="border-left:3px solid var(--gold);padding:14px 18px;background:var(--gold-light);border-radius:0 8px 8px 0;font-family:Georgia,serif;font-style:italic;font-size:0.98rem;color:var(--text-dark);line-height:1.8;">
+          "Cette vision transversale me permet d'appréhender un bien non pas seulement comme un produit à vendre, mais comme une opération à valoriser."
+        </blockquote>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMISSION -->
+<section id="commission">
+  <div class="container">
+    <p class="section-label">Partenariat</p>
+    <h2 class="section-title">Commission d'apporteur d'affaires</h2>
+    <div class="commission-block">
+      <h3>Une rémunération pour chaque dossier orienté</h3>
+      <p>Valorimmo prévoit une commission d'apporteur d'affaires pour les prescripteurs qui orientent leurs clients vers nos diagnostics.</p>
+      <div class="commission-highlight">
+        Le montant et les modalités sont définis individuellement selon votre profil et le volume d'affaires envisagé. Contactez-nous pour convenir d'un accord cadre adapté à votre structure.
+      </div>
+      <p>Aucun engagement de volume n'est requis pour démarrer. Chaque dossier transmis est traité avec le même niveau d'exigence, qu'il soit isolé ou issu d'un partenariat régulier.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FORMULAIRE -->
+<section id="formulaire">
+  <div class="container">
+    <p class="section-label">Transmettre un dossier</p>
+    <h2 class="section-title">Recommander un client</h2>
+    <p class="section-sub" style="margin-bottom:32px;">Remplissez ce formulaire et nous prendrons contact avec vous et votre client sous 24h ouvrées.</p>
+    <div class="form-card">
+      <h3>Formulaire prescripteur</h3>
+      <p class="form-card-sub">Vos informations et celles de votre client restent strictement confidentielles.</p>
+      <div id="form-wrap">
+        <form onsubmit="handleSubmit(event)">
+          <div class="form-grid">
+
+            <!-- Prescripteur -->
+            <div class="form-section-label">Vos coordonnées</div>
+
+            <div class="form-group">
+              <label>Votre nom</label>
+              <input type="text" name="presc_nom" placeholder="Me Dupont" required />
+            </div>
+            <div class="form-group">
+              <label>Votre profession</label>
+              <select name="presc_type" required>
+                <option value="">Sélectionner…</option>
+                <option>Notaire</option>
+                <option>Géomètre-expert</option>
+                <option>Diagnostiqueur immobilier</option>
+                <option>Expert-comptable</option>
+                <option>Autre professionnel</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Cabinet / Structure</label>
+              <input type="text" name="presc_cabinet" placeholder="Cabinet Dupont & Associés" />
+            </div>
+            <div class="form-group">
+              <label>Votre email professionnel</label>
+              <input type="email" name="presc_email" placeholder="contact@cabinet.fr" required />
+            </div>
+            <div class="form-group full">
+              <label>Votre téléphone</label>
+              <input type="tel" name="presc_tel" placeholder="06 XX XX XX XX" />
+            </div>
+
+            <hr class="form-divider" />
+
+            <!-- Client -->
+            <div class="form-section-label">Informations sur votre client</div>
+
+            <div class="form-group">
+              <label>Nom du client</label>
+              <input type="text" name="client_nom" placeholder="Nom du propriétaire" required />
+            </div>
+            <div class="form-group">
+              <label>Email du client</label>
+              <input type="email" name="client_email" placeholder="client@email.fr" />
+            </div>
+            <div class="form-group">
+              <label>Téléphone du client</label>
+              <input type="tel" name="client_tel" placeholder="06 XX XX XX XX" />
+            </div>
+            <div class="form-group">
+              <label>Formule recommandée</label>
+              <select name="formule">
+                <option value="">À définir avec l'expert</option>
+                <option>Rapport d'analyse — 250€</option>
+                <option>Rapport + appel conseil — 400€</option>
+                <option>Accompagnement complet — 950€</option>
+              </select>
+            </div>
+            <div class="form-group full">
+              <label>Description du bien et contexte</label>
+              <textarea name="bien" placeholder="Type de bien, localisation, surface, contexte (succession, indivision, projet de vente…), éléments qui motivent la recommandation." required></textarea>
+            </div>
+
+            <hr class="form-divider" />
+
+            <div class="form-group full" style="flex-direction:row;align-items:flex-start;gap:10px;">
+              <input type="checkbox" id="commission_check" name="commission" style="width:auto;margin-top:3px;flex-shrink:0;" />
+              <label for="commission_check" style="font-size:0.85rem;font-weight:400;color:var(--text-body);cursor:pointer;">
+                Je souhaite être informé(e) des modalités de commission d'apporteur d'affaires
+              </label>
+            </div>
+
+            <button type="submit" class="btn-submit">Transmettre le dossier</button>
+            <p class="form-mention">Nous vous recontactons sous 24h ouvrées pour confirmer la prise en charge du dossier.</p>
+          </div>
+        </form>
+      </div>
+      <div class="form-success" id="form-success">
+        <span class="icon">✓</span>
+        <h3>Dossier transmis</h3>
+        <p>Nous avons bien reçu votre recommandation. Nous vous recontacterons sous 24h ouvrées pour organiser la prise en charge de votre client.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg width="29" height="20" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+    <span class="footer-logo-text">Valor<em>immo</em></span>
+  </div>
+  <p>Diagnostic expert immobilier · Espace prescripteurs</p>
+  <p style="margin-top:6px;"><a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a></p>
+  <p style="margin-top:8px;">© 2026 Valorimmo. Tous droits réservés. · <a href="particulier.html">Accès particuliers</a></p>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('form-wrap').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
+</script>
+</body>
+</html>

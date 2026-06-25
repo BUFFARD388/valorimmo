@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Rapport disponible — Valorimmo</title>
+<!-- Empêcher l'indexation de cette page -->
+<meta name="robots" content="noindex, nofollow" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100vh; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #F4F7FB;
+    color: #4B5563;
+    font-size: 15px;
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :root {
+    --blue: #1B3F6E;
+    --blue-mid: #2557A0;
+    --blue-light: #EBF2FB;
+    --gold: #D4891A;
+    --gold-light: #FEF3E2;
+    --green: #15803D;
+    --green-light: #F0FDF4;
+    --text-dark: #1A2535;
+    --text-body: #4B5563;
+    --text-muted: #6B7280;
+    --border: #E2E8F0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: #fff; border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+  .nav-logo-text { font-family: Georgia, serif; font-size: 1.25rem; color: var(--blue); font-style: italic; }
+  .nav-logo-text em { font-style: normal; color: var(--gold); }
+  .nav-baseline { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); }
+
+  /* ── MAIN ── */
+  main {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 48px 24px;
+  }
+  .card {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 16px;
+    padding: 56px 48px; max-width: 580px; width: 100%; text-align: center;
+    box-shadow: 0 8px 40px rgba(27,63,110,0.09);
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-icon {
+    width: 72px; height: 72px; background: var(--green-light);
+    border: 2px solid #BBF7D0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 24px; font-size: 2rem;
+  }
+  .card h1 {
+    font-family: Georgia, serif; font-size: 1.6rem; color: var(--text-dark);
+    font-weight: 400; margin-bottom: 10px;
+  }
+  .card .subtitle { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 36px; }
+
+  /* ── RAPPORT INFO ── */
+  .rapport-info {
+    background: var(--blue-light); border: 1.5px solid #BFDBF7; border-radius: 10px;
+    padding: 20px 24px; margin-bottom: 28px; text-align: left;
+  }
+  .rapport-info-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 6px;
+  }
+  .rapport-info-title { font-family: Georgia, serif; font-size: 1.05rem; color: var(--text-dark); font-weight: 400; }
+
+  /* ── DOWNLOAD BTN ── */
+  .btn-download {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--blue); color: #fff; text-decoration: none;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 16px 32px; border-radius: 8px; transition: background 0.2s;
+    width: 100%; justify-content: center; margin-bottom: 14px;
+  }
+  .btn-download:hover { background: var(--blue-mid); }
+  .btn-download svg { flex-shrink: 0; }
+  .download-note { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 32px; }
+
+  /* ── APPEL CONSEIL ── */
+  .appel-bloc {
+    display: none;
+    background: var(--gold-light); border: 1.5px solid #F6D5A0;
+    border-radius: 10px; padding: 18px 22px; text-align: left; margin-bottom: 28px;
+  }
+  .appel-bloc.visible { display: block; }
+  .appel-bloc-title { font-weight: 700; color: #92400E; font-size: 0.88rem; margin-bottom: 6px; }
+  .appel-bloc p { font-size: 0.85rem; color: #92400E; margin: 0; }
+
+  /* ── SEPARATOR ── */
+  .sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  /* ── CONTACT ── */
+  .contact-bloc { font-size: 0.83rem; color: var(--text-muted); }
+  .contact-bloc a { color: var(--blue); text-decoration: none; }
+  .contact-bloc a:hover { text-decoration: underline; }
+
+  /* ── NO PARAM FALLBACK ── */
+  .no-rapport {
+    display: none;
+    background: #FEF2F2; border: 1.5px solid #FECACA;
+    border-radius: 10px; padding: 18px 22px; margin-bottom: 28px;
+    font-size: 0.88rem; color: #B91C1C; text-align: left;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0F1E33; padding: 20px 24px; text-align: center;
+    font-size: 0.78rem; color: #4B5563;
+  }
+
+  @media (max-width: 540px) {
+    .card { padding: 36px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <svg width="40" height="28" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
+    <span class="nav-logo-text">Valor<em>immo</em></span>
+  </a>
+  <span class="nav-baseline">Ce que votre bien vaut vraiment</span>
+</nav>
+
+<main>
+  <div class="card">
+
+    <div class="success-icon">✓</div>
+    <h1>Paiement confirmé</h1>
+    <p class="subtitle">Votre rapport Valorimmo est disponible en téléchargement.</p>
+
+    <!-- Info rapport -->
+    <div class="rapport-info">
+      <div class="rapport-info-label">Votre rapport</div>
+      <div class="rapport-info-title" id="rapport-title">Rapport d'analyse — Valorimmo</div>
+    </div>
+
+    <!-- Fallback si pas de lien -->
+    <div class="no-rapport" id="no-rapport">
+      Le lien de téléchargement n'est pas disponible dans cette URL. Contactez-nous à <a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a> et nous vous enverrons votre rapport immédiatement.
+    </div>
+
+    <!-- Bouton téléchargement -->
+    <a href="#" id="btn-download" class="btn-download" download>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Télécharger mon rapport PDF
+    </a>
+    <p class="download-note">Ce lien est personnel et valable 30 jours. Conservez ce fichier précieusement.</p>
+
+    <!-- Bloc appel conseil (affiché uniquement formule 400€ et 950€) -->
+    <div class="appel-bloc" id="appel-bloc">
+      <div class="appel-bloc-title">📞 Votre appel conseil est inclus</div>
+      <p>Notre expert vous contactera sous 24h ouvrées pour planifier votre rendez-vous téléphonique de 30 minutes. Vérifiez vos emails (y compris les spams).</p>
+    </div>
+
+    <hr class="sep" />
+
+    <div class="contact-bloc">
+      Une question sur votre rapport ?<br>
+      Contactez-nous à <a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  © 2026 Valorimmo — contact@valorimmo.app
+</footer>
+
+<script>
+  // Lecture des paramètres URL
+  // Format attendu : rapport-confirme.html?r=URL_PDF_ENCODEE&f=rapport|rapport-appel|complet&nom=NOM_CLIENT
+  const params = new URLSearchParams(window.location.search);
+  const rapportUrl = params.get('r');       // URL du PDF (encodée)
+  const formule    = params.get('f');       // rapport | rapport-appel | complet
+  const nom        = params.get('nom');     // Nom du client (optionnel)
+
+  // Titre personnalisé
+  if (nom) {
+    document.getElementById('rapport-title').textContent = 'Rapport d\'analyse — ' + decodeURIComponent(nom);
+  }
+
+  // Bouton de téléchargement
+  if (rapportUrl) {
+    const url = decodeURIComponent(rapportUrl);
+    const btn = document.getElementById('btn-download');
+    btn.href = url;
+    btn.setAttribute('download', 'rapport-valorimmo.pdf');
+  } else {
+    document.getElementById('btn-download').style.display = 'none';
+    document.getElementById('no-rapport').style.display = 'block';
+  }
+
+  // Bloc appel conseil
+  if (formule === 'rapport-appel' || formule === 'complet') {
+    document.getElementById('appel-bloc').classList.add('visible');
+  }
+</script>
+
+</body>
+</html>
