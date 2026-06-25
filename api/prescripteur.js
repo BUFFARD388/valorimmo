@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -10,6 +12,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Champs obligatoires manquants' });
   }
 
+  // Générer l'UUID côté serveur pour éviter le besoin de SELECT policy
+  const prescripteurId = randomUUID();
+
   // 1. Enregistrer le prescripteur dans Supabase
   const prescRes = await fetch(`${process.env.SUPABASE_URL}/rest/v1/prescripteurs`, {
     method: 'POST',
@@ -17,9 +22,10 @@ export default async function handler(req, res) {
       'apikey': process.env.SUPABASE_ANON_KEY,
       'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
       'Content-Type': 'application/json',
-      'Prefer': 'return=representation',
+      'Prefer': 'return=minimal',
     },
     body: JSON.stringify({
+      id: prescripteurId,
       nom: presc_nom,
       email: presc_email,
       telephone: presc_tel || '',
@@ -29,11 +35,7 @@ export default async function handler(req, res) {
     }),
   });
 
-  let prescripteurId = null;
-  if (prescRes.ok) {
-    const prescData = await prescRes.json();
-    prescripteurId = prescData[0]?.id || null;
-  } else {
+  if (!prescRes.ok) {
     const err = await prescRes.text();
     console.error('Supabase prescripteur error:', err);
     return res.status(500).json({ error: 'Erreur base de données (prescripteur)' });
