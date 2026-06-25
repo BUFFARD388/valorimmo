@@ -387,6 +387,7 @@
 <script>
   let currentPwd = sessionStorage.getItem('admin_pwd') || '';
   let currentDemande = null;
+  let allDemandes = [];
 
   // ── AUTO LOGIN ──
   if (currentPwd) verifyAndEnter(currentPwd);
@@ -440,11 +441,12 @@
       const res = await fetch('/api/admin-demandes', {
         headers: { 'x-admin-password': currentPwd },
       });
-      const demandes = await res.json();
-      if (!demandes.length) {
+      allDemandes = await res.json();
+      if (!Array.isArray(allDemandes) || !allDemandes.length) {
         sub.textContent = 'Aucune demande reçue pour l\'instant.';
         return;
       }
+      const demandes = allDemandes;
       sub.textContent = `${demandes.length} demande${demandes.length > 1 ? 's' : ''} reçue${demandes.length > 1 ? 's' : ''}`;
       list.innerHTML = demandes.map(d => `
         <div class="demande-card" onclick="showDetail('${d.id}')">
@@ -466,12 +468,18 @@
   // ── DETAIL ──
   async function showDetail(id) {
     show('view-detail');
-    const res = await fetch('/api/admin-demandes', {
-      headers: { 'x-admin-password': currentPwd },
-    });
-    const demandes = await res.json();
-    const d = demandes.find(x => x.id === id);
-    if (!d) return;
+    // Utiliser les demandes déjà chargées, sinon refetch
+    let d = allDemandes.find(x => x.id === id);
+    if (!d) {
+      try {
+        const res = await fetch('/api/admin-demandes', {
+          headers: { 'x-admin-password': currentPwd },
+        });
+        allDemandes = await res.json();
+        d = allDemandes.find(x => x.id === id);
+      } catch(e) { console.error(e); }
+    }
+    if (!d) { alert('Dossier introuvable'); return; }
 
     currentDemande = d;
 
