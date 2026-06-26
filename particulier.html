@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Valorimmo — Diagnostic expert immobilier indépendant</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #4B5563; font-size: 16px; line-height: 1.7; }
+  body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #fff; color: #4B5563; font-size: 16px; line-height: 1.7; }
   .serif { font-family: 'Playfair Display', Georgia, serif; }
+  h1, h2, h3, .formule-price { font-family: 'Playfair Display', Georgia, serif; }
 
   /* ── Tokens ── */
   :root {
@@ -99,11 +100,6 @@
     color: #fff; line-height: 1; margin-bottom: 10px;
   }
   .hero-logo em { font-style: normal; color: #FBBF24; }
-  .hero-tagline {
-    font-family: Georgia, serif; font-style: italic;
-    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-    color: #CBD5E1; margin: 24px 0 16px;
-  }
   .hero-pitch { font-size: 1rem; color: #94A3B8; max-width: 580px; margin-bottom: 36px; line-height: 1.8; }
   .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
   .btn-primary {
@@ -165,7 +161,7 @@
     color: var(--blue); margin-bottom: 14px;
   }
   .formule-card.featured .formule-name { color: var(--blue); }
-  .formule-price { font-family: Georgia, serif; font-size: 2.8rem; color: var(--text-dark); line-height: 1; margin-bottom: 4px; }
+  .formule-price { font-size: 2.8rem; color: var(--text-dark); line-height: 1; margin-bottom: 4px; }
   .formule-price sup { font-size: 1.2rem; vertical-align: super; }
   .formule-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 26px; }
   .formule-features { list-style: none; margin-bottom: 30px; }
@@ -185,6 +181,75 @@
   .formule-card.featured .btn-formule { background: var(--blue); color: #fff; }
   .formule-card.featured .btn-formule:hover { background: var(--blue-mid); }
 
+  /* ── APERÇU RAPPORT ── */
+  .apercu-wrapper {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start;
+  }
+  .apercu-sections {
+    background: #fff; border: 1.5px solid var(--border); border-radius: 12px;
+    overflow: hidden; box-shadow: 0 4px 24px rgba(27,63,110,0.07);
+  }
+  .apercu-doc-header {
+    background: var(--blue); padding: 18px 24px;
+  }
+  .apercu-doc-brand {
+    font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 0.08em;
+    font-size: 1rem; color: #fff;
+  }
+  .apercu-doc-brand span { color: #FBBF24; }
+  .apercu-doc-meta { font-size: 0.68rem; color: #93C5FD; margin-top: 3px; letter-spacing: 0.1em; }
+  .apercu-sections-list { padding: 8px 0; }
+  .apercu-section-item {
+    display: flex; gap: 14px; padding: 12px 20px; align-items: flex-start;
+    border-bottom: 1px solid var(--border); transition: background 0.15s;
+  }
+  .apercu-section-item:last-child { border-bottom: none; }
+  .apercu-section-item:hover { background: var(--bg-alt); }
+  .apercu-section-featured { background: #FFFBF0; }
+  .apercu-section-featured:hover { background: #FEF3E2; }
+  .apercu-num {
+    font-family: 'Playfair Display', Georgia, serif; font-size: 0.85rem;
+    color: var(--blue-mid); font-weight: 600; min-width: 22px; margin-top: 1px; flex-shrink: 0;
+  }
+  .apercu-num-gold { color: var(--gold); }
+  .apercu-section-name { font-size: 0.88rem; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
+  .apercu-section-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+
+  .apercu-output {
+    background: var(--blue); border-radius: 12px; padding: 32px 28px;
+    position: sticky; top: 90px;
+  }
+  .apercu-output-label {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: #93C5FD; margin-bottom: 8px;
+  }
+  .apercu-output-title {
+    font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem;
+    color: #fff; font-weight: 600; margin-bottom: 24px;
+  }
+  .apercu-estim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .apercu-estim-card { border-radius: 8px; padding: 16px; text-align: center; }
+  .apercu-estim-low { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); }
+  .apercu-estim-high { background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.35); }
+  .apercu-estim-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #93C5FD; margin-bottom: 6px; }
+  .apercu-estim-high .apercu-estim-tag { color: #FBBF24; }
+  .apercu-estim-val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: #fff; line-height: 1; }
+  .apercu-estim-note { font-size: 0.7rem; color: #94A3B8; margin-top: 5px; line-height: 1.4; }
+  .apercu-cible {
+    background: #FBBF24; border-radius: 8px; padding: 16px 20px;
+    text-align: center; margin-bottom: 20px;
+  }
+  .apercu-cible-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #78350F; margin-bottom: 4px; }
+  .apercu-cible-val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; color: #1A2535; line-height: 1; font-weight: 600; }
+  .apercu-reco { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 16px 18px; margin-bottom: 16px; }
+  .apercu-reco-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #93C5FD; margin-bottom: 8px; }
+  .apercu-reco-text { font-size: 0.84rem; color: #CBD5E1; line-height: 1.65; margin: 0; }
+  .apercu-disclaimer { font-size: 0.7rem; color: #64748B; line-height: 1.5; font-style: italic; }
+  @media (max-width: 860px) {
+    .apercu-wrapper { grid-template-columns: 1fr; }
+    .apercu-output { position: static; }
+  }
+
   /* ── EXPERT ── */
   .expert-inner { max-width: 700px; }
   .expert-intro { font-size: 1.03rem; color: var(--text-body); margin-bottom: 28px; line-height: 1.8; }
@@ -199,7 +264,7 @@
   .expert-quote {
     border-left: 3px solid var(--gold); padding: 16px 20px;
     background: var(--gold-light); border-radius: 0 8px 8px 0;
-    font-family: Georgia, serif; font-style: italic; font-size: 1.02rem;
+    font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.02rem;
     color: var(--text-dark); line-height: 1.8;
   }
 
@@ -225,7 +290,7 @@
     background: var(--blue-light); border: 1px solid #BFDBF7; border-radius: 8px;
     padding: 14px 12px; text-align: center;
   }
-  .about-stat-num { font-family: Georgia, serif; font-size: 1.5rem; color: var(--blue); line-height: 1; }
+  .about-stat-num { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: var(--blue); line-height: 1; }
   .about-stat-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; line-height: 1.3; }
   .about-intro { font-size: 1.03rem; color: var(--text-body); margin-bottom: 28px; line-height: 1.8; }
   .about-pillars { list-style: none; margin-bottom: 28px; }
@@ -241,7 +306,7 @@
   .about-quote {
     border-left: 3px solid var(--gold); padding: 18px 22px;
     background: var(--gold-light); border-radius: 0 8px 8px 0;
-    font-family: Georgia, serif; font-style: italic; font-size: 1.05rem;
+    font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.05rem;
     color: var(--text-dark); line-height: 1.8;
   }
   @media (max-width: 760px) {
@@ -278,7 +343,7 @@
   /* ── CTA FINAL ── */
   #cta-final { background: var(--blue); color: #fff; text-align: center; padding: 96px 24px; }
   #cta-final .section-label { color: #93C5FD; }
-  #cta-final h2 { font-family: Georgia, serif; font-size: clamp(1.5rem, 3vw, 2rem); color: #fff; font-weight: 400; margin-bottom: 14px; }
+  #cta-final h2 { font-size: clamp(1.5rem, 3vw, 2rem); color: #fff; font-weight: 600; margin-bottom: 14px; }
   #cta-final p { color: #94A3B8; max-width: 480px; margin: 0 auto 32px; }
 
   /* ── FOOTER ── */
@@ -306,7 +371,7 @@
   }
   .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
   .modal-close:hover { color: var(--text-dark); }
-  .modal h3 { font-family: Georgia, serif; font-size: 1.4rem; color: var(--text-dark); margin-bottom: 6px; font-weight: 400; }
+  .modal h3 { font-size: 1.4rem; color: var(--text-dark); margin-bottom: 6px; font-weight: 600; }
   .modal-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
   .modal-badge {
     display: inline-block; background: var(--blue-light); border: 1px solid #BFDBF7;
@@ -354,7 +419,7 @@
   @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
   .form-success { display: none; text-align: center; padding: 20px 0; }
   .form-success .success-icon { font-size: 2.5rem; margin-bottom: 14px; display: block; }
-  .form-success h3 { color: var(--blue); font-family: Georgia, serif; font-weight: 400; margin-bottom: 10px; }
+  .form-success h3 { color: var(--blue); font-weight: 600; margin-bottom: 10px; }
   .form-success p { font-size: 0.9rem; color: var(--text-muted); }
 
   @media (max-width: 640px) {
@@ -455,6 +520,119 @@
         <h3>Potentiel de transformation inconnu</h3>
         <p>Surélévation, changement d'usage, réhabilitation… Vous pressentez que votre bien vaut plus que ce qu'on vous a dit, sans savoir pourquoi.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- APERÇU RAPPORT -->
+<section id="rapport-apercu">
+  <div class="container">
+    <p class="section-label">Ce que vous recevez</p>
+    <h2 class="section-title">Un diagnostic complet, pas une estimation en ligne</h2>
+    <p class="section-sub" style="margin-bottom:40px;">Votre rapport Valorimmo analyse 9 dimensions de votre bien et vous livre une fourchette argumentée, pas un chiffre sorti d'un algorithme.</p>
+
+    <div class="apercu-wrapper">
+
+      <!-- Liste des 9 sections -->
+      <div class="apercu-sections">
+        <div class="apercu-doc-header">
+          <div class="apercu-doc-brand">VALOR<span>IMMO</span></div>
+          <div class="apercu-doc-meta">Rapport de diagnostic · Document confidentiel</div>
+        </div>
+        <div class="apercu-sections-list">
+          <div class="apercu-section-item">
+            <span class="apercu-num">01</span>
+            <div>
+              <div class="apercu-section-name">Synthèse et contexte</div>
+              <div class="apercu-section-desc">Vue d'ensemble du bien, situation juridique et enjeux</div>
+            </div>
+          </div>
+          <div class="apercu-section-item">
+            <span class="apercu-num">02</span>
+            <div>
+              <div class="apercu-section-name">Analyse PLU et urbanisme</div>
+              <div class="apercu-section-desc">Zone, droits à construire, contraintes réglementaires</div>
+            </div>
+          </div>
+          <div class="apercu-section-item">
+            <span class="apercu-num">03</span>
+            <div>
+              <div class="apercu-section-name">Localisation et marché local</div>
+              <div class="apercu-section-desc">Dynamique du secteur, demande, attractivité</div>
+            </div>
+          </div>
+          <div class="apercu-section-item">
+            <span class="apercu-num">04</span>
+            <div>
+              <div class="apercu-section-name">Risques naturels et technologiques</div>
+              <div class="apercu-section-desc">Exposition aux risques, impact sur la valeur</div>
+            </div>
+          </div>
+          <div class="apercu-section-item">
+            <span class="apercu-num">05</span>
+            <div>
+              <div class="apercu-section-name">Références DVF et notariales</div>
+              <div class="apercu-section-desc">Transactions comparables dans un rayon pertinent</div>
+            </div>
+          </div>
+          <div class="apercu-section-item">
+            <span class="apercu-num">06</span>
+            <div>
+              <div class="apercu-section-name">Cohérence de prix</div>
+              <div class="apercu-section-desc">Analyse critique du prix envisagé vs marché réel</div>
+            </div>
+          </div>
+          <div class="apercu-section-item">
+            <span class="apercu-num">07</span>
+            <div>
+              <div class="apercu-section-name">Potentiel de valorisation</div>
+              <div class="apercu-section-desc">Division, transformation, surélévation, changement d'usage</div>
+            </div>
+          </div>
+          <div class="apercu-section-item apercu-section-featured">
+            <span class="apercu-num apercu-num-gold">08</span>
+            <div>
+              <div class="apercu-section-name">Fourchette d'estimation argumentée</div>
+              <div class="apercu-section-desc">Valeur basse, valeur haute, valeur cible et stratégie</div>
+            </div>
+          </div>
+          <div class="apercu-section-item">
+            <span class="apercu-num">09</span>
+            <div>
+              <div class="apercu-section-name">Conclusion et recommandations</div>
+              <div class="apercu-section-desc">Stratégie de mise en marché et plan d'action</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemple de sortie -->
+      <div class="apercu-output">
+        <div class="apercu-output-label">Exemple · Section 08</div>
+        <h3 class="apercu-output-title">Fourchette d'estimation</h3>
+        <div class="apercu-estim-grid">
+          <div class="apercu-estim-card apercu-estim-low">
+            <div class="apercu-estim-tag">Valeur basse</div>
+            <div class="apercu-estim-val">320 000 €</div>
+            <div class="apercu-estim-note">Scénario prudent, bien tel quel</div>
+          </div>
+          <div class="apercu-estim-card apercu-estim-high">
+            <div class="apercu-estim-tag">Valeur haute</div>
+            <div class="apercu-estim-val">410 000 €</div>
+            <div class="apercu-estim-note">Potentiel valorisé, avec optimisation</div>
+          </div>
+        </div>
+        <div class="apercu-cible">
+          <div class="apercu-cible-label">Valeur cible recommandée</div>
+          <div class="apercu-cible-val">365 000 €</div>
+        </div>
+        <div class="apercu-reco">
+          <div class="apercu-reco-title">Stratégie recommandée</div>
+          <p class="apercu-reco-text">Mise en valeur du potentiel constructible auprès d'acheteurs investisseurs et promotion locale. Argumentaire PLU disponible pour négociation.</p>
+        </div>
+        <div class="apercu-disclaimer">Valeurs fictives à titre d'illustration. Votre rapport inclut les données DVF réelles de votre secteur.</div>
+      </div>
+
     </div>
   </div>
 </section>
