@@ -1335,8 +1335,12 @@
 
         <!-- Détail baux — visible si un bail est sélectionné -->
         <div class="form-group" id="champ-baux-detail" style="display:none;">
+          <label>Revenus fonciers bruts annuels <span class="opt">(optionnel)</span></label>
+          <input type="text" name="revenus_fonciers" placeholder="Ex : 18 000 € / an" />
+        </div>
+        <div class="form-group" id="champ-baux-precisions" style="display:none;">
           <label>Précisions sur le(s) bail(s) <span class="opt">(optionnel)</span></label>
-          <textarea name="baux_detail" placeholder="Ex : loyer mensuel, durée restante, type de locataire, échéance…" style="min-height:80px;"></textarea>
+          <textarea name="baux_detail" placeholder="Ex : durée restante, type de locataire, échéance…" style="min-height:80px;"></textarea>
         </div>
 
         <div class="form-group">
@@ -1399,7 +1403,9 @@
   }
   function updateDetailBaux() {
     const val = document.getElementById('f-baux').value;
-    document.getElementById('champ-baux-detail').style.display = (val && val !== 'Non — bien libre') ? 'block' : 'none';
+    const show = val && val !== 'Non — bien libre';
+    document.getElementById('champ-baux-detail').style.display = show ? 'block' : 'none';
+    document.getElementById('champ-baux-precisions').style.display = show ? 'block' : 'none';
   }
 
   // ── Aperçu rapport — tabs interactifs ──
@@ -1486,6 +1492,7 @@
       type_bien:         form.type_bien.value,
       etat_bien:         form.etat_bien ? form.etat_bien.value : '',
       baux_en_cours:     form.baux_en_cours ? form.baux_en_cours.value : '',
+      revenus_fonciers:  form.revenus_fonciers ? form.revenus_fonciers.value : '',
       baux_detail:       form.baux_detail ? form.baux_detail.value : '',
       surface_bien:      form.surface.value,
       prix_estime:       form.prix_estime.value,
