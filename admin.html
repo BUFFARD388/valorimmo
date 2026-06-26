@@ -171,6 +171,14 @@
   .btn-send:hover:not(:disabled) { background: #b5720f; }
   .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
   .send-status { font-size: 0.78rem; color: var(--text-muted); text-align: center; min-height: 18px; }
+  .btn-pay-request {
+    width: 100%; background: #7C3AED; color: #fff; border: none; padding: 13px;
+    font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    border-radius: 7px; cursor: pointer; transition: background 0.2s;
+  }
+  .btn-pay-request:hover:not(:disabled) { background: #6D28D9; }
+  .btn-pay-request:disabled { opacity: 0.6; cursor: not-allowed; }
+  .pay-status { font-size: 0.78rem; color: var(--text-muted); text-align: center; min-height: 18px; }
 
   /* Right panel — report */
   .panel-right { display: flex; flex-direction: column; gap: 16px; }
@@ -393,7 +401,8 @@
           <option value="nouveau">🟡 Nouveau</option>
           <option value="en_cours">🔵 En cours</option>
           <option value="rapport_genere">🟢 Rapport généré</option>
-          <option value="envoye">🟣 Envoyé au client</option>
+          <option value="paiement_demande">🟣 Paiement demandé</option>
+          <option value="envoye">✅ Rapport envoyé</option>
         </select>
       </div>
 
@@ -411,8 +420,13 @@
         ⬇ Télécharger PDF
       </button>
 
+      <button class="btn-pay-request" id="btn-pay-request" onclick="requestPayment()">
+        💳 Demander le paiement
+      </button>
+      <div class="pay-status" id="pay-status"></div>
+
       <button class="btn-send" id="btn-send" onclick="sendReport()">
-        ✉ Envoyer au client
+        ✉ Envoyer manuellement
       </button>
       <div class="send-status" id="send-status"></div>
 
@@ -836,8 +850,86 @@
     });
   }
 
+  // ── DEMANDE DE PAIEMENT ──
+  async function requestPayment() {
+    const reportHtml = document.getElementById('report-html-textarea').value;
+    if (!reportHtml.trim()) { alert('Générez et sauvegardez d\'abord le rapport avant de demander le paiement.'); return; }
+
+    const d = currentDemande;
+    if (!confirm(`Envoyer la demande de paiement à ${d.email} ?`)) return;
+
+    const btn = document.getElementById('btn-pay-request');
+    const status = document.getElementById('pay-status');
+    btn.disabled = true;
+    status.textContent = '';
+
+    try {
+      // Générer le PDF
+      btn.textContent = '⚙ Génération du PDF…';
+      const printHtml = buildPrintHtml(d, reportHtml);
+      const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
+      const nomFichier = `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf`;
+
+      const iframe = document.createElement('iframe');
+      iframe.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:794px;height:1123px;border:0;';
+      document.body.appendChild(iframe);
+      iframe.contentDocument.open();
+      iframe.contentDocument.write(printHtml);
+      iframe.contentDocument.close();
+      await new Promise(r => setTimeout(r, 500));
+
+      const pdfBlob = await html2pdf()
+        .set({
+          margin: 0,
+          filename: nomFichier,
+          image: { type: 'jpeg', quality: 0.92 },
+          html2canvas: { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        })
+        .from(iframe.contentDocument.body)
+        .outputPdf('blob');
+      document.body.removeChild(iframe);
+
+      const pdfBase64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(pdfBlob);
+      });
+
+      // Envoyer à l'API
+      btn.textContent = '📨 Envoi de la demande…';
+      const pwd = sessionStorage.getItem('adminPwd');
+      const r = await fetch('/api/admin-pay-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-password': pwd },
+        body: JSON.stringify({ id: d.id, pdfBase64, nomFichier }),
+      });
+      const data = await r.json();
+      if (!r.ok) throw new Error(data.error || 'Erreur envoi');
+
+      status.textContent = '✓ Demande de paiement envoyée au client';
+      status.style.color = 'var(--green)';
+      d.statut = 'paiement_demande';
+      document.getElementById('statut-select').value = 'paiement_demande';
+    } catch (err) {
+      console.error(err);
+      status.textContent = '✗ ' + err.message;
+      status.style.color = 'var(--red)';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '💳 Demander le paiement';
+    }
+  }
+
   function statutClass(s) {
-    const map = { nouveau: 'statut-nouveau', en_cours: 'statut-en_cours', rapport_genere: 'statut-rapport_genere', envoye: 'statut-envoye' };
+    const map = {
+      nouveau: 'statut-nouveau',
+      en_cours: 'statut-en_cours',
+      rapport_genere: 'statut-rapport_genere',
+      paiement_demande: 'statut-envoye',
+      envoye: 'statut-envoye',
+    };
     return map[s] || 'statut-nouveau';
   }
 

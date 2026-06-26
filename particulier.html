@@ -917,12 +917,6 @@
       formule:           form.formule.value,
     };
 
-    const stripeLinks = {
-      'Diagnostic Essentiel — 250€':   'https://buy.stripe.com/eVqeVc7l80ZK5sUci16sw00',
-      'Diagnostic Expert — 390€':      'https://buy.stripe.com/7sYbJ05d09wg6wY1Dn6sw02',
-      'Diagnostic Stratégique — 950€': 'https://buy.stripe.com/bJe00ibBoaAk7B2ci16sw03',
-    };
-
     try {
       const res = await fetch('/api/demande', {
         method: 'POST',
@@ -930,16 +924,8 @@
         body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error('Erreur serveur');
-
-      // Rediriger vers Stripe selon la formule choisie
-      const lien = stripeLinks[data.formule];
-      if (lien) {
-        btn.textContent = 'Redirection vers le paiement…';
-        window.location.href = lien;
-      } else {
-        document.getElementById('form-wrap').style.display = 'none';
-        document.getElementById('form-success').style.display = 'block';
-      }
+      document.getElementById('form-wrap').style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
     } catch (err) {
       btn.disabled = false;
       btn.textContent = 'Envoyer ma demande';
