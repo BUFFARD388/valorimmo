@@ -798,7 +798,7 @@
 
       // 3. Envoyer à l'API
       btn.textContent = '✉ Envoi en cours…';
-      const pwd = sessionStorage.getItem('adminPwd');
+      const pwd = sessionStorage.getItem('admin_pwd');
       const r = await fetch('/api/admin-send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-password': pwd },
@@ -899,7 +899,7 @@
 
       // Envoyer à l'API
       btn.textContent = '📨 Envoi de la demande…';
-      const pwd = sessionStorage.getItem('adminPwd');
+      const pwd = sessionStorage.getItem('admin_pwd');
       const r = await fetch('/api/admin-pay-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-password': pwd },
