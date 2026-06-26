@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Exemple de rapport — Valorimmo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -34,7 +36,7 @@
     position: sticky; top: 0; z-index: 100;
   }
   .nav-logo { display: flex; align-items: center; gap: 9px; text-decoration: none; }
-  .nav-logo-text { font-family: Georgia, serif; font-size: 1.25rem; color: var(--blue); font-style: italic; }
+  .nav-logo-text { font-family: 'Poppins', sans-serif; font-size: 1.25rem; color: var(--blue); font-style: italic; }
   .nav-logo-text em { font-style: normal; color: var(--gold); }
   .nav-right { display: flex; align-items: center; gap: 16px; }
   .nav-back { font-size: 0.82rem; color: var(--text-muted); text-decoration: none; }
@@ -64,13 +66,13 @@
     padding: 40px 48px 36px; color: #fff; margin-bottom: 0;
   }
   .report-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
-  .report-brand-text { font-family: Georgia, serif; font-size: 1.1rem; color: #fff; font-style: italic; opacity: 0.9; }
+  .report-brand-text { font-family: 'Poppins', sans-serif; font-size: 1.1rem; color: #fff; font-style: italic; opacity: 0.9; }
   .report-brand-text em { font-style: normal; color: #C8933A; }
   .report-type {
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase;
     color: #93C5FD; margin-bottom: 12px;
   }
-  .report-title { font-family: Georgia, serif; font-size: 1.55rem; color: #fff; font-weight: 400; line-height: 1.3; margin-bottom: 6px; }
+  .report-title { font-family: 'Poppins', sans-serif; font-size: 1.55rem; color: #fff; font-weight: 600; line-height: 1.3; margin-bottom: 6px; }
   .report-address { font-size: 0.88rem; color: #94A3B8; margin-bottom: 24px; }
   .report-meta { display: flex; gap: 24px; flex-wrap: wrap; }
   .report-meta-item { font-size: 0.8rem; color: #CBD5E1; }
@@ -84,7 +86,7 @@
   }
   .verdict-item { display: flex; flex-direction: column; gap: 2px; }
   .verdict-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
-  .verdict-value { font-family: Georgia, serif; font-size: 1.4rem; color: var(--text-dark); font-weight: 400; }
+  .verdict-value { font-family: 'Poppins', sans-serif; font-size: 1.4rem; color: var(--text-dark); font-weight: 500; }
   .verdict-value.red { color: var(--red); }
   .verdict-value.green { color: var(--green); }
   .verdict-sep { width: 1px; height: 40px; background: var(--border); flex-shrink: 0; }
@@ -103,7 +105,7 @@
     color: var(--gold); margin-bottom: 6px;
   }
   .section-title {
-    font-family: Georgia, serif; font-size: 1.15rem; color: var(--text-dark);
+    font-family: 'Poppins', sans-serif; font-size: 1.15rem; color: var(--text-dark);
     font-weight: 400; margin-bottom: 20px; padding-bottom: 12px;
     border-bottom: 1.5px solid var(--border);
   }
@@ -139,7 +141,7 @@
   .estimation-card.high { background: var(--blue); border-color: var(--blue); }
   .estimation-card-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
   .estimation-card.high .estimation-card-label { color: #93C5FD; }
-  .estimation-card-value { font-family: Georgia, serif; font-size: 2rem; color: var(--blue); line-height: 1; }
+  .estimation-card-value { font-family: 'Poppins', sans-serif; font-size: 2rem; color: var(--blue); line-height: 1; }
   .estimation-card.high .estimation-card-value { color: #fff; }
   .estimation-card-sub { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
   .estimation-card.high .estimation-card-sub { color: #94A3B8; }
@@ -148,7 +150,7 @@
   .conclusion-block {
     background: var(--blue); border-radius: 10px; padding: 32px 36px; color: #fff; margin-top: 8px;
   }
-  .conclusion-block h3 { font-family: Georgia, serif; font-size: 1.15rem; color: #fff; font-weight: 400; margin-bottom: 18px; }
+  .conclusion-block h3 { font-family: 'Poppins', sans-serif; font-size: 1.15rem; color: #fff; font-weight: 400; margin-bottom: 18px; }
   .conclusion-rec { display: flex; flex-direction: column; gap: 12px; }
   .conclusion-rec-item {
     background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
@@ -164,7 +166,7 @@
   .conclusion-quote {
     border-left: 3px solid #C8933A; padding: 14px 20px; margin-top: 24px;
     background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0;
-    font-family: Georgia, serif; font-style: italic; font-size: 0.95rem; color: #CBD5E1; line-height: 1.7;
+    font-family: 'Poppins', sans-serif; font-style: italic; font-size: 0.95rem; color: #CBD5E1; line-height: 1.7;
   }
 
   /* ── DISCLAIMER ── */
@@ -179,7 +181,7 @@
     margin-top: 40px; background: var(--gold-light); border: 1.5px solid #F6D5A0;
     border-radius: 10px; padding: 28px 32px; text-align: center;
   }
-  .report-cta h3 { font-family: Georgia, serif; font-size: 1.1rem; color: var(--text-dark); font-weight: 400; margin-bottom: 8px; }
+  .report-cta h3 { font-family: 'Poppins', sans-serif; font-size: 1.1rem; color: var(--text-dark); font-weight: 400; margin-bottom: 8px; }
   .report-cta p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
   .btn-cta {
     display: inline-block; background: var(--blue); color: #fff;

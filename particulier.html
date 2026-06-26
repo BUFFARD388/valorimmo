@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Valorimmo — Diagnostic expert immobilier indépendant</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #fff; color: #4B5563; font-size: 16px; line-height: 1.7; }
-  .serif { font-family: 'Playfair Display', Georgia, serif; }
-  h1, h2, h3, .formule-price { font-family: 'Playfair Display', Georgia, serif; }
+  .serif { font-family: 'Poppins', sans-serif; }
+  h1, h2, h3, .formule-price { font-family: 'Poppins', sans-serif; }
 
   /* ── Tokens ── */
   :root {
@@ -41,7 +41,7 @@
     display: flex; align-items: center; justify-content: space-between;
   }
   .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .nav-logo-text { font-family: Georgia, serif; font-size: 1.35rem; color: var(--blue); font-style: italic; }
+  .nav-logo-text { font-family: 'Poppins', sans-serif; font-size: 1.35rem; color: var(--blue); font-style: italic; }
   .nav-logo-text em { font-style: normal; color: var(--gold); }
   .nav-back { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: flex; align-items: center; gap: 6px; }
   .nav-back:hover { color: var(--blue); }
@@ -61,7 +61,7 @@
   }
   .hero-inner { max-width: 740px; }
   .hero-headline {
-    font-family: 'Playfair Display', Georgia, serif;
+    font-family: 'Poppins', sans-serif;
     font-size: clamp(1.75rem, 4vw, 2.65rem);
     color: #fff; font-weight: 600; line-height: 1.28;
     margin: 16px 0 22px;
@@ -95,7 +95,7 @@
   }
   .hero-eyebrow::before { content: ''; width: 32px; height: 1.5px; background: #93C5FD; display: block; }
   .hero-logo {
-    font-family: Georgia, serif; font-style: italic;
+    font-family: 'Poppins', sans-serif; font-style: italic;
     font-size: clamp(2.4rem, 6vw, 4.2rem);
     color: #fff; line-height: 1; margin-bottom: 10px;
   }
@@ -121,7 +121,7 @@
     color: var(--gold); margin-bottom: 10px;
   }
   h2.section-title {
-    font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.5rem, 3vw, 2.1rem);
+    font-family: 'Poppins', sans-serif; font-size: clamp(1.5rem, 3vw, 2.1rem);
     color: var(--text-dark); font-weight: 600; margin-bottom: 12px;
   }
   .section-sub { color: var(--text-muted); max-width: 540px; margin-bottom: 48px; }
@@ -211,7 +211,7 @@
   .apercu-section-featured:hover { background: #FEF3E2; }
   .apercu-section-featured.active { background: #FEF3E2; border-left-color: var(--gold); }
   .apercu-num {
-    font-family: 'Playfair Display', Georgia, serif; font-size: 0.85rem;
+    font-family: 'Poppins', sans-serif; font-size: 0.85rem;
     color: var(--blue-mid); font-weight: 600; min-width: 22px; margin-top: 1px; flex-shrink: 0;
   }
   .apercu-num-gold { color: var(--gold); }
@@ -227,7 +227,7 @@
     color: #93C5FD; margin-bottom: 8px;
   }
   .apercu-output-title {
-    font-family: 'Playfair Display', Georgia, serif; font-size: 1.2rem;
+    font-family: 'Poppins', sans-serif; font-size: 1.2rem;
     color: #fff; font-weight: 600; margin-bottom: 24px;
   }
   .apercu-estim-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
@@ -236,14 +236,14 @@
   .apercu-estim-high { background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.35); }
   .apercu-estim-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #93C5FD; margin-bottom: 6px; }
   .apercu-estim-high .apercu-estim-tag { color: #C8933A; }
-  .apercu-estim-val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: #fff; line-height: 1; }
+  .apercu-estim-val { font-family: 'Poppins', sans-serif; font-size: 1.5rem; color: #fff; line-height: 1; }
   .apercu-estim-note { font-size: 0.7rem; color: #94A3B8; margin-top: 5px; line-height: 1.4; }
   .apercu-cible {
     background: #C8933A; border-radius: 8px; padding: 16px 20px;
     text-align: center; margin-bottom: 20px;
   }
   .apercu-cible-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #78350F; margin-bottom: 4px; }
-  .apercu-cible-val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; color: #1A2535; line-height: 1; font-weight: 600; }
+  .apercu-cible-val { font-family: 'Poppins', sans-serif; font-size: 1.8rem; color: #1A2535; line-height: 1; font-weight: 600; }
   .apercu-reco { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 16px 18px; margin-bottom: 16px; }
   .apercu-reco-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #93C5FD; margin-bottom: 8px; }
   .apercu-reco-text { font-size: 0.84rem; color: #CBD5E1; line-height: 1.65; margin: 0; }
@@ -304,7 +304,7 @@
   .expert-quote {
     border-left: 3px solid var(--gold); padding: 16px 20px;
     background: var(--gold-light); border-radius: 0 8px 8px 0;
-    font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.02rem;
+    font-family: 'Poppins', sans-serif; font-style: italic; font-size: 1.02rem;
     color: var(--text-dark); line-height: 1.8;
   }
 
@@ -319,7 +319,7 @@
     box-shadow: 0 8px 32px rgba(27,63,110,0.1);
   }
   .about-name {
-    font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; color: var(--text-dark);
+    font-family: 'Poppins', sans-serif; font-size: 1.15rem; color: var(--text-dark);
     font-weight: 400; margin-top: 16px;
   }
   .about-title { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
@@ -330,7 +330,7 @@
     background: var(--blue-light); border: 1px solid #BFDBF7; border-radius: 8px;
     padding: 14px 12px; text-align: center;
   }
-  .about-stat-num { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: var(--blue); line-height: 1; }
+  .about-stat-num { font-family: 'Poppins', sans-serif; font-size: 1.5rem; color: var(--blue); line-height: 1; }
   .about-stat-label { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; line-height: 1.3; }
   .about-intro { font-size: 1.03rem; color: var(--text-body); margin-bottom: 28px; line-height: 1.8; }
   .about-pillars { list-style: none; margin-bottom: 28px; }
@@ -346,7 +346,7 @@
   .about-quote {
     border-left: 3px solid var(--gold); padding: 18px 22px;
     background: var(--gold-light); border-radius: 0 8px 8px 0;
-    font-family: 'Playfair Display', Georgia, serif; font-style: italic; font-size: 1.05rem;
+    font-family: 'Poppins', sans-serif; font-style: italic; font-size: 1.05rem;
     color: var(--text-dark); line-height: 1.8;
   }
   @media (max-width: 760px) {
@@ -392,7 +392,7 @@
     padding: 32px 24px; text-align: center; font-size: 0.8rem; color: #6B7280;
   }
   .footer-logo { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-  .footer-logo-text { font-family: Georgia, serif; font-style: italic; color: #CBD5E1; font-size: 1.1rem; }
+  .footer-logo-text { font-family: 'Poppins', sans-serif; font-style: italic; color: #CBD5E1; font-size: 1.1rem; }
   .footer-logo-text em { font-style: normal; color: #C8933A; }
   footer a { color: #6B7280; text-decoration: none; }
   footer a:hover { color: #CBD5E1; }
@@ -507,7 +507,7 @@
   <div class="container">
     <div style="text-align:center;margin-bottom:48px;">
       <p class="section-label" style="color:#93C5FD;">Ce que l'on ne vous dira pas toujours</p>
-      <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.5rem,3vw,2rem);color:#fff;font-weight:600;margin-bottom:14px;">Une estimation gratuite,<br>c'est souvent une promesse pour décrocher votre mandat.</h2>
+      <h2 style="font-family:'Poppins',sans-serif;font-size:clamp(1.5rem,3vw,2rem);color:#fff;font-weight:600;margin-bottom:14px;">Une estimation gratuite,<br>c'est souvent une promesse pour décrocher votre mandat.</h2>
       <p style="color:#94A3B8;max-width:560px;margin:0 auto;font-size:0.97rem;">Les plateformes d'estimation revendent vos données à des professionnels. De nombreux agents et mandataires immobiliers vous promettent alors le prix le plus flatteur pour signer un mandat. Leur objectif : obtenir l'exclusivité, pas analyser votre bien.</p>
     </div>
     <div class="independant-grid">
@@ -972,9 +972,9 @@
       <!-- Carte CUb -->
       <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:36px 32px;box-shadow:0 4px 20px rgba(27,63,110,0.07);">
         <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Clé en main</div>
-        <div style="font-family:Georgia,serif;font-size:1.15rem;color:var(--text-dark);font-weight:400;margin-bottom:4px;">Certificat d'Urbanisme<br>Opérationnel (CUb)</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:1.15rem;color:var(--text-dark);font-weight:400;margin-bottom:4px;">Certificat d'Urbanisme<br>Opérationnel (CUb)</div>
         <div style="display:flex;align-items:baseline;gap:6px;margin:16px 0;">
-          <span style="font-family:Georgia,serif;font-size:2.6rem;color:var(--text-dark);line-height:1;">490 €</span>
+          <span style="font-family:'Poppins',sans-serif;font-size:2.6rem;color:var(--text-dark);line-height:1;">490 €</span>
           <span style="font-size:0.85rem;color:var(--text-muted);">HT · service complet</span>
         </div>
         <ul style="list-style:none;margin-bottom:28px;">
@@ -1000,7 +1000,7 @@
 
       <!-- Informations -->
       <div style="padding-top:8px;">
-        <div style="font-family:Georgia,serif;font-size:1.05rem;color:var(--text-dark);margin-bottom:16px;line-height:1.5;">Pourquoi obtenir un CUb avant de vendre ?</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:1.05rem;color:var(--text-dark);margin-bottom:16px;line-height:1.5;">Pourquoi obtenir un CUb avant de vendre ?</div>
         <ul style="list-style:none;margin-bottom:28px;">
           <li style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.9rem;color:var(--text-body);">
             <span style="color:var(--gold);font-weight:700;flex-shrink:0;">→</span>Confirmer qu'un terrain ou une partie de votre bien est constructible
@@ -1036,16 +1036,16 @@
       <div style="background:var(--blue);padding:28px 32px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;">
         <div>
           <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#93C5FD;margin-bottom:8px;">Rapport d'analyse expert · Exemple anonymisé</div>
-          <div style="font-family:Georgia,serif;font-size:1.15rem;color:#fff;font-weight:400;margin-bottom:4px;">Terrain à bâtir — deux parcelles</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:1.15rem;color:#fff;font-weight:400;margin-bottom:4px;">Terrain à bâtir — deux parcelles</div>
           <div style="font-size:0.82rem;color:#94A3B8;">Commune du Val de Saône, Métropole de Lyon · 2 997 m²</div>
         </div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;">
           <div style="text-align:center;">
-            <div style="font-family:Georgia,serif;font-size:1.4rem;color:#C8933A;line-height:1;">150 000 €</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:1.4rem;color:#C8933A;line-height:1;">150 000 €</div>
             <div style="font-size:0.7rem;color:#94A3B8;margin-top:2px;">Estimation haute</div>
           </div>
           <div style="text-align:center;">
-            <div style="font-family:Georgia,serif;font-size:1.4rem;color:#F87171;line-height:1;">+33 %</div>
+            <div style="font-family:'Poppins',sans-serif;font-size:1.4rem;color:#F87171;line-height:1;">+33 %</div>
             <div style="font-size:0.7rem;color:#94A3B8;margin-top:2px;">Surestimation constatée</div>
           </div>
         </div>

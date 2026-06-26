@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Valorimmo — Administration</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -29,13 +31,13 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.2);
   }
   .login-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
-  .login-logo-text { font-family: Georgia, serif; font-size: 1.4rem; color: var(--blue); font-style: italic; }
+  .login-logo-text { font-family: 'Poppins', sans-serif; font-size: 1.4rem; color: var(--blue); font-style: italic; }
   .login-logo-text em { font-style: normal; color: var(--gold); }
   .login-badge {
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
     color: var(--text-muted); margin-bottom: 24px;
   }
-  .login-card h1 { font-family: Georgia, serif; font-size: 1.4rem; color: var(--text-dark); font-weight: 400; margin-bottom: 24px; }
+  .login-card h1 { font-family: 'Poppins', sans-serif; font-size: 1.4rem; color: var(--text-dark); font-weight: 500; margin-bottom: 24px; }
   .login-card input {
     width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 7px;
     font-size: 1rem; color: var(--text-dark); background: var(--bg-alt); outline: none;
@@ -57,7 +59,7 @@
     position: sticky; top: 0; z-index: 100;
   }
   .header-logo { display: flex; align-items: center; gap: 10px; }
-  .header-logo-text { font-family: Georgia, serif; font-size: 1.2rem; color: var(--blue); font-style: italic; }
+  .header-logo-text { font-family: 'Poppins', sans-serif; font-size: 1.2rem; color: var(--blue); font-style: italic; }
   .header-logo-text em { font-style: normal; color: var(--gold); }
   .header-badge {
     font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
@@ -79,7 +81,7 @@
   /* ── DASHBOARD ── */
   .dashboard-wrap { max-width: 1000px; margin: 0 auto; padding: 36px 24px; }
   .dashboard-title {
-    font-family: Georgia, serif; font-size: 1.5rem; color: var(--text-dark); font-weight: 400; margin-bottom: 6px;
+    font-family: 'Poppins', sans-serif; font-size: 1.5rem; color: var(--text-dark); font-weight: 500; margin-bottom: 6px;
   }
   .dashboard-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 28px; }
   .demandes-grid { display: flex; flex-direction: column; gap: 12px; }
@@ -223,7 +225,7 @@
     color: var(--gold); margin-bottom: 6px;
   }
   .report-preview-wrap .section-title {
-    font-family: Georgia, serif; font-size: 1.1rem; color: var(--text-dark);
+    font-family: 'Poppins', sans-serif; font-size: 1.1rem; color: var(--text-dark);
     font-weight: 400; margin-bottom: 16px; padding-bottom: 10px;
     border-bottom: 1.5px solid var(--border);
   }
@@ -250,18 +252,18 @@
   .report-preview-wrap .estimation-card.high { background: var(--blue); border-color: var(--blue); }
   .report-preview-wrap .estimation-card-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
   .report-preview-wrap .estimation-card.high .estimation-card-label { color: #93C5FD; }
-  .report-preview-wrap .estimation-card-value { font-family: Georgia, serif; font-size: 1.8rem; color: var(--blue); line-height: 1; }
+  .report-preview-wrap .estimation-card-value { font-family: 'Poppins', sans-serif; font-size: 1.8rem; color: var(--blue); line-height: 1; }
   .report-preview-wrap .estimation-card.high .estimation-card-value { color: #fff; }
   .report-preview-wrap .estimation-card-sub { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
   .report-preview-wrap .estimation-card.high .estimation-card-sub { color: #94A3B8; }
   .report-preview-wrap .conclusion-block { background: var(--blue); border-radius: 10px; padding: 28px 32px; color: #fff; margin-top: 8px; }
-  .report-preview-wrap .conclusion-block h3 { font-family: Georgia, serif; font-size: 1.05rem; color: #fff; font-weight: 400; margin-bottom: 16px; }
+  .report-preview-wrap .conclusion-block h3 { font-family: 'Poppins', sans-serif; font-size: 1.05rem; color: #fff; font-weight: 400; margin-bottom: 16px; }
   .report-preview-wrap .conclusion-rec { display: flex; flex-direction: column; gap: 10px; }
   .report-preview-wrap .conclusion-rec-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 7px; padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start; }
   .report-preview-wrap .conclusion-rec-num { background: #C8933A; color: #0F1F3D; font-size: 0.7rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .report-preview-wrap .conclusion-rec-text { font-size: 0.85rem; color: #E2E8F0; line-height: 1.6; }
   .report-preview-wrap .conclusion-rec-text strong { color: #fff; }
-  .report-preview-wrap .conclusion-quote { border-left: 3px solid #C8933A; padding: 12px 18px; margin-top: 20px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.92rem; color: #CBD5E1; line-height: 1.7; }
+  .report-preview-wrap .conclusion-quote { border-left: 3px solid #C8933A; padding: 12px 18px; margin-top: 20px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: 'Poppins', sans-serif; font-style: italic; font-size: 0.92rem; color: #CBD5E1; line-height: 1.7; }
   .report-preview-wrap .disclaimer { margin-top: 28px; padding: 14px 18px; background: var(--bg-alt); border-radius: 7px; font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; border: 1px solid var(--border); font-style: italic; }
 
   [hidden] { display: none !important; }
@@ -666,7 +668,7 @@
   .pdf-body { padding: 32px 40px; }
   .section { margin-bottom: 36px; page-break-inside: avoid; }
   .section-num { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #2557A0; margin-bottom: 4px; }
-  .section-title { font-family: Georgia, serif; font-size: 1.05rem; color: #1B2D5B; font-weight: 400; border-bottom: 1.5px solid #BFDBF7; padding-bottom: 8px; margin-bottom: 14px; }
+  .section-title { font-family: 'Poppins', sans-serif; font-size: 1.05rem; color: #1B2D5B; font-weight: 400; border-bottom: 1.5px solid #BFDBF7; padding-bottom: 8px; margin-bottom: 14px; }
   p { margin-bottom: 8px; color: #374151; }
   table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 12px 0; }
   thead th { background: #EBF2FB; color: #1B2D5B; font-weight: 700; padding: 8px 12px; text-align: left; border-bottom: 2px solid #BFDBF7; }
@@ -688,18 +690,18 @@
   .estimation-card.high { background: #1B2D5B; border-color: #1B2D5B; }
   .estimation-card-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #6B7280; margin-bottom: 6px; }
   .estimation-card.high .estimation-card-label { color: #93C5FD; }
-  .estimation-card-value { font-family: Georgia, serif; font-size: 1.7rem; color: #1B2D5B; line-height: 1; }
+  .estimation-card-value { font-family: 'Poppins', sans-serif; font-size: 1.7rem; color: #1B2D5B; line-height: 1; }
   .estimation-card.high .estimation-card-value { color: #fff; }
   .estimation-card-sub { font-size: 0.72rem; color: #6B7280; margin-top: 4px; }
   .estimation-card.high .estimation-card-sub { color: #94A3B8; }
   .conclusion-block { background: #1B2D5B; border-radius: 10px; padding: 24px 28px; color: #fff; margin-top: 8px; page-break-inside: avoid; }
-  .conclusion-block h3 { font-family: Georgia, serif; font-size: 1rem; color: #fff; font-weight: 400; margin-bottom: 14px; }
+  .conclusion-block h3 { font-family: 'Poppins', sans-serif; font-size: 1rem; color: #fff; font-weight: 400; margin-bottom: 14px; }
   .conclusion-rec { display: flex; flex-direction: column; gap: 8px; }
   .conclusion-rec-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px 14px; display: flex; gap: 12px; align-items: flex-start; }
   .conclusion-rec-num { background: #C8933A; color: #0F1F3D; font-size: 0.68rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .conclusion-rec-text { font-size: 0.82rem; color: #E2E8F0; line-height: 1.6; }
   .conclusion-rec-text strong { color: #fff; }
-  .conclusion-quote { border-left: 3px solid #C8933A; padding: 10px 16px; margin-top: 18px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.88rem; color: #CBD5E1; line-height: 1.7; }
+  .conclusion-quote { border-left: 3px solid #C8933A; padding: 10px 16px; margin-top: 18px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: 'Poppins', sans-serif; font-style: italic; font-size: 0.88rem; color: #CBD5E1; line-height: 1.7; }
   .disclaimer { margin-top: 24px; padding: 12px 16px; background: #F9FAFB; border-radius: 6px; font-size: 0.72rem; color: #6B7280; line-height: 1.6; border: 1px solid #E5E7EB; font-style: italic; }
   .pdf-footer { border-top: 1.5px solid #E5E7EB; margin: 0 40px; padding: 16px 0; display: flex; justify-content: space-between; font-size: 0.72rem; color: #9CA3AF; }
   @media print {
