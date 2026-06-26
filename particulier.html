@@ -1388,30 +1388,24 @@
 </div>
 
 <script>
+  // ── Champs conditionnels formulaire ──
+  function updateChampsBien() {
+    const type = document.getElementById('f-type-bien').value;
+    const terrainNu = type === 'Terrain nu';
+    const avecBaux = ['Immeuble', 'Bien mixte (habitation + local)', 'Local commercial / professionnel'].includes(type);
+    document.getElementById('champ-etat-bien').style.display = (type && !terrainNu) ? 'block' : 'none';
+    document.getElementById('champ-baux').style.display = avecBaux ? 'block' : 'none';
+    if (!avecBaux) document.getElementById('champ-baux-detail').style.display = 'none';
+  }
+  function updateDetailBaux() {
+    const val = document.getElementById('f-baux').value;
+    document.getElementById('champ-baux-detail').style.display = (val && val !== 'Non — bien libre') ? 'block' : 'none';
+  }
+
   // ── Aperçu rapport — tabs interactifs ──
   (function() {
     const items = document.querySelectorAll('.apercu-section-item');
     const panels = document.querySelectorAll('.apercu-panel');
-    // ── Champs conditionnels formulaire ──
-    function updateChampsBien() {
-      const type = document.getElementById('f-type-bien').value;
-      const terrainNu = type === 'Terrain nu';
-      const avecBaux = ['Immeuble', 'Bien mixte (habitation + local)', 'Local commercial / professionnel'].includes(type);
-
-      // État du bien : visible sauf terrain nu
-      document.getElementById('champ-etat-bien').style.display = (type && !terrainNu) ? 'block' : 'none';
-
-      // Baux : visible uniquement immeuble / local / mixte
-      document.getElementById('champ-baux').style.display = avecBaux ? 'block' : 'none';
-      if (!avecBaux) {
-        document.getElementById('champ-baux-detail').style.display = 'none';
-      }
-    }
-    function updateDetailBaux() {
-      const val = document.getElementById('f-baux').value;
-      const avecDetail = val && val !== 'Non — bien libre';
-      document.getElementById('champ-baux-detail').style.display = avecDetail ? 'block' : 'none';
-    }
 
     function activateSection(sectionId) {
       items.forEach(i => i.classList.toggle('active', i.dataset.section === sectionId));
