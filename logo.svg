@@ -3,13 +3,12 @@
   <g transform="translate(2, 6) scale(0.48)">
     <path d="M50,5 L93,42 L83,42 L83,80 L17,80 L17,42 L7,42 Z"
           fill="none" stroke="#1B2D5B" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-    <!-- Curved arrow -->
-    <path d="M28,74 C34,60 50,44 72,26"
+    <!-- Flèche courbée vers la droite (bas-gauche → haut-droit) -->
+    <path d="M30,72 C50,68 66,44 74,27"
           fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round"/>
-    <polyline points="61,21 72,26 66,38"
+    <polyline points="63,22 74,27 68,39"
               fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
   </g>
-  <!-- valor en bleu, immo en or -->
   <text font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="21" font-weight="700" letter-spacing="-0.3">
     <tspan x="50" y="41" fill="#1B2D5B">valor</tspan><tspan fill="#C8933A">immo</tspan>
   </text>
