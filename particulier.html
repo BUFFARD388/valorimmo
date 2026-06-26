@@ -3,11 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Valorimmo — Diagnostic pour les particuliers</title>
+<title>Valorimmo — Diagnostic expert immobilier indépendant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #4B5563; font-size: 16px; line-height: 1.7; }
+  .serif { font-family: 'Playfair Display', Georgia, serif; }
 
   /* ── Tokens ── */
   :root {
@@ -55,7 +58,35 @@
     padding: 96px 0 80px;
     color: #fff;
   }
-  .hero-inner { max-width: 720px; }
+  .hero-inner { max-width: 740px; }
+  .hero-headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.75rem, 4vw, 2.65rem);
+    color: #fff; font-weight: 600; line-height: 1.28;
+    margin: 16px 0 22px;
+  }
+  .hero-trust {
+    display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px;
+  }
+  .hero-trust span {
+    font-size: 0.78rem; color: #93C5FD; display: flex; align-items: center; gap: 6px;
+  }
+  .hero-trust span::before { content: '✓'; color: #FBBF24; font-weight: 700; }
+
+  /* ── SECTION INDÉPENDANT ── */
+  #independant { background: #0F2A50; padding: 72px 0; }
+  .independant-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px; max-width: 880px; margin: 0 auto;
+  }
+  .independant-card {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.11);
+    border-radius: 10px; padding: 28px 24px; transition: background 0.2s;
+  }
+  .independant-card:hover { background: rgba(255,255,255,0.1); }
+  .independant-icon { font-size: 1.5rem; margin-bottom: 14px; display: block; }
+  .independant-card h3 { font-size: 0.95rem; color: #fff; margin-bottom: 8px; font-weight: 600; }
+  .independant-card p { font-size: 0.86rem; color: #94A3B8; line-height: 1.65; margin: 0; }
   .hero-eyebrow {
     font-size: 0.75rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
     color: #93C5FD; margin-bottom: 20px;
@@ -94,8 +125,8 @@
     color: var(--gold); margin-bottom: 10px;
   }
   h2.section-title {
-    font-family: Georgia, serif; font-size: clamp(1.5rem, 3vw, 2.1rem);
-    color: var(--text-dark); font-weight: 400; margin-bottom: 12px;
+    font-family: 'Playfair Display', Georgia, serif; font-size: clamp(1.5rem, 3vw, 2.1rem);
+    color: var(--text-dark); font-weight: 600; margin-bottom: 12px;
   }
   .section-sub { color: var(--text-muted); max-width: 540px; margin-bottom: 48px; }
 
@@ -183,7 +214,7 @@
     box-shadow: 0 8px 32px rgba(27,63,110,0.1);
   }
   .about-name {
-    font-family: Georgia, serif; font-size: 1.15rem; color: var(--text-dark);
+    font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; color: var(--text-dark);
     font-weight: 400; margin-top: 16px;
   }
   .about-title { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
@@ -351,14 +382,47 @@
 <section id="hero">
   <div class="container">
     <div class="hero-inner">
-      <div class="hero-eyebrow">Pour les propriétaires particuliers</div>
+      <div class="hero-eyebrow">Expertise indépendante · Particuliers</div>
       <div class="hero-logo">Valor<em>immo</em></div>
-      <p style="font-size:0.78rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#FBBF24;margin-bottom:10px;margin-top:6px;">Ce que votre bien vaut vraiment</p>
-      <p class="hero-tagline">"Avant de vendre, comprenez ce que vous avez vraiment."</p>
-      <p class="hero-pitch">Un diagnostic d'expert pour les biens que les estimations en ligne et les agents généralistes ne savent pas évaluer correctement.</p>
+      <h1 class="hero-headline">Votre bien est complexe.<br>Vous méritez une expertise,<br>pas une sollicitation.</h1>
+      <p class="hero-pitch">Terrain constructible, indivision, divorce, succession, bien atypique — Valorimmo analyse votre bien en profondeur et vous livre un rapport expert sous 48h. Par un professionnel indépendant, qui n'a rien à vous vendre.</p>
       <div class="hero-actions">
-        <a href="#formules" class="btn-primary">Découvrir les formules</a>
+        <a href="#formules" class="btn-primary">Voir les formules</a>
         <a href="#expert" class="btn-ghost-white">L'expert</a>
+      </div>
+      <div class="hero-trust">
+        <span>Sans mandat</span>
+        <span>Sans relance</span>
+        <span>Rapport PDF sous 48h</span>
+        <span>Expert indépendant</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAS UNE AGENCE -->
+<section id="independant">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px;">
+      <p class="section-label" style="color:#93C5FD;">Ce qui change tout</p>
+      <h2 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(1.5rem,3vw,2rem);color:#fff;font-weight:600;margin-bottom:14px;">Nous ne sommes pas une agence.</h2>
+      <p style="color:#94A3B8;max-width:500px;margin:0 auto;font-size:0.97rem;">Lorsque vous demandez une estimation à une agence, vous devenez un prospect. Les appels commencent. Valorimmo fonctionne à l'inverse.</p>
+    </div>
+    <div class="independant-grid">
+      <div class="independant-card">
+        <span class="independant-icon">🚫</span>
+        <h3>Pas de mandat à signer</h3>
+        <p>Nous n'avons rien à vous vendre et aucun bien à placer. Notre seule mission : vous donner une lecture honnête et documentée de votre bien.</p>
+      </div>
+      <div class="independant-card">
+        <span class="independant-icon">📵</span>
+        <h3>Pas de relance commerciale</h3>
+        <p>Vous recevez votre rapport PDF. Vous décidez de la suite, à votre rythme, sans aucune pression. Vous n'entendrez pas parler de nous si vous ne le souhaitez pas.</p>
+      </div>
+      <div class="independant-card">
+        <span class="independant-icon">⚖️</span>
+        <h3>Votre intérêt, pas le nôtre</h3>
+        <p>Que vous vendiez, héritiez, ou négociiez un partage — notre rapport est écrit pour défendre votre position, pas pour faciliter une transaction qui nous profite.</p>
       </div>
     </div>
   </div>
@@ -368,8 +432,8 @@
 <section id="qualification">
   <div class="container">
     <p class="section-label">Votre bien est-il concerné ?</p>
-    <h2 class="section-title">Certains biens méritent une lecture plus fine</h2>
-    <p class="section-sub">Une estimation classique ne suffit pas lorsque votre bien cache un potentiel que seul un œil expert peut identifier.</p>
+    <h2 class="section-title">Les biens que les estimations classiques ne savent pas évaluer</h2>
+    <p class="section-sub">Les outils en ligne et les agences généralistes travaillent sur des références standard. Dès que votre bien sort de l'ordinaire, leur estimation perd sa pertinence.</p>
     <div class="qual-grid">
       <div class="qual-card">
         <span class="qual-icon">🗺️</span>
@@ -399,8 +463,8 @@
 <section id="formules">
   <div class="container">
     <p class="section-label">Nos formules</p>
-    <h2 class="section-title">Choisissez votre niveau d'accompagnement</h2>
-    <p class="section-sub">Trois formules conçues pour répondre à des besoins différents — du propriétaire qui veut comprendre à celui qui veut être guidé jusqu'à la signature.</p>
+    <h2 class="section-title">Un rapport expert, livré sous 48h</h2>
+    <p class="section-sub">Trois niveaux d'analyse selon la complexité de votre bien et l'enjeu de votre décision. Chaque formule inclut un appel de restitution avec l'expert.</p>
     <div class="formules-grid">
       <div class="formule-card">
         <div class="formule-name">Diagnostic Essentiel</div>
@@ -482,7 +546,7 @@
             <div class="about-stat-label">lecture urbanistique intégrée</div>
           </div>
           <div class="about-stat">
-            <div class="about-stat-num">5j</div>
+            <div class="about-stat-num">48h</div>
             <div class="about-stat-label">délai de livraison du rapport</div>
           </div>
         </div>
