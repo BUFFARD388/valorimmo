@@ -1291,15 +1291,15 @@
         <div class="form-row">
           <div class="form-group">
             <label>Type de bien</label>
-            <select name="type_bien" required>
+            <select id="f-type-bien" name="type_bien" required onchange="updateChampsBien()">
               <option value="">Sélectionner…</option>
-              <option>Maison individuelle</option>
-              <option>Terrain nu</option>
-              <option>Immeuble</option>
-              <option>Bien mixte (habitation + local)</option>
-              <option>Local commercial / professionnel</option>
-              <option>Corps de ferme / bien atypique</option>
-              <option>Autre</option>
+              <option value="Maison individuelle">Maison individuelle</option>
+              <option value="Terrain nu">Terrain nu</option>
+              <option value="Immeuble">Immeuble</option>
+              <option value="Bien mixte (habitation + local)">Bien mixte (habitation + local)</option>
+              <option value="Local commercial / professionnel">Local commercial / professionnel</option>
+              <option value="Corps de ferme / bien atypique">Corps de ferme / bien atypique</option>
+              <option value="Autre">Autre</option>
             </select>
           </div>
           <div class="form-group">
@@ -1307,6 +1307,38 @@
             <input type="text" name="surface" placeholder="Ex : 1 200 m²" />
           </div>
         </div>
+
+        <!-- État du bien — masqué pour terrain nu -->
+        <div class="form-group" id="champ-etat-bien" style="display:none;">
+          <label>État général du bien</label>
+          <select name="etat_bien">
+            <option value="">Sélectionner…</option>
+            <option value="Bon état général">Bon état général</option>
+            <option value="État correct — quelques travaux à prévoir">État correct — quelques travaux à prévoir</option>
+            <option value="Travaux importants à prévoir">Travaux importants à prévoir</option>
+            <option value="À rénover entièrement">À rénover entièrement</option>
+            <option value="En cours de rénovation">En cours de rénovation</option>
+          </select>
+        </div>
+
+        <!-- Baux en cours — uniquement immeuble, local commercial, bien mixte -->
+        <div class="form-group" id="champ-baux" style="display:none;">
+          <label>Baux en cours</label>
+          <select name="baux_en_cours" id="f-baux" onchange="updateDetailBaux()">
+            <option value="">Sélectionner…</option>
+            <option value="Non — bien libre">Non — bien libre</option>
+            <option value="Oui — bail d'habitation">Oui — bail d'habitation</option>
+            <option value="Oui — bail commercial">Oui — bail commercial</option>
+            <option value="Oui — plusieurs baux">Oui — plusieurs baux (mixte ou multi-lots)</option>
+          </select>
+        </div>
+
+        <!-- Détail baux — visible si un bail est sélectionné -->
+        <div class="form-group" id="champ-baux-detail" style="display:none;">
+          <label>Précisions sur le(s) bail(s) <span class="opt">(optionnel)</span></label>
+          <textarea name="baux_detail" placeholder="Ex : loyer mensuel, durée restante, type de locataire, échéance…" style="min-height:80px;"></textarea>
+        </div>
+
         <div class="form-group">
           <label>Prix de vente envisagé <span class="opt">(optionnel)</span></label>
           <input type="text" name="prix_estime" placeholder="Ex : 280 000 €" />
@@ -1360,6 +1392,27 @@
   (function() {
     const items = document.querySelectorAll('.apercu-section-item');
     const panels = document.querySelectorAll('.apercu-panel');
+    // ── Champs conditionnels formulaire ──
+    function updateChampsBien() {
+      const type = document.getElementById('f-type-bien').value;
+      const terrainNu = type === 'Terrain nu';
+      const avecBaux = ['Immeuble', 'Bien mixte (habitation + local)', 'Local commercial / professionnel'].includes(type);
+
+      // État du bien : visible sauf terrain nu
+      document.getElementById('champ-etat-bien').style.display = (type && !terrainNu) ? 'block' : 'none';
+
+      // Baux : visible uniquement immeuble / local / mixte
+      document.getElementById('champ-baux').style.display = avecBaux ? 'block' : 'none';
+      if (!avecBaux) {
+        document.getElementById('champ-baux-detail').style.display = 'none';
+      }
+    }
+    function updateDetailBaux() {
+      const val = document.getElementById('f-baux').value;
+      const avecDetail = val && val !== 'Non — bien libre';
+      document.getElementById('champ-baux-detail').style.display = avecDetail ? 'block' : 'none';
+    }
+
     function activateSection(sectionId) {
       items.forEach(i => i.classList.toggle('active', i.dataset.section === sectionId));
       panels.forEach(p => p.classList.toggle('active', p.id === 'panel-' + sectionId));
@@ -1437,6 +1490,9 @@
       adresse_bien:      [form.adresse_bien.value, form.cp_bien.value, form.ville_bien.value].filter(v => v.trim()).join(' – '),
       parcelles:         parcelles.join(', '),
       type_bien:         form.type_bien.value,
+      etat_bien:         form.etat_bien ? form.etat_bien.value : '',
+      baux_en_cours:     form.baux_en_cours ? form.baux_en_cours.value : '',
+      baux_detail:       form.baux_detail ? form.baux_detail.value : '',
       surface_bien:      form.surface.value,
       prix_estime:       form.prix_estime.value,
       objet_demande:     form.objet_demande.value,
