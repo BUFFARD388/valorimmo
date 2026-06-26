@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 65" width="210" height="65">
+  <!-- House icon (white) -->
+  <g transform="translate(2, 6) scale(0.48)">
+    <path d="M50,5 L93,42 L83,42 L83,80 L17,80 L17,42 L7,42 Z"
+          fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M30,72 C42,62 56,46 74,27"
+          fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round"/>
+    <polyline points="63,22 74,27 68,39"
+              fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- Text white -->
+  <text x="50" y="41" font-family="'Inter','Segoe UI',Arial,sans-serif" font-size="21" letter-spacing="-0.3" fill="#ffffff">
+    <tspan font-weight="700">valor</tspan><tspan font-weight="400">immo</tspan>
+  </text>
+</svg>

@@ -15,10 +15,10 @@
 
   /* ── Tokens ── */
   :root {
-    --blue: #1B3F6E;
-    --blue-mid: #2557A0;
+    --blue: #1B2D5B;
+    --blue-mid: #2A4A8A;
     --blue-light: #EBF2FB;
-    --gold: #D4891A;
+    --gold: #C8933A;
     --gold-light: #FEF3E2;
     --text-dark: #1A2535;
     --text-body: #4B5563;
@@ -55,7 +55,7 @@
 
   /* ── HERO ── */
   #hero {
-    background: linear-gradient(135deg, var(--blue) 0%, #0f2a50 100%);
+    background: linear-gradient(135deg, var(--blue) 0%, #0F1F3D 100%);
     padding: 96px 0 80px;
     color: #fff;
   }
@@ -72,10 +72,10 @@
   .hero-trust span {
     font-size: 0.78rem; color: #93C5FD; display: flex; align-items: center; gap: 6px;
   }
-  .hero-trust span::before { content: '✓'; color: #FBBF24; font-weight: 700; }
+  .hero-trust span::before { content: '✓'; color: #C8933A; font-weight: 700; }
 
   /* ── SECTION INDÉPENDANT ── */
-  #independant { background: #0F2A50; padding: 72px 0; }
+  #independant { background: #0F1F3D; padding: 72px 0; }
   .independant-grid {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 24px; max-width: 880px; margin: 0 auto;
@@ -99,15 +99,15 @@
     font-size: clamp(2.4rem, 6vw, 4.2rem);
     color: #fff; line-height: 1; margin-bottom: 10px;
   }
-  .hero-logo em { font-style: normal; color: #FBBF24; }
+  .hero-logo em { font-style: normal; color: #C8933A; }
   .hero-pitch { font-size: 1rem; color: #94A3B8; max-width: 580px; margin-bottom: 36px; line-height: 1.8; }
   .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
   .btn-primary {
-    display: inline-block; background: #FBBF24; color: #1A2535;
+    display: inline-block; background: #C8933A; color: #1A2535;
     font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
     padding: 14px 30px; border-radius: 6px; text-decoration: none; transition: background 0.2s;
   }
-  .btn-primary:hover { background: #F59E0B; text-decoration: none; }
+  .btn-primary:hover { background: #B07A28; text-decoration: none; }
   .btn-ghost-white {
     display: inline-block; background: transparent; color: #fff;
     font-size: 0.85rem; padding: 14px 30px; border: 1.5px solid rgba(255,255,255,0.3);
@@ -196,7 +196,7 @@
     font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 0.08em;
     font-size: 1rem; color: #fff;
   }
-  .apercu-doc-brand span { color: #FBBF24; }
+  .apercu-doc-brand span { color: #C8933A; }
   .apercu-doc-meta { font-size: 0.68rem; color: #93C5FD; margin-top: 3px; letter-spacing: 0.1em; }
   .apercu-sections-list { padding: 8px 0; }
   .apercu-section-item {
@@ -235,11 +235,11 @@
   .apercu-estim-low { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); }
   .apercu-estim-high { background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.35); }
   .apercu-estim-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #93C5FD; margin-bottom: 6px; }
-  .apercu-estim-high .apercu-estim-tag { color: #FBBF24; }
+  .apercu-estim-high .apercu-estim-tag { color: #C8933A; }
   .apercu-estim-val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: #fff; line-height: 1; }
   .apercu-estim-note { font-size: 0.7rem; color: #94A3B8; margin-top: 5px; line-height: 1.4; }
   .apercu-cible {
-    background: #FBBF24; border-radius: 8px; padding: 16px 20px;
+    background: #C8933A; border-radius: 8px; padding: 16px 20px;
     text-align: center; margin-bottom: 20px;
   }
   .apercu-cible-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #78350F; margin-bottom: 4px; }
@@ -265,7 +265,7 @@
   .apercu-box-blue { background: rgba(255,255,255,0.07); border: 1px solid rgba(147,197,253,0.25); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
   .apercu-box-gold { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
   .apercu-box-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #93C5FD; margin-bottom: 7px; }
-  .apercu-box-gold .apercu-box-title { color: #FBBF24; }
+  .apercu-box-gold .apercu-box-title { color: #C8933A; }
   .apercu-box-blue p, .apercu-box-gold p { font-size: 0.84rem; color: #CBD5E1; line-height: 1.65; margin: 0; }
   /* Table */
   .apercu-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 12px; }
@@ -274,14 +274,14 @@
   .apercu-table tbody tr:last-child td { border-bottom: none; }
   /* Scénarios */
   .apercu-scenario { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px 18px; }
-  .apercu-scenario-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #FBBF24; margin-bottom: 4px; }
+  .apercu-scenario-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #C8933A; margin-bottom: 4px; }
   .apercu-scenario-title { font-size: 0.92rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
   .apercu-scenario p { font-size: 0.83rem; color: #94A3B8; line-height: 1.6; margin: 0 0 10px; }
   .apercu-scenario-gain { font-size: 0.78rem; font-weight: 600; color: #6EE7B7; }
   /* Reco list */
   .apercu-reco-list { display: flex; flex-direction: column; gap: 12px; }
   .apercu-reco-item { display: flex; gap: 14px; background: rgba(255,255,255,0.06); border-radius: 8px; padding: 14px 16px; }
-  .apercu-reco-num { background: #FBBF24; color: #0F2A50; font-size: 0.7rem; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .apercu-reco-num { background: #C8933A; color: #0F1F3D; font-size: 0.7rem; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
   .apercu-reco-item-title { font-size: 0.88rem; font-weight: 600; color: #fff; margin-bottom: 5px; }
   .apercu-reco-item p { font-size: 0.82rem; color: #94A3B8; line-height: 1.6; margin: 0; }
   @media (max-width: 860px) {
@@ -393,7 +393,7 @@
   }
   .footer-logo { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px; }
   .footer-logo-text { font-family: Georgia, serif; font-style: italic; color: #CBD5E1; font-size: 1.1rem; }
-  .footer-logo-text em { font-style: normal; color: #FBBF24; }
+  .footer-logo-text em { font-style: normal; color: #C8933A; }
   footer a { color: #6B7280; text-decoration: none; }
   footer a:hover { color: #CBD5E1; }
 
@@ -473,10 +473,7 @@
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">
-    <svg width="43" height="30" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
-    <span class="nav-logo-text">Valor<em>immo</em></span>
-  </a>
+  <a href="index.html" class="nav-logo"><img src="logo.svg" alt="Valorimmo" height="38" style="display:block;"></a>
   <div class="nav-right">
     <a href="prescripteur.html" class="nav-back">Espace prescripteurs</a>
     <a href="#formules" class="nav-cta" onclick="openModal('Diagnostic Essentiel — 250€')">Demander un diagnostic</a>
@@ -488,7 +485,7 @@
   <div class="container">
     <div class="hero-inner">
       <div class="hero-eyebrow">Diagnostic immobilier indépendant</div>
-      <div class="hero-logo">Valor<em>immo</em></div>
+      <div class="hero-logo"><img src="logo-white.svg" alt="Valorimmo" style="height:56px;display:block;margin-bottom:4px;"></div>
       <h1 class="hero-headline">Vendez avec toutes<br>les cartes en main.</h1>
       <p class="hero-pitch">Avant de confier votre bien à une agence, obtenez une expertise complète : valeur vénale réelle, lecture du PLU, données DVF, potentiel de valorisation. Vous choisirez votre stratégie de vente en toute connaissance de cause — sans vous laisser dicter vos conditions.</p>
       <div class="hero-actions">
@@ -899,7 +896,7 @@
       <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2557A0;margin-bottom:6px;">Option complémentaire</p>
       <p style="font-size:0.9rem;color:#1A2535;font-weight:600;margin-bottom:4px;">Certificat d'Urbanisme opérationnel (CUb) — 390 €</p>
       <p style="font-size:0.82rem;color:#6B7280;margin-bottom:14px;">Dépôt et suivi de votre demande de CUb en mairie. À ajouter à l'une des formules ci-dessus.</p>
-      <a href="https://buy.stripe.com/fZu3cu8pc9wg08A4Pz6sw01" target="_blank" style="display:inline-block;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:10px 24px;border-radius:6px;border:1.5px solid #1B3F6E;color:#1B3F6E;text-decoration:none;">Ajouter cette option</a>
+      <a href="https://buy.stripe.com/fZu3cu8pc9wg08A4Pz6sw01" target="_blank" style="display:inline-block;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:10px 24px;border-radius:6px;border:1.5px solid #1B2D5B;color:#1B2D5B;text-decoration:none;">Ajouter cette option</a>
     </div>
     <p style="text-align:center;margin-top:20px;font-size:0.8rem;color:#9CA3AF;">
       🔒 Paiement sécurisé par Stripe · Rapport livré sous 5 jours
@@ -1044,7 +1041,7 @@
         </div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;">
           <div style="text-align:center;">
-            <div style="font-family:Georgia,serif;font-size:1.4rem;color:#FBBF24;line-height:1;">150 000 €</div>
+            <div style="font-family:Georgia,serif;font-size:1.4rem;color:#C8933A;line-height:1;">150 000 €</div>
             <div style="font-size:0.7rem;color:#94A3B8;margin-top:2px;">Estimation haute</div>
           </div>
           <div style="text-align:center;">
@@ -1155,10 +1152,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">
-    <svg width="29" height="20" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
-    <span class="footer-logo-text">Valor<em>immo</em></span>
-  </div>
+  <div class="footer-logo"><img src="logo-white.svg" alt="Valorimmo" height="40" style="display:block;"></div>
   <p>Diagnostic expert immobilier · Biens complexes &amp; potentiels de valorisation</p>
   <p style="margin-top:6px;"><a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a></p>
   <p style="margin-top:8px;">© 2026 Valorimmo. Tous droits réservés.</p>

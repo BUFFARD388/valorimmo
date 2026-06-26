@@ -11,8 +11,8 @@
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #F4F7FB; color: #4B5563; font-size: 15px; line-height: 1.6; }
 
   :root {
-    --blue: #1B3F6E; --blue-mid: #2557A0; --blue-light: #EBF2FB;
-    --gold: #D4891A; --gold-light: #FEF3E2;
+    --blue: #1B2D5B; --blue-mid: #2A4A8A; --blue-light: #EBF2FB;
+    --gold: #C8933A; --gold-light: #FEF3E2;
     --green: #15803D; --green-light: #F0FDF4;
     --red: #B91C1C; --red-light: #FEF2F2;
     --text-dark: #1A2535; --text-body: #4B5563; --text-muted: #6B7280;
@@ -22,7 +22,7 @@
   /* ── LOGIN ── */
   #view-login {
     min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, var(--blue) 0%, #0f2a50 100%);
+    background: linear-gradient(135deg, var(--blue) 0%, #0F1F3D 100%);
   }
   .login-card {
     background: #fff; border-radius: 14px; padding: 48px 40px; width: 100%; max-width: 400px;
@@ -92,7 +92,7 @@
   .demande-statut {
     width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
   }
-  .statut-nouveau { background: #FBBF24; }
+  .statut-nouveau { background: #C8933A; }
   .statut-en_cours { background: #3B82F6; }
   .statut-rapport_genere { background: var(--green); }
   .statut-envoye { background: #8B5CF6; }
@@ -258,10 +258,10 @@
   .report-preview-wrap .conclusion-block h3 { font-family: Georgia, serif; font-size: 1.05rem; color: #fff; font-weight: 400; margin-bottom: 16px; }
   .report-preview-wrap .conclusion-rec { display: flex; flex-direction: column; gap: 10px; }
   .report-preview-wrap .conclusion-rec-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 7px; padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start; }
-  .report-preview-wrap .conclusion-rec-num { background: #FBBF24; color: #0F2A50; font-size: 0.7rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .report-preview-wrap .conclusion-rec-num { background: #C8933A; color: #0F1F3D; font-size: 0.7rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .report-preview-wrap .conclusion-rec-text { font-size: 0.85rem; color: #E2E8F0; line-height: 1.6; }
   .report-preview-wrap .conclusion-rec-text strong { color: #fff; }
-  .report-preview-wrap .conclusion-quote { border-left: 3px solid #FBBF24; padding: 12px 18px; margin-top: 20px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.92rem; color: #CBD5E1; line-height: 1.7; }
+  .report-preview-wrap .conclusion-quote { border-left: 3px solid #C8933A; padding: 12px 18px; margin-top: 20px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.92rem; color: #CBD5E1; line-height: 1.7; }
   .report-preview-wrap .disclaimer { margin-top: 28px; padding: 14px 18px; background: var(--bg-alt); border-radius: 7px; font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; border: 1px solid var(--border); font-style: italic; }
 
   [hidden] { display: none !important; }
@@ -277,10 +277,7 @@
 <!-- ═══ LOGIN ═══ -->
 <div id="view-login">
   <div class="login-card">
-    <div class="login-logo">
-      <svg width="40" height="28" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
-      <span class="login-logo-text">Valor<em>immo</em></span>
-    </div>
+    <div class="login-logo"><img src="logo.svg" alt="Valorimmo" height="44" style="display:block;"></div>
     <div class="login-badge">Administration</div>
     <h1>Connexion</h1>
     <input type="password" id="pwd-input" placeholder="Mot de passe" autocomplete="current-password" />
@@ -293,8 +290,7 @@
 <div id="view-dashboard" hidden>
   <div class="admin-header">
     <div class="header-logo">
-      <svg width="36" height="25" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
-      <span class="header-logo-text">Valor<em>immo</em></span>
+      <img src="logo-white.svg" alt="Valorimmo" height="34" style="display:block;">
       <span class="header-badge">Admin</span>
     </div>
     <div class="header-right">
@@ -312,8 +308,7 @@
 <div id="view-detail" hidden>
   <div class="admin-header">
     <div class="header-logo">
-      <svg width="36" height="25" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
-      <span class="header-logo-text">Valor<em>immo</em></span>
+      <img src="logo-white.svg" alt="Valorimmo" height="34" style="display:block;">
       <span class="header-badge">Admin</span>
     </div>
     <div class="header-right">
@@ -662,19 +657,19 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; color: #1F2937; font-size: 13px; line-height: 1.6; background: #fff; padding: 0; }
-  .pdf-header { background: #1B3F6E; color: #fff; padding: 28px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .pdf-header { background: #1B2D5B; color: #fff; padding: 28px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
   .pdf-header-brand { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.06em; }
-  .pdf-header-brand span { color: #FBBF24; }
+  .pdf-header-brand span { color: #C8933A; }
   .pdf-header-tagline { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: #93C5FD; margin-top: 3px; }
   .pdf-header-meta { text-align: right; font-size: 0.78rem; color: #CBD5E1; line-height: 1.8; }
   .pdf-header-meta strong { color: #fff; }
   .pdf-body { padding: 32px 40px; }
   .section { margin-bottom: 36px; page-break-inside: avoid; }
   .section-num { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #2557A0; margin-bottom: 4px; }
-  .section-title { font-family: Georgia, serif; font-size: 1.05rem; color: #1B3F6E; font-weight: 400; border-bottom: 1.5px solid #BFDBF7; padding-bottom: 8px; margin-bottom: 14px; }
+  .section-title { font-family: Georgia, serif; font-size: 1.05rem; color: #1B2D5B; font-weight: 400; border-bottom: 1.5px solid #BFDBF7; padding-bottom: 8px; margin-bottom: 14px; }
   p { margin-bottom: 8px; color: #374151; }
   table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 12px 0; }
-  thead th { background: #EBF2FB; color: #1B3F6E; font-weight: 700; padding: 8px 12px; text-align: left; border-bottom: 2px solid #BFDBF7; }
+  thead th { background: #EBF2FB; color: #1B2D5B; font-weight: 700; padding: 8px 12px; text-align: left; border-bottom: 2px solid #BFDBF7; }
   tbody td { padding: 8px 12px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; }
   tbody tr:last-child td { border-bottom: none; }
   tbody tr:nth-child(even) td { background: #F9FAFB; }
@@ -690,21 +685,21 @@
   .estimation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
   .estimation-card { border-radius: 8px; padding: 18px 20px; text-align: center; border: 1.5px solid #E5E7EB; }
   .estimation-card.low { background: #F8FAFF; border-color: #BFDBF7; }
-  .estimation-card.high { background: #1B3F6E; border-color: #1B3F6E; }
+  .estimation-card.high { background: #1B2D5B; border-color: #1B2D5B; }
   .estimation-card-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #6B7280; margin-bottom: 6px; }
   .estimation-card.high .estimation-card-label { color: #93C5FD; }
-  .estimation-card-value { font-family: Georgia, serif; font-size: 1.7rem; color: #1B3F6E; line-height: 1; }
+  .estimation-card-value { font-family: Georgia, serif; font-size: 1.7rem; color: #1B2D5B; line-height: 1; }
   .estimation-card.high .estimation-card-value { color: #fff; }
   .estimation-card-sub { font-size: 0.72rem; color: #6B7280; margin-top: 4px; }
   .estimation-card.high .estimation-card-sub { color: #94A3B8; }
-  .conclusion-block { background: #1B3F6E; border-radius: 10px; padding: 24px 28px; color: #fff; margin-top: 8px; page-break-inside: avoid; }
+  .conclusion-block { background: #1B2D5B; border-radius: 10px; padding: 24px 28px; color: #fff; margin-top: 8px; page-break-inside: avoid; }
   .conclusion-block h3 { font-family: Georgia, serif; font-size: 1rem; color: #fff; font-weight: 400; margin-bottom: 14px; }
   .conclusion-rec { display: flex; flex-direction: column; gap: 8px; }
   .conclusion-rec-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px 14px; display: flex; gap: 12px; align-items: flex-start; }
-  .conclusion-rec-num { background: #FBBF24; color: #0F2A50; font-size: 0.68rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .conclusion-rec-num { background: #C8933A; color: #0F1F3D; font-size: 0.68rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .conclusion-rec-text { font-size: 0.82rem; color: #E2E8F0; line-height: 1.6; }
   .conclusion-rec-text strong { color: #fff; }
-  .conclusion-quote { border-left: 3px solid #FBBF24; padding: 10px 16px; margin-top: 18px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.88rem; color: #CBD5E1; line-height: 1.7; }
+  .conclusion-quote { border-left: 3px solid #C8933A; padding: 10px 16px; margin-top: 18px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.88rem; color: #CBD5E1; line-height: 1.7; }
   .disclaimer { margin-top: 24px; padding: 12px 16px; background: #F9FAFB; border-radius: 6px; font-size: 0.72rem; color: #6B7280; line-height: 1.6; border: 1px solid #E5E7EB; font-style: italic; }
   .pdf-footer { border-top: 1.5px solid #E5E7EB; margin: 0 40px; padding: 16px 0; display: flex; justify-content: space-between; font-size: 0.72rem; color: #9CA3AF; }
   @media print {

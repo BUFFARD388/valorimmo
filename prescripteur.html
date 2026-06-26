@@ -13,10 +13,10 @@
   h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
 
   :root {
-    --blue: #1B3F6E;
-    --blue-mid: #2557A0;
+    --blue: #1B2D5B;
+    --blue-mid: #2A4A8A;
     --blue-light: #EBF2FB;
-    --gold: #D4891A;
+    --gold: #C8933A;
     --gold-light: #FEF3E2;
     --text-dark: #1A2535;
     --text-body: #4B5563;
@@ -50,14 +50,14 @@
 
   /* ── HERO ── */
   #hero {
-    background: linear-gradient(135deg, #0F2A50 0%, var(--blue) 100%);
+    background: linear-gradient(135deg, #0F1F3D 0%, var(--blue) 100%);
     padding: 96px 0 80px; color: #fff;
   }
   .hero-eyebrow {
     font-size: 0.75rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
-    color: #FBBF24; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+    color: #C8933A; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
   }
-  .hero-eyebrow::before { content: ''; width: 32px; height: 1.5px; background: #FBBF24; display: block; }
+  .hero-eyebrow::before { content: ''; width: 32px; height: 1.5px; background: #C8933A; display: block; }
   h1 {
     font-family: Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.8rem);
     color: #fff; font-weight: 400; line-height: 1.2; margin-bottom: 16px; max-width: 680px;
@@ -165,7 +165,7 @@
   .apercu-sections { background: #fff; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(27,63,110,0.07); }
   .apercu-doc-header { background: var(--blue); padding: 18px 24px; }
   .apercu-doc-brand { font-family: 'Inter', sans-serif; font-weight: 800; letter-spacing: 0.08em; font-size: 1rem; color: #fff; }
-  .apercu-doc-brand span { color: #FBBF24; }
+  .apercu-doc-brand span { color: #C8933A; }
   .apercu-doc-meta { font-size: 0.68rem; color: #93C5FD; margin-top: 3px; letter-spacing: 0.1em; }
   .apercu-sections-list { padding: 8px 0; }
   .apercu-section-item { display: flex; gap: 14px; padding: 12px 20px; align-items: flex-start; border-bottom: 1px solid var(--border); transition: background 0.15s, border-left 0.15s; cursor: pointer; border-left: 3px solid transparent; }
@@ -196,7 +196,7 @@
   .apercu-box-blue { background: rgba(255,255,255,0.07); border: 1px solid rgba(147,197,253,0.25); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
   .apercu-box-gold { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); border-radius: 8px; padding: 14px 16px; margin-bottom: 12px; }
   .apercu-box-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #93C5FD; margin-bottom: 7px; }
-  .apercu-box-gold .apercu-box-title { color: #FBBF24; }
+  .apercu-box-gold .apercu-box-title { color: #C8933A; }
   .apercu-box-blue p, .apercu-box-gold p { font-size: 0.84rem; color: #CBD5E1; line-height: 1.65; margin: 0; }
   .apercu-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 12px; }
   .apercu-table thead th { background: rgba(255,255,255,0.08); color: #93C5FD; font-weight: 700; padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.12); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; }
@@ -207,23 +207,23 @@
   .apercu-estim-low { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); }
   .apercu-estim-high { background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.35); }
   .apercu-estim-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #93C5FD; margin-bottom: 6px; }
-  .apercu-estim-high .apercu-estim-tag { color: #FBBF24; }
+  .apercu-estim-high .apercu-estim-tag { color: #C8933A; }
   .apercu-estim-val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.5rem; color: #fff; line-height: 1; }
   .apercu-estim-note { font-size: 0.7rem; color: #94A3B8; margin-top: 5px; line-height: 1.4; }
-  .apercu-cible { background: #FBBF24; border-radius: 8px; padding: 16px 20px; text-align: center; margin-bottom: 20px; }
+  .apercu-cible { background: #C8933A; border-radius: 8px; padding: 16px 20px; text-align: center; margin-bottom: 20px; }
   .apercu-cible-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #78350F; margin-bottom: 4px; }
   .apercu-cible-val { font-family: 'Playfair Display', Georgia, serif; font-size: 1.8rem; color: #1A2535; line-height: 1; font-weight: 600; }
   .apercu-reco { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 16px 18px; margin-bottom: 16px; }
   .apercu-reco-title { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #93C5FD; margin-bottom: 8px; }
   .apercu-reco-text { font-size: 0.84rem; color: #CBD5E1; line-height: 1.65; margin: 0; }
   .apercu-scenario { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 16px 18px; }
-  .apercu-scenario-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #FBBF24; margin-bottom: 4px; }
+  .apercu-scenario-tag { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #C8933A; margin-bottom: 4px; }
   .apercu-scenario-title { font-size: 0.92rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
   .apercu-scenario p { font-size: 0.83rem; color: #94A3B8; line-height: 1.6; margin: 0 0 10px; }
   .apercu-scenario-gain { font-size: 0.78rem; font-weight: 600; color: #6EE7B7; }
   .apercu-reco-list { display: flex; flex-direction: column; gap: 12px; }
   .apercu-reco-item { display: flex; gap: 14px; background: rgba(255,255,255,0.06); border-radius: 8px; padding: 14px 16px; }
-  .apercu-reco-num { background: #FBBF24; color: #0F2A50; font-size: 0.7rem; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .apercu-reco-num { background: #C8933A; color: #0F1F3D; font-size: 0.7rem; font-weight: 800; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
   .apercu-reco-item-title { font-size: 0.88rem; font-weight: 600; color: #fff; margin-bottom: 5px; }
   .apercu-reco-item p { font-size: 0.82rem; color: #94A3B8; line-height: 1.6; margin: 0; }
   .apercu-disclaimer { font-size: 0.7rem; color: #64748B; line-height: 1.5; font-style: italic; margin-top: 16px; }
@@ -236,7 +236,7 @@
   }
   .footer-logo { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px; }
   .footer-logo-text { font-family: Georgia, serif; font-style: italic; color: #CBD5E1; font-size: 1.1rem; }
-  .footer-logo-text em { font-style: normal; color: #FBBF24; }
+  .footer-logo-text em { font-style: normal; color: #C8933A; }
   footer a { color: #6B7280; text-decoration: none; }
   footer a:hover { color: #CBD5E1; }
 
@@ -281,10 +281,7 @@
 <body>
 
 <nav>
-  <a href="index.html" class="nav-logo">
-    <svg width="43" height="30" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
-    <span class="nav-logo-text">Valor<em>immo</em></span>
-  </a>
+  <a href="index.html" class="nav-logo"><img src="logo.svg" alt="Valorimmo" height="38" style="display:block;"></a>
   <div class="nav-right">
     <a href="index.html" class="nav-back">← Accueil</a>
     <span class="nav-pill">Espace prescripteurs</span>
@@ -295,7 +292,7 @@
 <section id="hero">
   <div class="container">
     <div class="hero-eyebrow">Espace prescripteurs</div>
-    <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#FBBF24;margin-bottom:10px;">Ce que votre bien vaut vraiment</div>
+    <div style="font-size:0.78rem;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#C8933A;margin-bottom:10px;">Ce que votre bien vaut vraiment</div>
     <h1>Orientez vos clients vers une expertise immobilière indépendante</h1>
     <p class="hero-sub">Lorsqu'un client hérite d'un bien complexe, fait face à une indivision ou s'interroge sur le potentiel de son terrain, Valorimmo apporte la réponse que les outils classiques ne donnent pas.</p>
     <div class="hero-badges">
@@ -809,10 +806,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">
-    <svg width="29" height="20" viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg"><polygon points="2,66 2,26 28,4 41,14 41,66" fill="#1B3F6E"/><path d="M51,20 L66,4 L84,20 L84,66 L63,66 L63,44 L51,44 Z" fill="#1B3F6E"/></svg>
-    <span class="footer-logo-text">Valor<em>immo</em></span>
-  </div>
+  <div class="footer-logo"><img src="logo-white.svg" alt="Valorimmo" height="40" style="display:block;"></div>
   <p>Diagnostic expert immobilier · Espace prescripteurs</p>
   <p style="margin-top:6px;"><a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a></p>
   <p style="margin-top:8px;">© 2026 Valorimmo. Tous droits réservés. · <a href="particulier.html">Accès particuliers</a></p>
