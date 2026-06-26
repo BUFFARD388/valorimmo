@@ -444,7 +444,13 @@
         <a href="#" class="btn-formule" onclick="openModal('Diagnostic Stratégique — 950€'); return false;">Commander</a>
       </div>
     </div>
-    <p style="text-align:center;margin-top:28px;font-size:0.8rem;color:#9CA3AF;">
+    <div style="text-align:center;margin-top:32px;padding:20px 24px;background:#F8FAFF;border:1.5px solid #BFDBF7;border-radius:10px;max-width:520px;margin-left:auto;margin-right:auto;">
+      <p style="font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#2557A0;margin-bottom:6px;">Option complémentaire</p>
+      <p style="font-size:0.9rem;color:#1A2535;font-weight:600;margin-bottom:4px;">Certificat d'Urbanisme opérationnel (CUb) — 390 €</p>
+      <p style="font-size:0.82rem;color:#6B7280;margin-bottom:14px;">Dépôt et suivi de votre demande de CUb en mairie. À ajouter à l'une des formules ci-dessus.</p>
+      <a href="https://buy.stripe.com/fZu3cu8pc9wg08A4Pz6sw01" target="_blank" style="display:inline-block;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:10px 24px;border-radius:6px;border:1.5px solid #1B3F6E;color:#1B3F6E;text-decoration:none;">Ajouter cette option</a>
+    </div>
+    <p style="text-align:center;margin-top:20px;font-size:0.8rem;color:#9CA3AF;">
       🔒 Paiement sécurisé par Stripe · Rapport livré sous 48h
     </p>
   </div>
@@ -911,6 +917,12 @@
       formule:           form.formule.value,
     };
 
+    const stripeLinks = {
+      'Diagnostic Essentiel — 250€':   'https://buy.stripe.com/eVqeVc7l80ZK5sUci16sw00',
+      'Diagnostic Expert — 390€':      'https://buy.stripe.com/7sYbJ05d09wg6wY1Dn6sw02',
+      'Diagnostic Stratégique — 950€': 'https://buy.stripe.com/bJe00ibBoaAk7B2ci16sw03',
+    };
+
     try {
       const res = await fetch('/api/demande', {
         method: 'POST',
@@ -918,8 +930,16 @@
         body: JSON.stringify(data),
       });
       if (!res.ok) throw new Error('Erreur serveur');
-      document.getElementById('form-wrap').style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
+
+      // Rediriger vers Stripe selon la formule choisie
+      const lien = stripeLinks[data.formule];
+      if (lien) {
+        btn.textContent = 'Redirection vers le paiement…';
+        window.location.href = lien;
+      } else {
+        document.getElementById('form-wrap').style.display = 'none';
+        document.getElementById('form-success').style.display = 'block';
+      }
     } catch (err) {
       btn.disabled = false;
       btn.textContent = 'Envoyer ma demande';
