@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Valorimmo — Administration</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -634,17 +635,12 @@
     }
   }
 
-  // ── PDF ──
-  function downloadPDF() {
-    const reportHtml = document.getElementById('report-html-textarea').value;
-    if (!reportHtml.trim()) { alert('Générez et sauvegardez d\'abord le rapport avant de télécharger le PDF.'); return; }
-
-    const d = currentDemande;
+  // ── CONSTRUCTION HTML PDF (partagé entre download et envoi) ──
+  function buildPrintHtml(d, reportHtml) {
     const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
     const dateFr = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
     const adresse = d.adresse_bien || '';
-
-    const printHtml = `<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -652,25 +648,17 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; color: #1F2937; font-size: 13px; line-height: 1.6; background: #fff; padding: 0; }
-
-  /* HEADER */
   .pdf-header { background: #1B3F6E; color: #fff; padding: 28px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
   .pdf-header-brand { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.06em; }
   .pdf-header-brand span { color: #FBBF24; }
   .pdf-header-tagline { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: #93C5FD; margin-top: 3px; }
   .pdf-header-meta { text-align: right; font-size: 0.78rem; color: #CBD5E1; line-height: 1.8; }
   .pdf-header-meta strong { color: #fff; }
-
-  /* CONTENT */
   .pdf-body { padding: 32px 40px; }
-
-  /* SECTIONS */
   .section { margin-bottom: 36px; page-break-inside: avoid; }
   .section-num { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #2557A0; margin-bottom: 4px; }
   .section-title { font-family: Georgia, serif; font-size: 1.05rem; color: #1B3F6E; font-weight: 400; border-bottom: 1.5px solid #BFDBF7; padding-bottom: 8px; margin-bottom: 14px; }
   p { margin-bottom: 8px; color: #374151; }
-
-  /* TABLEAUX */
   table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 12px 0; }
   thead th { background: #EBF2FB; color: #1B3F6E; font-weight: 700; padding: 8px 12px; text-align: left; border-bottom: 2px solid #BFDBF7; }
   tbody td { padding: 8px 12px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; }
@@ -679,16 +667,12 @@
   td strong { color: #111827; font-weight: 600; }
   td.oui { color: #15803D; font-weight: 600; }
   td.non { color: #DC2626; font-weight: 600; }
-
-  /* BOÎTES */
   .box { border-radius: 7px; padding: 14px 18px; margin: 12px 0; font-size: 0.84rem; line-height: 1.7; }
   .box-blue { background: #EBF2FB; border: 1px solid #BFDBF7; color: #1F2937; }
   .box-gold { background: #FEF3E2; border: 1px solid #F6D5A0; color: #92400E; }
   .box-red { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; }
   .box-green { background: #F0FDF4; border: 1px solid #BBF7D0; color: #15803D; }
   .box-title { font-weight: 700; margin-bottom: 5px; font-size: 0.78rem; }
-
-  /* ESTIMATION */
   .estimation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
   .estimation-card { border-radius: 8px; padding: 18px 20px; text-align: center; border: 1.5px solid #E5E7EB; }
   .estimation-card.low { background: #F8FAFF; border-color: #BFDBF7; }
@@ -699,8 +683,6 @@
   .estimation-card.high .estimation-card-value { color: #fff; }
   .estimation-card-sub { font-size: 0.72rem; color: #6B7280; margin-top: 4px; }
   .estimation-card.high .estimation-card-sub { color: #94A3B8; }
-
-  /* CONCLUSION */
   .conclusion-block { background: #1B3F6E; border-radius: 10px; padding: 24px 28px; color: #fff; margin-top: 8px; page-break-inside: avoid; }
   .conclusion-block h3 { font-family: Georgia, serif; font-size: 1rem; color: #fff; font-weight: 400; margin-bottom: 14px; }
   .conclusion-rec { display: flex; flex-direction: column; gap: 8px; }
@@ -710,10 +692,7 @@
   .conclusion-rec-text strong { color: #fff; }
   .conclusion-quote { border-left: 3px solid #FBBF24; padding: 10px 16px; margin-top: 18px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.88rem; color: #CBD5E1; line-height: 1.7; }
   .disclaimer { margin-top: 24px; padding: 12px 16px; background: #F9FAFB; border-radius: 6px; font-size: 0.72rem; color: #6B7280; line-height: 1.6; border: 1px solid #E5E7EB; font-style: italic; }
-
-  /* FOOTER */
   .pdf-footer { border-top: 1.5px solid #E5E7EB; margin: 0 40px; padding: 16px 0; display: flex; justify-content: space-between; font-size: 0.72rem; color: #9CA3AF; }
-
   @media print {
     body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .section { page-break-inside: avoid; }
@@ -733,54 +712,93 @@
     <div>Formule : ${d.formule || d.message || 'Non précisée'}</div>
   </div>
 </div>
-<div class="pdf-body">
-${reportHtml}
-</div>
+<div class="pdf-body">${reportHtml}</div>
 <div class="pdf-footer">
   <div>Valorimmo — Laurent Buffard · contact@valorimmo.app · valorimmo.app</div>
   <div>${dateFr}</div>
 </div>
 </body>
 </html>`;
+  }
 
+  // ── PDF DOWNLOAD ──
+  function downloadPDF() {
+    const reportHtml = document.getElementById('report-html-textarea').value;
+    if (!reportHtml.trim()) { alert('Générez et sauvegardez d\'abord le rapport avant de télécharger le PDF.'); return; }
     const win = window.open('', '_blank');
-    win.document.write(printHtml);
+    win.document.write(buildPrintHtml(currentDemande, reportHtml));
     win.document.close();
     win.focus();
     setTimeout(() => { win.print(); }, 600);
   }
 
-  // ── SEND ──
+  // ── SEND (email + PDF en pièce jointe) ──
   async function sendReport() {
     const reportHtml = document.getElementById('report-html-textarea').value;
     if (!reportHtml.trim()) { alert('Générez et sauvegardez d\'abord le rapport avant de l\'envoyer.'); return; }
 
     const d = currentDemande;
-    if (!confirm(`Envoyer le rapport à ${d.email} ?`)) return;
+    if (!confirm(`Envoyer le rapport + PDF à ${d.email} ?`)) return;
 
     const btn = document.getElementById('btn-send');
     const status = document.getElementById('send-status');
     btn.disabled = true;
-    btn.textContent = 'Envoi en cours…';
     status.textContent = '';
 
     try {
+      // 1. Générer le PDF côté navigateur via html2pdf.js
+      btn.textContent = '⚙ Génération du PDF…';
+      const printHtml = buildPrintHtml(d, reportHtml);
+      const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
+
+      // Créer un iframe caché pour le rendu
+      const iframe = document.createElement('iframe');
+      iframe.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:794px;height:1123px;border:0;';
+      document.body.appendChild(iframe);
+      iframe.contentDocument.open();
+      iframe.contentDocument.write(printHtml);
+      iframe.contentDocument.close();
+
+      await new Promise(r => setTimeout(r, 500)); // laisser le DOM se rendre
+
+      const pdfBlob = await html2pdf()
+        .set({
+          margin: 0,
+          filename: `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf`,
+          image: { type: 'jpeg', quality: 0.92 },
+          html2canvas: { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        })
+        .from(iframe.contentDocument.body)
+        .outputPdf('blob');
+
+      document.body.removeChild(iframe);
+
+      // 2. Convertir en base64
+      const pdfBase64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(pdfBlob);
+      });
+
+      // 3. Envoyer à l'API
+      btn.textContent = '✉ Envoi en cours…';
       const pwd = sessionStorage.getItem('adminPwd');
       const r = await fetch('/api/admin-send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-admin-password': pwd },
-        body: JSON.stringify({ id: d.id }),
+        body: JSON.stringify({ id: d.id, pdfBase64, nomFichier: `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf` }),
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || 'Erreur envoi');
 
-      status.textContent = '✓ Rapport envoyé au client';
+      status.textContent = '✓ Rapport envoyé avec PDF en pièce jointe';
       status.style.color = 'var(--green)';
-
-      // Mettre à jour le statut local
       d.statut = 'envoye';
       document.getElementById('statut-select').value = 'envoye';
     } catch (err) {
+      console.error(err);
       status.textContent = '✗ ' + err.message;
       status.style.color = 'var(--red)';
     } finally {

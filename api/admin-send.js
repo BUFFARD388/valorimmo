@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'Non autorisé' });
   }
 
-  const { id } = req.body;
+  const { id, pdfBase64, nomFichier } = req.body;
   if (!id) return res.status(400).json({ error: 'ID manquant' });
 
   // 1. Récupérer la demande depuis Supabase
@@ -164,6 +164,12 @@ export default async function handler(req, res) {
       to: [{ email: d.email, name: nomComplet }],
       subject: `Votre rapport de diagnostic Valorimmo — ${d.adresse_bien}`,
       htmlContent: emailHtml,
+      ...(pdfBase64 ? {
+        attachment: [{
+          content: pdfBase64,
+          name: nomFichier || 'rapport-valorimmo.pdf',
+        }],
+      } : {}),
     }),
   });
 
