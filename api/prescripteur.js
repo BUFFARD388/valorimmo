@@ -85,8 +85,33 @@ export default async function handler(req, res) {
   if (!apportRes.ok) {
     const err = await apportRes.text();
     console.error('Supabase apport error:', err);
-    // On continue quand même pour envoyer les emails
   }
+
+  // 3. Créer une demande dans la table demandes pour qu'elle apparaisse dans l'admin
+  const nomParts = client_nom.trim().split(' ');
+  const clientPrenom = nomParts.slice(0, -1).join(' ') || client_nom;
+  const clientNom = nomParts.slice(-1)[0] || '';
+
+  await fetch(`${process.env.SUPABASE_URL}/rest/v1/demandes`, {
+    method: 'POST',
+    headers: {
+      'apikey': process.env.SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify({
+      prenom: clientPrenom,
+      nom: clientNom,
+      email: client_email || '',
+      telephone: client_tel || '',
+      adresse_bien: bien,
+      formule: formule || '',
+      message: formule || '',
+      statut: 'nouveau',
+      contexte: `Apport prescripteur — ${presc_nom} (${presc_type || presc_cabinet || 'Prescripteur'}) | ${presc_email} | ${presc_tel || ''} | Code: ${prescCode}`,
+    }),
+  });
 
   // 3. Notification à Laurent
   const isNotaire = isNotairePrescr;
