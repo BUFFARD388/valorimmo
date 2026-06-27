@@ -137,7 +137,7 @@ async function sendBonCadeau({ email, nom, prescCode, valeur, points }) {
 <style>
   body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #F4F7FB; margin: 0; padding: 0; }
   .wrapper { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; }
-  .header { background: linear-gradient(135deg, #1B2D5B 0%, #0F1F3D 100%); padding: 28px 40px; }
+  .header { background: #ffffff; border-bottom: 2px solid #E5E7EB; padding: 28px 40px; }
   .body { padding: 36px 40px; }
   .body h2 { font-family: 'Poppins', Georgia, serif; font-size: 1.1rem; color: #1B2D5B; font-weight: 600; margin: 0 0 16px; }
   .body p { font-size: 0.9rem; color: #4B5563; line-height: 1.75; margin: 0 0 12px; }
@@ -155,7 +155,7 @@ async function sendBonCadeau({ email, nom, prescCode, valeur, points }) {
 <body>
 <div class="wrapper">
   <div class="header">
-    <img src="https://valorimmo.app/logo-email-white.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
+    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
   </div>
   <div class="body">
     <h2>🎁 Félicitations ${nom} !</h2>
@@ -198,11 +198,11 @@ async function sendNotifPoints({ email, nom, prescCode, pointsAjoutes, totalPoin
 <style>
   body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #F4F7FB; margin: 0; padding: 0; }
   .wrapper { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; }
-  .header { background: linear-gradient(135deg, #1B2D5B 0%, #0F1F3D 100%); padding: 28px 40px; }
+  .header { background: #ffffff; border-bottom: 2px solid #E5E7EB; padding: 28px 40px; }
   .body { padding: 36px 40px; }
   .body h2 { font-family: 'Poppins', Georgia, serif; font-size: 1.1rem; color: #1B2D5B; font-weight: 600; margin: 0 0 16px; }
   .body p { font-size: 0.9rem; color: #4B5563; line-height: 1.75; margin: 0 0 12px; }
-  .points-box { background: linear-gradient(135deg, #1B2D5B 0%, #0F1F3D 100%); border-radius: 10px; padding: 24px; display: flex; align-items: center; justify-content: space-between; margin: 22px 0; gap: 16px; }
+  .points-box { background: #ffffff; border-bottom: 2px solid #E5E7EB; border-radius: 10px; padding: 24px; display: flex; align-items: center; justify-content: space-between; margin: 22px 0; gap: 16px; }
   .pts-item { text-align: center; }
   .pts-value { font-family: 'Poppins', Georgia, serif; font-size: 1.8rem; font-weight: 700; color: #C8933A; }
   .pts-label { font-size: 0.72rem; color: #CBD5E1; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; }
@@ -215,7 +215,7 @@ async function sendNotifPoints({ email, nom, prescCode, pointsAjoutes, totalPoin
 <body>
 <div class="wrapper">
   <div class="header">
-    <img src="https://valorimmo.app/logo-email-white.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
+    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
   </div>
   <div class="body">
     <h2>Votre compte fidélité a été crédité</h2>

@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   .wrapper { max-width: 720px; margin: 0 auto; background: #fff; }
 
   /* HEADER */
-  .header { background: linear-gradient(135deg, #1B2D5B 0%, #0F1F3D 100%); padding: 28px 40px; }
+  .header { background: #ffffff; border-bottom: 2px solid #E5E7EB; padding: 28px 40px; }
 
   /* INTRO */
   .intro { padding: 28px 40px; border-bottom: 1.5px solid #E5E7EB; }
@@ -110,7 +110,7 @@ export default async function handler(req, res) {
 <div class="wrapper">
 
   <div class="header">
-    <img src="https://valorimmo.app/logo-email-white.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
+    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
   </div>
 
   <div class="intro">

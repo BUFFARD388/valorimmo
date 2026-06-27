@@ -102,7 +102,7 @@ export default async function handler(req, res) {
 <style>
   body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #F4F7FB; margin: 0; padding: 0; color: #1F2937; }
   .wrapper { max-width: 720px; margin: 0 auto; background: #fff; }
-  .header { background: linear-gradient(135deg, #1B2D5B 0%, #0F1F3D 100%); padding: 28px 40px; }
+  .header { background: #ffffff; border-bottom: 2px solid #E5E7EB; padding: 28px 40px; }
   .intro { padding: 28px 40px; border-bottom: 1.5px solid #E5E7EB; }
   .intro h2 { font-family: 'Poppins', Georgia, serif; font-size: 1.1rem; color: #1B2D5B; font-weight: 600; margin-bottom: 12px; }
   .intro p { font-size: 0.9rem; color: #4B5563; line-height: 1.7; margin-bottom: 10px; }
@@ -153,7 +153,7 @@ export default async function handler(req, res) {
 <body>
 <div class="wrapper">
   <div class="header">
-    <img src="https://valorimmo.app/logo-email-white.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
+    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
   </div>
   <div class="intro">
     <h2>Merci pour votre paiement — voici votre rapport</h2>
