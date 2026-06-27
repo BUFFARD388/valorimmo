@@ -1,5 +1,12 @@
 import { randomUUID } from 'crypto';
 
+// Génère un code prescripteur lisible ex: PRESC-2026-A3F7
+function genPrescrCode() {
+  const year = new Date().getFullYear();
+  const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `PRESC-${year}-${suffix}`;
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -15,6 +22,7 @@ export default async function handler(req, res) {
 
   // Générer l'UUID côté serveur pour éviter le besoin de SELECT policy
   const prescripteurId = randomUUID();
+  const prescCode = genPrescrCode();
 
   // 1. Enregistrer le prescripteur dans Supabase
   const prescRes = await fetch(`${process.env.SUPABASE_URL}/rest/v1/prescripteurs`, {
@@ -33,6 +41,8 @@ export default async function handler(req, res) {
       societe: presc_cabinet || '',
       type_prescripteur: presc_type || '',
       statut: 'actif',
+      presc_code: prescCode,
+      points: 0,
     }),
   });
 
@@ -40,6 +50,18 @@ export default async function handler(req, res) {
     const err = await prescRes.text();
     console.error('Supabase prescripteur error:', err);
     return res.status(500).json({ error: 'Erreur base de données (prescripteur)' });
+  }
+
+  // 1b. Créer le contact Brevo avec attributs programme fidélité
+  const isNotairePrescr = partenariat_notaire === true || partenariat_notaire === 'true';
+  if (!isNotairePrescr) {
+    await createBrevoContact({
+      email: presc_email,
+      nom: presc_nom,
+      presc_code: prescCode,
+      presc_type: presc_type || '',
+      societe: presc_cabinet || '',
+    });
   }
 
   // 2. Enregistrer l'apport dans Supabase
@@ -67,7 +89,7 @@ export default async function handler(req, res) {
   }
 
   // 3. Notification à Laurent
-  const isNotaire = partenariat_notaire === true || partenariat_notaire === 'true';
+  const isNotaire = isNotairePrescr;
   await sendEmail({
     to: 'laurentbuffard69250@gmail.com',
     subject: `[Valorimmo] ${isNotaire ? '⚖️ PARTENARIAT NOTAIRE' : 'Nouveau dossier prescripteur'} — ${presc_nom}`,
@@ -141,8 +163,13 @@ export default async function handler(req, res) {
       <p><strong>Client :</strong> ${client_nom}</p>
       <p><strong>Bien :</strong> ${bien}</p>
       <p><strong>Formule :</strong> ${formule || 'À définir'}</p>
-      ${commission ? '<p><strong>Commission apporteur :</strong> Souhaitée — nous reviendrons vers vous pour les modalités.</p>' : ''}
     </div>
+    ${!isNotaire ? `
+    <div style="background:#F0F7FF;border:1.5px solid #BFDBF7;border-radius:8px;padding:16px 20px;margin:20px 0;">
+      <p style="margin:0 0 8px;font-size:0.82rem;font-weight:700;color:#1B2D5B;text-transform:uppercase;letter-spacing:0.1em;">Votre programme fidélité</p>
+      <p style="margin:0 0 6px;font-size:0.88rem;color:#1F2937;">Votre code prescripteur : <strong style="color:#C8933A;font-size:1rem;letter-spacing:0.05em;">${prescCode}</strong></p>
+      <p style="margin:0;font-size:0.82rem;color:#4B5563;">Chaque client diagnostiqué vous rapporte des points échangeables en bons cadeaux. Nous vous tiendrons informé de l'avancement de ce dossier.</p>
+    </div>` : ''}
     <div class="note">
       📞 <strong>Laurent Buffard vous recontactera sous 24h ouvrées</strong> pour confirmer la prise en charge du dossier.
     </div>
@@ -177,5 +204,32 @@ async function sendEmail({ to, subject, html }) {
   if (!res.ok) {
     const err = await res.text();
     console.error('Brevo error:', err);
+  }
+}
+
+// Crée ou met à jour un contact Brevo avec les attributs du programme fidélité
+async function createBrevoContact({ email, nom, presc_code, presc_type, societe }) {
+  const res = await fetch('https://api.brevo.com/v3/contacts', {
+    method: 'POST',
+    headers: {
+      'api-key': process.env.BREVO_API_KEY,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email,
+      attributes: {
+        PRENOM: nom,
+        SOCIETE: societe,
+        PRESC_CODE: presc_code,
+        PRESC_TYPE: presc_type,
+        POINTS: 0,
+      },
+      listIds: [parseInt(process.env.BREVO_PRESCRIPTEUR_LIST_ID || '0')].filter(Boolean),
+      updateEnabled: true,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    console.error('Brevo contact error:', err);
   }
 }
