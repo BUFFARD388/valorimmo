@@ -22,16 +22,30 @@ const PALIERS = [
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { secret, email, points, note } = req.body;
+  // Parsing du body (string ou objet selon l'environnement)
+  let body = req.body;
+  if (typeof body === 'string') {
+    try { body = JSON.parse(body); } catch { body = {}; }
+  }
+  body = body || {};
+
+  const { secret, email, points, note } = body;
+
+  // Debug temporaire — à retirer après validation
+  console.log('ADMIN_PASSWORD set:', !!process.env.ADMIN_PASSWORD);
+  console.log('secret reçu:', secret);
+  console.log('match:', secret === process.env.ADMIN_PASSWORD);
 
   // Vérification du mot de passe admin (même variable que admin-auth.js)
   if (!secret || secret !== process.env.ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Non autorisé' });
+    return res.status(401).json({ error: 'Non autorisé', debug: { hasEnv: !!process.env.ADMIN_PASSWORD } });
   }
 
-  if (!email || typeof points !== 'number' || points <= 0) {
-    return res.status(400).json({ error: 'email et points (nombre > 0) requis' });
+  if (!email || !points || Number(points) <= 0) {
+    return res.status(400).json({ error: 'email et points requis' });
   }
+
+  const pointsNum = Number(points);
 
   // 1. Récupérer le contact Brevo
   const getRes = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
@@ -47,7 +61,7 @@ export default async function handler(req, res) {
   const contact = await getRes.json();
   const attrs = contact.attributes || {};
   const oldPoints = parseInt(attrs.POINTS || '0', 10);
-  const newPoints = oldPoints + points;
+  const newPoints = oldPoints + pointsNum;
   const prescCode = attrs.PRESC_CODE || '';
   const nom = attrs.PRENOM || email;
 
@@ -81,6 +95,7 @@ export default async function handler(req, res) {
       points: newPoints,
     });
 
+
     // Notifier Laurent
     await sendEmail({
       to: 'laurentbuffard69250@gmail.com',
@@ -95,8 +110,7 @@ export default async function handler(req, res) {
       `,
     });
   } else {
-    // Envoyer juste une notification de points ajoutés au prescripteur
-    await sendNotifPoints({ email, nom, prescCode, pointsAjoutes: points, totalPoints: newPoints, note });
+    await sendNotifPoints({ email, nom, prescCode, pointsAjoutes: pointsNum, totalPoints: newPoints, note });
   }
 
   return res.status(200).json({
