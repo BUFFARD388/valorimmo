@@ -643,7 +643,7 @@
               </div>
             </div>
             <button onclick="toggleDetail('notaire')" id="btn-notaire" style="width:100%;background:var(--gold);color:#1A2535;font-size:0.8rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:13px 20px;border:none;border-radius:8px;cursor:pointer;">
-              Devenir partenaire notaire ↓
+              Recommander un client ↓
             </button>
           </div>
         </div>
@@ -651,29 +651,14 @@
         <!-- Détail + formulaire (masqué par défaut) -->
         <div id="detail-notaire" style="display:none;flex-direction:column;gap:14px;">
 
-          <!-- Modalités -->
-          <div style="background:var(--blue-light);border:1.5px solid #BFDBF7;border-radius:10px;padding:20px 22px;">
-            <div style="font-size:0.68rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;">Modalités du partenariat</div>
-            <div style="background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:14px;">
-              <div style="font-size:0.62rem;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Tarifs partenaires (−50 %)</div>
-              <div style="display:flex;justify-content:space-between;font-size:0.83rem;padding:5px 0;border-bottom:1px solid var(--border);color:var(--text-dark);"><span>Diagnostic Essentiel</span><span><s style="color:#9CA3AF;font-size:0.75rem;margin-right:4px;">250 €</s><strong style="color:var(--gold);">125 €</strong></span></div>
-              <div style="display:flex;justify-content:space-between;font-size:0.83rem;padding:5px 0;border-bottom:1px solid var(--border);color:var(--text-dark);"><span>Diagnostic Expert</span><span><s style="color:#9CA3AF;font-size:0.75rem;margin-right:4px;">390 €</s><strong style="color:var(--gold);">195 €</strong></span></div>
-              <div style="display:flex;justify-content:space-between;font-size:0.83rem;padding:5px 0;color:var(--text-dark);"><span>Diagnostic Stratégique</span><span><s style="color:#9CA3AF;font-size:0.75rem;margin-right:4px;">950 €</s><strong style="color:var(--gold);">475 €</strong></span></div>
-            </div>
-            <ul style="list-style:none;margin:0;">
-              <li style="font-size:0.81rem;color:var(--text-muted);padding:4px 0;display:flex;gap:8px;"><span style="color:var(--gold);flex-shrink:0;">✓</span>Convention écrite remise sous 48h</li>
-              <li style="font-size:0.81rem;color:var(--text-muted);padding:4px 0;display:flex;gap:8px;"><span style="color:var(--gold);flex-shrink:0;">✓</span>Code partenaire personnel — conforme aux obligations déontologiques</li>
-              <li style="font-size:0.81rem;color:var(--text-muted);padding:4px 0;display:flex;gap:8px;"><span style="color:var(--gold);flex-shrink:0;">✓</span>Aucune contrepartie financière directe</li>
-            </ul>
-          </div>
-
-          <!-- Formulaire -->
+          <!-- Formulaire simple -->
           <div style="background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:24px 22px;box-shadow:0 4px 16px rgba(27,45,91,0.06);">
             <div id="notaire-form-wrap">
-              <h3 style="font-family:'Poppins',sans-serif;font-size:1rem;color:var(--text-dark);font-weight:600;margin-bottom:4px;">Demande de partenariat</h3>
-              <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:18px;">Convention + code partenaire envoyés sous 48h ouvrées.</p>
+              <h3 style="font-family:'Poppins',sans-serif;font-size:1rem;color:var(--text-dark);font-weight:600;margin-bottom:4px;">Recommander un client</h3>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:18px;">Nous prenons contact avec vous sous 24h ouvrées pour organiser la prise en charge.</p>
               <form onsubmit="handleNotaireSubmit(event)">
                 <div class="form-grid">
+                  <div class="form-section-label">Vos coordonnées</div>
                   <div class="form-group">
                     <label>Votre nom</label>
                     <input type="text" name="presc_nom" placeholder="Me Dupont" required />
@@ -691,36 +676,58 @@
                     <input type="tel" name="presc_tel" placeholder="06 XX XX XX XX" />
                   </div>
                   <hr class="form-divider" />
-                  <div class="form-section-label" style="font-size:0.68rem;">Premier client <span style="font-weight:400;color:var(--text-muted);text-transform:none;letter-spacing:0;">(optionnel)</span></div>
+                  <div class="form-section-label">Informations sur votre client</div>
                   <div class="form-group">
                     <label>Nom du client</label>
-                    <input type="text" name="client_nom" placeholder="Nom du propriétaire" />
+                    <input type="text" name="client_nom" placeholder="Nom du propriétaire" required />
                   </div>
                   <div class="form-group">
                     <label>Téléphone du client</label>
                     <input type="tel" name="client_tel" placeholder="06 XX XX XX XX" />
                   </div>
+                  <div class="form-group">
+                    <label>Email du client</label>
+                    <input type="email" name="client_email" placeholder="client@email.fr" />
+                  </div>
+                  <div class="form-group">
+                    <label>Formule souhaitée</label>
+                    <select name="formule">
+                      <option value="">À définir ensemble</option>
+                      <option>Diagnostic Essentiel — 250 €</option>
+                      <option>Diagnostic Expert — 390 €</option>
+                      <option>Diagnostic Stratégique — 950 €</option>
+                    </select>
+                  </div>
                   <div class="form-group full">
-                    <label>Adresse du bien <span style="font-weight:400;color:var(--text-muted);">(optionnel)</span></label>
-                    <textarea name="bien" placeholder="Adresse du bien à diagnostiquer…" style="min-height:60px;"></textarea>
+                    <label>Adresse du bien</label>
+                    <textarea name="bien" placeholder="Adresse complète du bien à diagnostiquer…" style="min-height:70px;" required></textarea>
                   </div>
                   <input type="hidden" name="presc_type" value="Notaire" />
-                  <input type="hidden" name="partenariat_notaire" value="true" />
-                  <button type="submit" class="btn-submit">Demander le partenariat</button>
+                  <input type="hidden" name="partenariat_notaire" value="false" />
+                  <button type="submit" class="btn-submit">Transmettre le dossier</button>
+                  <p class="form-mention">Nous vous recontactons sous 24h ouvrées.</p>
                 </div>
               </form>
             </div>
             <div id="notaire-form-success" style="display:none;text-align:center;padding:24px 8px;">
               <div style="font-size:2rem;margin-bottom:10px;">✓</div>
-              <h3 style="font-family:'Poppins',sans-serif;color:var(--blue);font-weight:500;font-size:1rem;margin-bottom:6px;">Demande reçue</h3>
-              <p style="font-size:0.84rem;color:var(--text-muted);">Convention et code partenaire envoyés sous 48h ouvrées.</p>
+              <h3 style="font-family:'Poppins',sans-serif;color:var(--blue);font-weight:500;font-size:1rem;margin-bottom:6px;">Dossier transmis</h3>
+              <p style="font-size:0.84rem;color:var(--text-muted);">Nous vous recontactons sous 24h ouvrées pour organiser la prise en charge de votre client.</p>
             </div>
           </div>
 
-          <a href="/convention-partenariat-notaire.pdf" download style="display:flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid #BFDBF7;border-radius:8px;padding:11px 18px;text-decoration:none;color:var(--blue);font-size:0.8rem;font-weight:600;background:#fff;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Télécharger la convention (PDF)
-          </a>
+          <!-- Convention optionnelle — tout en bas -->
+          <div style="border:1px solid var(--border);border-radius:10px;padding:18px 22px;background:var(--bg-alt);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:0.78rem;font-weight:600;color:var(--text-dark);margin-bottom:3px;">Vous souhaitez formaliser un partenariat ?</div>
+              <div style="font-size:0.76rem;color:var(--text-muted);line-height:1.55;">Une convention optionnelle permet à vos clients de bénéficier de −50 % via un code partenaire personnel.</div>
+            </div>
+            <a href="/convention-partenariat-notaire.pdf" download style="display:inline-flex;align-items:center;gap:7px;background:#fff;border:1.5px solid #BFDBF7;border-radius:7px;padding:9px 16px;text-decoration:none;color:var(--blue);font-size:0.78rem;font-weight:600;white-space:nowrap;flex-shrink:0;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Télécharger la convention (PDF)
+            </a>
+          </div>
+
         </div>
       </div>
 
