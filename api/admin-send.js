@@ -41,34 +41,31 @@ export default async function handler(req, res) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Votre rapport Valorimmo</title>
 <style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F4F7FB; margin: 0; padding: 0; color: #1F2937; }
+  body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #F4F7FB; margin: 0; padding: 0; color: #1F2937; }
   .wrapper { max-width: 720px; margin: 0 auto; background: #fff; }
 
   /* HEADER */
-  .header { background: #1B3F6E; padding: 28px 40px; }
-  .header-brand { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.06em; color: #fff; }
-  .header-brand span { color: #FBBF24; }
-  .header-tagline { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: #93C5FD; margin-top: 3px; }
+  .header { background: linear-gradient(135deg, #1B2D5B 0%, #0F1F3D 100%); padding: 28px 40px; }
 
   /* INTRO */
   .intro { padding: 28px 40px; border-bottom: 1.5px solid #E5E7EB; }
-  .intro h2 { font-family: Georgia, serif; font-size: 1.1rem; color: #1B3F6E; font-weight: 400; margin-bottom: 12px; }
+  .intro h2 { font-family: 'Poppins', Georgia, serif; font-size: 1.1rem; color: #1B2D5B; font-weight: 600; margin-bottom: 12px; }
   .intro p { font-size: 0.9rem; color: #4B5563; line-height: 1.7; margin-bottom: 10px; }
   .intro .call-box { background: #FEF3E2; border: 1px solid #F6D5A0; border-radius: 8px; padding: 14px 18px; margin-top: 16px; font-size: 0.88rem; color: #92400E; }
   .intro .call-box strong { color: #78350F; }
 
   /* RAPPORT */
   .rapport { padding: 32px 40px; }
-  .rapport-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #2557A0; margin-bottom: 20px; border-bottom: 2px solid #BFDBF7; padding-bottom: 8px; }
+  .rapport-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: #C8933A; margin-bottom: 20px; border-bottom: 2px solid #BFDBF7; padding-bottom: 8px; }
 
   /* SECTIONS DU RAPPORT */
   .section { margin-bottom: 36px; }
-  .section-num { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #2557A0; margin-bottom: 4px; }
-  .section-title { font-family: Georgia, serif; font-size: 1rem; color: #1B3F6E; font-weight: 400; border-bottom: 1.5px solid #BFDBF7; padding-bottom: 8px; margin-bottom: 12px; }
+  .section-num { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #C8933A; margin-bottom: 4px; }
+  .section-title { font-family: 'Poppins', Georgia, serif; font-size: 1rem; color: #1B2D5B; font-weight: 600; border-bottom: 1.5px solid #BFDBF7; padding-bottom: 8px; margin-bottom: 12px; }
   p { margin-bottom: 8px; }
 
   table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 12px 0; }
-  thead th { background: #EBF2FB; color: #1B3F6E; font-weight: 700; padding: 8px 12px; text-align: left; border-bottom: 2px solid #BFDBF7; }
+  thead th { background: #EBF2FB; color: #1B2D5B; font-weight: 700; padding: 8px 12px; text-align: left; border-bottom: 2px solid #BFDBF7; }
   tbody td { padding: 8px 12px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; }
   tbody tr:last-child td { border-bottom: none; }
   tbody tr:nth-child(even) td { background: #F9FAFB; }
@@ -85,36 +82,44 @@ export default async function handler(req, res) {
   .estimation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
   .estimation-card { border-radius: 8px; padding: 18px 20px; text-align: center; }
   .estimation-card.low { background: #F8FAFF; border: 1.5px solid #BFDBF7; }
-  .estimation-card.high { background: #1B3F6E; border: 1.5px solid #1B3F6E; }
+  .estimation-card.high { background: #1B2D5B; border: 1.5px solid #1B2D5B; }
   .estimation-card-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #6B7280; margin-bottom: 6px; }
   .estimation-card.high .estimation-card-label { color: #93C5FD; }
-  .estimation-card-value { font-family: Georgia, serif; font-size: 1.6rem; color: #1B3F6E; line-height: 1; }
+  .estimation-card-value { font-family: Georgia, serif; font-size: 1.6rem; color: #1B2D5B; line-height: 1; }
   .estimation-card.high .estimation-card-value { color: #fff; }
   .estimation-card-sub { font-size: 0.7rem; color: #6B7280; margin-top: 4px; }
   .estimation-card.high .estimation-card-sub { color: #94A3B8; }
 
-  .conclusion-block { background: #1B3F6E; border-radius: 10px; padding: 22px 26px; color: #fff; margin-top: 8px; }
+  .conclusion-block { background: #1B2D5B; border-radius: 10px; padding: 22px 26px; color: #fff; margin-top: 8px; }
   .conclusion-block h3 { font-family: Georgia, serif; font-size: 0.95rem; color: #fff; font-weight: 400; margin-bottom: 12px; }
   .conclusion-rec { display: flex; flex-direction: column; gap: 8px; }
   .conclusion-rec-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px 14px; display: flex; gap: 12px; align-items: flex-start; }
-  .conclusion-rec-num { background: #FBBF24; color: #0F2A50; font-size: 0.68rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .conclusion-rec-num { background: #C8933A; color: #1A2535; font-size: 0.68rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .conclusion-rec-text { font-size: 0.82rem; color: #E2E8F0; line-height: 1.6; }
   .conclusion-rec-text strong { color: #fff; }
-  .conclusion-quote { border-left: 3px solid #FBBF24; padding: 10px 16px; margin-top: 16px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.86rem; color: #CBD5E1; line-height: 1.7; }
+  .conclusion-quote { border-left: 3px solid #C8933A; padding: 10px 16px; margin-top: 16px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-family: Georgia, serif; font-style: italic; font-size: 0.86rem; color: #CBD5E1; line-height: 1.7; }
   .disclaimer { margin-top: 22px; padding: 12px 16px; background: #F9FAFB; border-radius: 6px; font-size: 0.72rem; color: #6B7280; line-height: 1.6; border: 1px solid #E5E7EB; font-style: italic; }
 
   /* FOOTER */
   .footer { background: #F4F7FB; border-top: 1.5px solid #E5E7EB; padding: 20px 40px; text-align: center; }
   .footer p { font-size: 0.75rem; color: #9CA3AF; line-height: 1.8; }
-  .footer a { color: #2557A0; text-decoration: none; }
+  .footer a { color: #C8933A; text-decoration: none; }
 </style>
 </head>
 <body>
 <div class="wrapper">
 
   <div class="header">
-    <div class="header-brand">VALOR<span>IMMO</span></div>
-    <div class="header-tagline">Diagnostic expert immobilier</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 65" width="168" height="52">
+      <g transform="translate(2, 6) scale(0.48)">
+        <path d="M50,5 L93,42 L83,42 L83,80 L17,80 L17,42 L7,42 Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M30,72 C50,68 66,44 74,27" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round"/>
+        <polyline points="63,22 74,27 68,39" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text font-family="'Poppins','Inter','Segoe UI',Arial,sans-serif" font-size="21" font-weight="700" font-style="italic" letter-spacing="-0.3">
+        <tspan x="50" y="41" fill="#ffffff">valor</tspan><tspan fill="#C8933A">immo</tspan>
+      </text>
+    </svg>
   </div>
 
   <div class="intro">

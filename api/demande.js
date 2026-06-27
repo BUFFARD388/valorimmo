@@ -74,14 +74,62 @@ export default async function handler(req, res) {
   await sendEmail({
     to: email,
     subject: 'Votre demande Valorimmo a bien été reçue',
-    html: `
-      <p>Bonjour ${prenom || nom},</p>
-      <p>Nous avons bien reçu votre demande de diagnostic immobilier.</p>
-      <p>Nous vous recontactons sous <strong>24h ouvrées</strong> pour organiser votre dossier.</p>
-      <br>
-      <p>Cordialement,<br><strong>Laurent Buffard</strong><br>Valorimmo — Diagnostic expert immobilier</p>
-      <p style="font-size:12px;color:#999;">contact@valorimmo.app · valorimmo.app</p>
-    `,
+    html: `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Votre demande Valorimmo a bien été reçue</title>
+<style>
+  body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #F4F7FB; margin: 0; padding: 0; }
+  .wrapper { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; overflow: hidden; }
+  .header { background: linear-gradient(135deg, #1B2D5B 0%, #0F1F3D 100%); padding: 28px 40px; }
+  .body { padding: 36px 40px; }
+  .body h2 { font-family: 'Poppins', Georgia, serif; font-size: 1.1rem; color: #1B2D5B; font-weight: 600; margin: 0 0 16px; }
+  .body p { font-size: 0.9rem; color: #4B5563; line-height: 1.75; margin: 0 0 12px; }
+  .info-box { background: #F4F7FB; border: 1.5px solid #E2E8F0; border-radius: 8px; padding: 18px 22px; margin: 22px 0; }
+  .info-box p { margin: 0; font-size: 0.88rem; color: #1F2937; line-height: 1.8; }
+  .info-box strong { color: #1B2D5B; }
+  .note { background: #FEF3E2; border: 1px solid #F6D5A0; border-radius: 8px; padding: 14px 18px; margin: 20px 0; font-size: 0.85rem; color: #92400E; }
+  .footer { background: #F4F7FB; border-top: 1.5px solid #E5E7EB; padding: 20px 40px; text-align: center; }
+  .footer p { font-size: 0.75rem; color: #9CA3AF; line-height: 1.8; margin: 0; }
+  .footer a { color: #C8933A; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 65" width="168" height="52">
+      <g transform="translate(2, 6) scale(0.48)">
+        <path d="M50,5 L93,42 L83,42 L83,80 L17,80 L17,42 L7,42 Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M30,72 C50,68 66,44 74,27" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round"/>
+        <polyline points="63,22 74,27 68,39" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text font-family="'Poppins','Inter','Segoe UI',Arial,sans-serif" font-size="21" font-weight="700" font-style="italic" letter-spacing="-0.3">
+        <tspan x="50" y="41" fill="#ffffff">valor</tspan><tspan fill="#C8933A">immo</tspan>
+      </text>
+    </svg>
+  </div>
+  <div class="body">
+    <h2>Votre demande a bien été reçue</h2>
+    <p>Bonjour <strong>${prenom || nom}</strong>,</p>
+    <p>Nous avons bien enregistré votre demande de diagnostic immobilier pour le bien situé au <strong>${adresse_bien}</strong>.</p>
+    <div class="info-box">
+      <p><strong>Formule choisie :</strong> ${formule || 'À définir'}</p>
+      <p><strong>Bien :</strong> ${adresse_bien}</p>
+    </div>
+    <div class="note">
+      📞 <strong>Laurent Buffard vous recontactera sous 24h ouvrées</strong> pour organiser votre dossier et répondre à toutes vos questions.
+    </div>
+    <p>En attendant, n'hésitez pas à nous écrire directement à <a href="mailto:contact@valorimmo.app" style="color:#C8933A;">contact@valorimmo.app</a>.</p>
+  </div>
+  <div class="footer">
+    <p><strong>Valorimmo</strong> — Laurent Buffard<br>
+    <a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a> · <a href="https://valorimmo.app">valorimmo.app</a></p>
+  </div>
+</div>
+</body>
+</html>`,
   });
 
   return res.status(200).json({ ok: true });

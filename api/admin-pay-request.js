@@ -65,31 +65,36 @@ export default async function handler(req, res) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Votre rapport Valorimmo est prêt</title>
 <style>
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F4F7FB; margin: 0; padding: 0; }
+  body { font-family: 'Inter', 'Segoe UI', Arial, sans-serif; background: #F4F7FB; margin: 0; padding: 0; }
   .wrapper { max-width: 600px; margin: 0 auto; background: #fff; }
-  .header { background: #1B3F6E; padding: 28px 40px; }
-  .header-brand { font-size: 1.3rem; font-weight: 800; letter-spacing: 0.06em; color: #fff; }
-  .header-brand span { color: #FBBF24; }
-  .header-tagline { font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: #93C5FD; margin-top: 3px; }
+  .header { background: linear-gradient(135deg, #1B2D5B 0%, #0F1F3D 100%); padding: 28px 40px; }
   .body { padding: 36px 40px; }
-  .body h2 { font-family: Georgia, serif; font-size: 1.15rem; color: #1B3F6E; font-weight: 400; margin-bottom: 16px; }
+  .body h2 { font-family: 'Poppins', Georgia, serif; font-size: 1.15rem; color: #1B2D5B; font-weight: 600; margin-bottom: 16px; }
   .body p { font-size: 0.9rem; color: #4B5563; line-height: 1.7; margin-bottom: 12px; }
   .rapport-info { background: #F8FAFF; border: 1.5px solid #BFDBF7; border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
   .rapport-info p { margin: 0; font-size: 0.88rem; color: #1F2937; line-height: 1.8; }
-  .rapport-info strong { color: #1B3F6E; }
-  .btn-payer { display: block; width: fit-content; margin: 28px auto; background: #1B3F6E; color: #fff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.08em; text-align: center; }
+  .rapport-info strong { color: #1B2D5B; }
+  .btn-payer { display: block; width: fit-content; margin: 28px auto; background: #C8933A; color: #1A2535; text-decoration: none; padding: 16px 40px; border-radius: 6px; font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; text-align: center; }
   .note { background: #FEF3E2; border: 1px solid #F6D5A0; border-radius: 8px; padding: 14px 18px; margin: 20px 0; }
   .note p { font-size: 0.85rem; color: #92400E; margin: 0; }
   .footer { background: #F4F7FB; border-top: 1.5px solid #E5E7EB; padding: 20px 40px; text-align: center; }
   .footer p { font-size: 0.75rem; color: #9CA3AF; line-height: 1.8; margin: 0; }
-  .footer a { color: #2557A0; text-decoration: none; }
+  .footer a { color: #C8933A; text-decoration: none; }
 </style>
 </head>
 <body>
 <div class="wrapper">
   <div class="header">
-    <div class="header-brand">VALOR<span>IMMO</span></div>
-    <div class="header-tagline">Diagnostic expert immobilier</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 65" width="168" height="52">
+      <g transform="translate(2, 6) scale(0.48)">
+        <path d="M50,5 L93,42 L83,42 L83,80 L17,80 L17,42 L7,42 Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+        <path d="M30,72 C50,68 66,44 74,27" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round"/>
+        <polyline points="63,22 74,27 68,39" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text font-family="'Poppins','Inter','Segoe UI',Arial,sans-serif" font-size="21" font-weight="700" font-style="italic" letter-spacing="-0.3">
+        <tspan x="50" y="41" fill="#ffffff">valor</tspan><tspan fill="#C8933A">immo</tspan>
+      </text>
+    </svg>
   </div>
   <div class="body">
     <h2>Votre rapport de diagnostic est prêt</h2>
