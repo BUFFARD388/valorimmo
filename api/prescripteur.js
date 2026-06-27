@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   const {
     presc_nom, presc_type, presc_cabinet, presc_email, presc_tel,
     client_nom, client_email, client_tel, formule, bien, commission,
+    partenariat_notaire,
   } = req.body;
 
   if (!presc_nom || !presc_email || !client_nom || !bien) {
@@ -66,23 +67,28 @@ export default async function handler(req, res) {
   }
 
   // 3. Notification à Laurent
+  const isNotaire = partenariat_notaire === true || partenariat_notaire === 'true';
   await sendEmail({
     to: 'laurentbuffard69250@gmail.com',
-    subject: `[Valorimmo] Nouveau dossier prescripteur — ${presc_nom}`,
+    subject: `[Valorimmo] ${isNotaire ? '⚖️ PARTENARIAT NOTAIRE' : 'Nouveau dossier prescripteur'} — ${presc_nom}`,
     html: `
-      <h2>Nouveau dossier prescripteur</h2>
+      <h2>${isNotaire ? '⚖️ Nouveau partenaire notaire' : 'Nouveau dossier prescripteur'}</h2>
+      ${isNotaire ? '<p style="background:#FEF3E2;border:1px solid #F6D5A0;border-radius:6px;padding:10px 14px;color:#92400E;"><strong>Action requise :</strong> Envoyer la convention de partenariat + code partenaire sous 48h.</p>' : ''}
       <h3>Prescripteur</h3>
       <p><strong>Nom :</strong> ${presc_nom}</p>
       <p><strong>Profession :</strong> ${presc_type || 'nc'}</p>
       <p><strong>Cabinet :</strong> ${presc_cabinet || 'nc'}</p>
       <p><strong>Email :</strong> ${presc_email}</p>
       <p><strong>Téléphone :</strong> ${presc_tel || 'nc'}</p>
-      <p><strong>Commission souhaitée :</strong> ${commission ? 'Oui' : 'Non'}</p>
+      ${isNotaire
+        ? '<p><strong>Type de partenariat :</strong> Tarif préférentiel −50% (partenariat institutionnel notaire)</p>'
+        : `<p><strong>Programme fidélité :</strong> ${commission ? 'Oui' : 'Non'}</p>`
+      }
       <h3>Client</h3>
       <p><strong>Nom :</strong> ${client_nom}</p>
       <p><strong>Email :</strong> ${client_email || 'nc'}</p>
       <p><strong>Téléphone :</strong> ${client_tel || 'nc'}</p>
-      <p><strong>Formule :</strong> ${formule || 'À définir'}</p>
+      <p><strong>Formule :</strong> ${formule || 'À définir'}${isNotaire ? ' <em>(tarif −50% applicable)</em>' : ''}</p>
       <p><strong>Bien :</strong><br>${bien}</p>
     `,
   });
