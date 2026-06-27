@@ -24,8 +24,8 @@ export default async function handler(req, res) {
 
   const { secret, email, points, note } = req.body;
 
-  // Vérification de la clé secrète
-  if (!secret || secret !== process.env.ADMIN_SECRET) {
+  // Vérification du mot de passe admin (même variable que admin-auth.js)
+  if (!secret || secret !== process.env.ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Non autorisé' });
   }
 
