@@ -155,16 +155,7 @@ async function sendBonCadeau({ email, nom, prescCode, valeur, points }) {
 <body>
 <div class="wrapper">
   <div class="header">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 65" width="168" height="52">
-      <g transform="translate(2, 6) scale(0.48)">
-        <path d="M50,5 L93,42 L83,42 L83,80 L17,80 L17,42 L7,42 Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-        <path d="M30,72 C50,68 66,44 74,27" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round"/>
-        <polyline points="63,22 74,27 68,39" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-      </g>
-      <text font-family="'Poppins','Inter','Segoe UI',Arial,sans-serif" font-size="21" font-weight="700" font-style="italic" letter-spacing="-0.3">
-        <tspan x="50" y="41" fill="#ffffff">valor</tspan><tspan fill="#C8933A">immo</tspan>
-      </text>
-    </svg>
+    <img src="https://valorimmo.app/logo-email-white.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
   </div>
   <div class="body">
     <h2>🎁 Félicitations ${nom} !</h2>
@@ -224,16 +215,7 @@ async function sendNotifPoints({ email, nom, prescCode, pointsAjoutes, totalPoin
 <body>
 <div class="wrapper">
   <div class="header">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 65" width="168" height="52">
-      <g transform="translate(2, 6) scale(0.48)">
-        <path d="M50,5 L93,42 L83,42 L83,80 L17,80 L17,42 L7,42 Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
-        <path d="M30,72 C50,68 66,44 74,27" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round"/>
-        <polyline points="63,22 74,27 68,39" fill="none" stroke="#C8933A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-      </g>
-      <text font-family="'Poppins','Inter','Segoe UI',Arial,sans-serif" font-size="21" font-weight="700" font-style="italic" letter-spacing="-0.3">
-        <tspan x="50" y="41" fill="#ffffff">valor</tspan><tspan fill="#C8933A">immo</tspan>
-      </text>
-    </svg>
+    <img src="https://valorimmo.app/logo-email-white.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
   </div>
   <div class="body">
     <h2>Votre compte fidélité a été crédité</h2>
@@ -271,21 +253,4 @@ async function sendNotifPoints({ email, nom, prescCode, pointsAjoutes, totalPoin
 }
 
 async function sendEmail({ to, subject, html }) {
-  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: {
-      'api-key': process.env.BREVO_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      sender: { name: 'Valorimmo', email: 'contact@valorimmo.app' },
-      to: [{ email: to }],
-      subject,
-      htmlContent: html,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    console.error('Brevo error:', err);
-  }
-}
+  const 
