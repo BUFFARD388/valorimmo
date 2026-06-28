@@ -647,65 +647,55 @@
     }
   }
 
-  // ── GÉNÉRATION PDF (html2canvas + jsPDF directs, pas de wrapper html2pdf) ──
+  // ── GÉNÉRATION PDF via iframe srcdoc (même-origine, rendu complet garanti) ──
   async function generatePdf(printHtml, filename) {
-    const styleBlocks = printHtml.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
-    const bodyMatch = printHtml.match(/<body[^>]*>([\s\S]*)<\/body>/i); // greedy pour tout capturer
-    const bodyContent = bodyMatch ? bodyMatch[1] : '';
-
-    // Styles injectés dans le document courant
-    const tempStyle = document.createElement('style');
-    tempStyle.textContent = styleBlocks.map(s => s.replace(/<\/?style[^>]*>/gi, '')).join('\n');
-    document.head.appendChild(tempStyle);
-
-    // Overlay blanc visible (obligatoire pour html2canvas)
     const loadingMsg = document.createElement('div');
     loadingMsg.textContent = 'Génération du PDF…';
-    loadingMsg.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B2D5B;color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;font-family:Arial,sans-serif;z-index:100001;pointer-events:none;';
-
-    const el = document.createElement('div');
-    el.style.cssText = 'position:fixed;top:0;left:0;width:794px;background:#fff;z-index:100000;overflow:visible;';
-    el.innerHTML = bodyContent;
-
-    document.body.appendChild(el);
+    loadingMsg.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B2D5B;color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;font-family:Arial,sans-serif;z-index:999999;pointer-events:none;';
     document.body.appendChild(loadingMsg);
 
-    // Attendre fonts + images + rendu CSS
-    await new Promise(r => setTimeout(r, 2000));
+    // iframe srcdoc = même-origine, html2canvas peut lire son contentDocument
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed;top:0;left:0;width:794px;height:100%;border:0;z-index:999998;background:#fff;';
+    iframe.srcdoc = printHtml;
+    document.body.appendChild(iframe);
+
+    // Attendre le chargement + fonts/images
+    await new Promise(resolve => {
+      iframe.addEventListener('load', resolve, { once: true });
+      setTimeout(resolve, 5000); // fallback 5s
+    });
+    await new Promise(r => setTimeout(r, 1500));
 
     try {
-      const totalHeight = el.scrollHeight || el.offsetHeight || 1200;
+      const doc = iframe.contentDocument;
+      const body = doc.body;
+      const totalHeight = Math.max(body.scrollHeight, body.offsetHeight, 500);
 
-      const canvas = await html2canvas(el, {
+      const canvas = await html2canvas(body, {
         scale: 2,
         useCORS: true,
-        allowTaint: false,
+        allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false,
         width: 794,
         height: totalHeight,
         windowWidth: 794,
         windowHeight: totalHeight,
-        x: 0,
-        y: 0,
         scrollX: 0,
-        scrollY: 0,
+        scrollY: -window.scrollY,
       });
 
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-      const pageW = pdf.internal.pageSize.getWidth();   // 210mm
-      const pageH = pdf.internal.pageSize.getHeight();  // 297mm
-
-      // Ratio pixel→mm (canvas à scale 2, donc 794*2=1588px = 210mm)
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
       const pxToMm = pageW / canvas.width;
       const imgTotalH = canvas.height * pxToMm;
-
       const imgData = canvas.toDataURL('image/jpeg', 0.92);
 
       let yPos = 0;
       let remaining = imgTotalH;
-
       while (remaining > 0) {
         pdf.addImage(imgData, 'JPEG', 0, yPos, pageW, imgTotalH);
         remaining -= pageH;
@@ -715,9 +705,8 @@
 
       return pdf.output('blob');
     } finally {
-      if (document.body.contains(el)) document.body.removeChild(el);
+      if (document.body.contains(iframe)) document.body.removeChild(iframe);
       if (document.body.contains(loadingMsg)) document.body.removeChild(loadingMsg);
-      if (document.head.contains(tempStyle)) document.head.removeChild(tempStyle);
     }
   }
 
