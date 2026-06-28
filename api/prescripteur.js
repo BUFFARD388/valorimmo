@@ -46,8 +46,8 @@ export default async function handler(req, res) {
 
   if (!prescRes.ok) {
     const err = await prescRes.text();
-    console.error('Supabase prescripteur error:', err);
-    return res.status(500).json({ error: 'Erreur base de données (prescripteur)' });
+    console.error('Supabase prescripteur error (non-bloquant):', err);
+    // On continue quand même pour envoyer les emails
   }
 
   // 1b. Créer le contact Brevo avec attributs programme fidélité
@@ -90,7 +90,7 @@ export default async function handler(req, res) {
   const clientPrenom = nomParts.slice(0, -1).join(' ') || client_nom;
   const clientNom = nomParts.slice(-1)[0] || '';
 
-  await fetch(`${process.env.SUPABASE_URL}/rest/v1/demandes`, {
+  try { await fetch(`${process.env.SUPABASE_URL}/rest/v1/demandes`, {
     method: 'POST',
     headers: {
       'apikey': process.env.SUPABASE_ANON_KEY,
@@ -109,7 +109,7 @@ export default async function handler(req, res) {
       statut: 'nouveau',
       contexte: `Apport prescripteur — ${presc_nom} (${presc_type || presc_cabinet || 'Prescripteur'}) | ${presc_email} | ${presc_tel || ''} | Code: ${prescCode}`,
     }),
-  });
+  }); } catch(e) { console.error('Supabase demande error (non-bloquant):', e); }
 
   // 3. Notification à Laurent
   const isNotaire = isNotairePrescr;
