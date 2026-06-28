@@ -1,0 +1,12 @@
+{
+  "name": "valorimmo",
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=18.x"
+  },
+  "dependencies": {
+    "@sparticuz/chromium-min": "^123.0.0",
+    "puppeteer-core": "^22.6.5"
+  }
+}
