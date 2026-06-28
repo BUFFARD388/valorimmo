@@ -3,6 +3,9 @@
     "api/generate-pdf.js": {
       "memory": 3009,
       "maxDuration": 30
+    },
+    "api/stripe-webhook.js": {
+      "maxDuration": 30
     }
   }
 }
