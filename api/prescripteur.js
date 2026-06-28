@@ -50,40 +50,39 @@ export default async function handler(req, res) {
     // On continue quand même pour envoyer les emails
   }
 
-  // 1b. Créer le contact Brevo avec attributs programme fidélité
+  // 1b. Créer le contact Brevo (non-bloquant)
   const isNotairePrescr = partenariat_notaire === true || partenariat_notaire === 'true';
   if (!isNotairePrescr) {
-    await createBrevoContact({
-      email: presc_email,
-      nom: presc_nom,
-      presc_code: prescCode,
-      presc_type: presc_type || '',
-      societe: presc_cabinet || '',
+    try {
+      await createBrevoContact({
+        email: presc_email,
+        nom: presc_nom,
+        presc_code: prescCode,
+        presc_type: presc_type || '',
+        societe: presc_cabinet || '',
+      });
+    } catch(e) { console.error('Brevo contact error (non-bloquant):', e); }
+  }
+
+  // 2. Enregistrer l'apport dans Supabase (non-bloquant)
+  try {
+    await fetch(`${process.env.SUPABASE_URL}/rest/v1/apports`, {
+      method: 'POST',
+      headers: {
+        'apikey': process.env.SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        prescripteur_id: prescripteurId,
+        nom_client: client_nom,
+        adresse_bien: bien,
+        statut: 'en_attente',
+        notes: `Email: ${client_email || 'nc'} | Tél: ${client_tel || 'nc'} | Formule: ${formule || 'nc'} | Bien: ${bien}`,
+      }),
     });
-  }
-
-  // 2. Enregistrer l'apport dans Supabase
-  const apportRes = await fetch(`${process.env.SUPABASE_URL}/rest/v1/apports`, {
-    method: 'POST',
-    headers: {
-      'apikey': process.env.SUPABASE_ANON_KEY,
-      'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': 'return=minimal',
-    },
-    body: JSON.stringify({
-      prescripteur_id: prescripteurId,
-      nom_client: client_nom,
-      adresse_bien: client_tel || '',
-      statut: 'en_attente',
-      notes: `Email client: ${client_email || 'nc'} | Tél: ${client_tel || 'nc'} | Formule: ${formule || 'nc'} | Commission souhaitée: ${commission ? 'oui' : 'non'} | Bien: ${bien}`,
-    }),
-  });
-
-  if (!apportRes.ok) {
-    const err = await apportRes.text();
-    console.error('Supabase apport error:', err);
-  }
+  } catch(e) { console.error('Supabase apport error (non-bloquant):', e); }
 
   // 3. Créer une demande dans la table demandes pour qu'elle apparaisse dans l'admin
   const nomParts = client_nom.trim().split(' ');
@@ -111,9 +110,9 @@ export default async function handler(req, res) {
     }),
   }); } catch(e) { console.error('Supabase demande error (non-bloquant):', e); }
 
-  // 3. Notification à Laurent
+  // 4. Emails
   const isNotaire = isNotairePrescr;
-  await sendEmail({
+  try { await sendEmail({
     to: 'laurentbuffard69250@gmail.com',
     subject: `[Valorimmo] ${isNotaire ? '⚖️ PARTENARIAT NOTAIRE' : 'Nouveau dossier prescripteur'} — ${presc_nom}`,
     html: `
@@ -136,10 +135,10 @@ export default async function handler(req, res) {
       <p><strong>Formule :</strong> ${formule || 'À définir'}${isNotaire ? ' <em>(tarif −50% applicable)</em>' : ''}</p>
       <p><strong>Bien :</strong><br>${bien}</p>
     `,
-  });
+  }); } catch(e) { console.error('Email Laurent error:', e); }
 
-  // 4. Confirmation au prescripteur
-  await sendEmail({
+  // Confirmation au prescripteur
+  try { await sendEmail({
     to: presc_email,
     subject: 'Votre dossier Valorimmo a bien été transmis',
     html: `<!DOCTYPE html>
@@ -196,7 +195,7 @@ export default async function handler(req, res) {
 </div>
 </body>
 </html>`,
-  });
+  }); } catch(e) { console.error('Email prescripteur error:', e); }
 
   return res.status(200).json({ ok: true });
 }
