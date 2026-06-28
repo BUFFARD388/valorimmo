@@ -31,14 +31,9 @@ export default async function handler(req, res) {
 
   const { secret, email, points, note } = body;
 
-  // Debug temporaire — à retirer après validation
-  console.log('ADMIN_PASSWORD set:', !!process.env.ADMIN_PASSWORD);
-  console.log('secret reçu:', secret);
-  console.log('match:', secret === process.env.ADMIN_PASSWORD);
-
   // Vérification du mot de passe admin (même variable que admin-auth.js)
   if (!secret || secret !== process.env.ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Non autorisé', debug: { hasEnv: !!process.env.ADMIN_PASSWORD } });
+    return res.status(401).json({ error: 'Non autorisé' });
   }
 
   if (!email || !points || Number(points) <= 0) {
