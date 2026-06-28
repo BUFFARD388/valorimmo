@@ -4,7 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Valorimmo — Administration</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -646,49 +647,75 @@
     }
   }
 
-  // ── GÉNÉRATION PDF ──
-  // html2canvas nécessite un élément visible et rendu — on affiche un overlay blanc le temps de la capture
+  // ── GÉNÉRATION PDF (html2canvas + jsPDF directs, pas de wrapper html2pdf) ──
   async function generatePdf(printHtml, filename) {
     const styleBlocks = printHtml.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
-    const bodyMatch = printHtml.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    const bodyMatch = printHtml.match(/<body[^>]*>([\s\S]*)<\/body>/i); // greedy pour tout capturer
     const bodyContent = bodyMatch ? bodyMatch[1] : '';
 
+    // Styles injectés dans le document courant
     const tempStyle = document.createElement('style');
     tempStyle.textContent = styleBlocks.map(s => s.replace(/<\/?style[^>]*>/gi, '')).join('\n');
     document.head.appendChild(tempStyle);
 
-    // Overlay blanc plein écran — nécessaire pour que html2canvas capture le contenu
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#fff;z-index:99999;overflow:auto;display:flex;flex-direction:column;align-items:center;';
-
+    // Overlay blanc visible (obligatoire pour html2canvas)
     const loadingMsg = document.createElement('div');
     loadingMsg.textContent = 'Génération du PDF…';
-    loadingMsg.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B2D5B;color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;font-family:Arial,sans-serif;z-index:100000;';
+    loadingMsg.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B2D5B;color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;font-family:Arial,sans-serif;z-index:100001;pointer-events:none;';
 
-    const contentEl = document.createElement('div');
-    contentEl.style.cssText = 'width:794px;background:#fff;flex-shrink:0;';
-    contentEl.innerHTML = bodyContent;
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;top:0;left:0;width:794px;background:#fff;z-index:100000;overflow:visible;';
+    el.innerHTML = bodyContent;
 
-    overlay.appendChild(contentEl);
-    document.body.appendChild(overlay);
+    document.body.appendChild(el);
     document.body.appendChild(loadingMsg);
 
-    // Attendre le rendu complet (fonts, images, CSS)
-    await new Promise(r => setTimeout(r, 1500));
+    // Attendre fonts + images + rendu CSS
+    await new Promise(r => setTimeout(r, 2000));
 
     try {
-      return await html2pdf()
-        .set({
-          margin: 0,
-          filename,
-          image: { type: 'jpeg', quality: 0.92 },
-          html2canvas: { scale: 1.5, useCORS: true, backgroundColor: '#ffffff', logging: false },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        })
-        .from(contentEl)
-        .outputPdf('blob');
+      const totalHeight = el.scrollHeight || el.offsetHeight || 1200;
+
+      const canvas = await html2canvas(el, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: '#ffffff',
+        logging: false,
+        width: 794,
+        height: totalHeight,
+        windowWidth: 794,
+        windowHeight: totalHeight,
+        x: 0,
+        y: 0,
+        scrollX: 0,
+        scrollY: 0,
+      });
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      const pageW = pdf.internal.pageSize.getWidth();   // 210mm
+      const pageH = pdf.internal.pageSize.getHeight();  // 297mm
+
+      // Ratio pixel→mm (canvas à scale 2, donc 794*2=1588px = 210mm)
+      const pxToMm = pageW / canvas.width;
+      const imgTotalH = canvas.height * pxToMm;
+
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+      let yPos = 0;
+      let remaining = imgTotalH;
+
+      while (remaining > 0) {
+        pdf.addImage(imgData, 'JPEG', 0, yPos, pageW, imgTotalH);
+        remaining -= pageH;
+        yPos -= pageH;
+        if (remaining > 0) pdf.addPage();
+      }
+
+      return pdf.output('blob');
     } finally {
-      if (document.body.contains(overlay)) document.body.removeChild(overlay);
+      if (document.body.contains(el)) document.body.removeChild(el);
       if (document.body.contains(loadingMsg)) document.body.removeChild(loadingMsg);
       if (document.head.contains(tempStyle)) document.head.removeChild(tempStyle);
     }
@@ -830,7 +857,7 @@
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || 'Erreur envoi');
 
-      status.textContent = '✓ Rapport envoyé avec PDF en pièce jointe';
+      status.textContent = `✓ Rapport envoyé — PDF ${Math.round(pdfBlob.size / 1024)} KB`;
       status.style.color = 'var(--green)';
       d.statut = 'envoye';
       document.getElementById('statut-select').value = 'envoye';
