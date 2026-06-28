@@ -41,8 +41,6 @@ export default async function handler(req, res) {
       societe: presc_cabinet || '',
       type_prescripteur: presc_type || '',
       statut: 'actif',
-      presc_code: prescCode,
-      points: 0,
     }),
   });
 
