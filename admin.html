@@ -807,10 +807,37 @@
 </html>`;
   }
 
-  // ── PDF DOWNLOAD ──
-  function downloadPDF() {
+  // ── PDF DOWNLOAD (test direct via generatePdf — confirme que la génération fonctionne) ──
+  async function downloadPDF() {
     const reportHtml = document.getElementById('report-html-textarea').value;
     if (!reportHtml.trim()) { alert('Générez et sauvegardez d\'abord le rapport avant de télécharger le PDF.'); return; }
+    const btn = document.getElementById('btn-pdf');
+    const d = currentDemande;
+    const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
+    const nomFichier = `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf`;
+    btn.disabled = true;
+    btn.textContent = '⚙ Génération…';
+    try {
+      const blob = await generatePdf(buildPrintHtml(d, reportHtml), nomFichier);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = nomFichier;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      btn.textContent = `✓ ${Math.round(blob.size / 1024)} KB téléchargé`;
+    } catch(e) {
+      console.error('generatePdf error:', e);
+      alert('Erreur PDF: ' + e.message);
+      btn.textContent = '⬇ Télécharger PDF';
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  // ── PDF DOWNLOAD PRINT (impression navigateur — fallback) ──
+  function downloadPDFPrint() {
+    const reportHtml = document.getElementById('report-html-textarea').value;
+    if (!reportHtml.trim()) { alert('Générez et sauvegardez d\'abord le rapport.'); return; }
     const win = window.open('', '_blank');
     win.document.write(buildPrintHtml(currentDemande, reportHtml));
     win.document.close();
@@ -857,8 +884,8 @@
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || 'Erreur envoi');
 
-      status.textContent = `✓ Rapport envoyé — PDF ${Math.round(pdfBlob.size / 1024)} KB`;
-      status.style.color = 'var(--green)';
+      status.textContent = `✓ Rapport envoyé — PDF joint : ${Math.round(pdfBlob.size / 1024)} KB${pdfBlob.size < 50000 ? ' ⚠ TROP PETIT' : ''}`;
+      status.style.color = pdfBlob.size < 50000 ? 'var(--red)' : 'var(--green)';
       d.statut = 'envoye';
       document.getElementById('statut-select').value = 'envoye';
     } catch (err) {
