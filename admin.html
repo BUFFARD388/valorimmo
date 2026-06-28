@@ -646,6 +646,44 @@
     }
   }
 
+  // ── GÉNÉRATION PDF (contenu rendu dans le document principal, pas un iframe) ──
+  async function generatePdf(printHtml, filename) {
+    // Extraire les styles et le contenu body
+    const styleBlocks = printHtml.match(/<style[^>]*>([\s\S]*?)<\/style>/gi) || [];
+    const bodyMatch = printHtml.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    const bodyContent = bodyMatch ? bodyMatch[1] : printHtml;
+
+    // Injecter les styles dans le document principal
+    const tempStyle = document.createElement('style');
+    tempStyle.textContent = styleBlocks.map(s => s.replace(/<\/?style[^>]*>/gi, '')).join('\n');
+    document.head.appendChild(tempStyle);
+
+    // Créer un conteneur dans le document principal (nécessaire pour html2canvas)
+    const container = document.createElement('div');
+    container.style.cssText = 'position:fixed;top:0;left:0;width:794px;z-index:-9999;background:#fff;overflow:visible;';
+    container.innerHTML = bodyContent;
+    document.body.appendChild(container);
+
+    // Attendre le rendu complet (fonts, images)
+    await new Promise(r => setTimeout(r, 1500));
+
+    try {
+      return await html2pdf()
+        .set({
+          margin: 0,
+          filename,
+          image: { type: 'jpeg', quality: 0.92 },
+          html2canvas: { scale: 1.5, useCORS: true, backgroundColor: '#ffffff', logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        })
+        .from(container)
+        .outputPdf('blob');
+    } finally {
+      document.head.removeChild(tempStyle);
+      document.body.removeChild(container);
+    }
+  }
+
   // ── CONSTRUCTION HTML PDF (partagé entre download et envoi) ──
   function buildPrintHtml(d, reportHtml) {
     const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
@@ -761,29 +799,7 @@
       btn.textContent = '⚙ Génération du PDF…';
       const printHtml = buildPrintHtml(d, reportHtml);
       const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
-
-      // Créer un iframe caché pour le rendu
-      const iframe = document.createElement('iframe');
-      iframe.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:794px;height:1123px;border:0;';
-      document.body.appendChild(iframe);
-      iframe.contentDocument.open();
-      iframe.contentDocument.write(printHtml);
-      iframe.contentDocument.close();
-
-      await new Promise(r => setTimeout(r, 500)); // laisser le DOM se rendre
-
-      const pdfBlob = await html2pdf()
-        .set({
-          margin: 0,
-          filename: `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf`,
-          image: { type: 'jpeg', quality: 0.92 },
-          html2canvas: { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        })
-        .from(iframe.contentDocument.body)
-        .outputPdf('blob');
-
-      document.body.removeChild(iframe);
+      const pdfBlob = await generatePdf(printHtml, `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf`);
 
       // 2. Convertir en base64
       const pdfBase64 = await new Promise((resolve, reject) => {
@@ -866,26 +882,7 @@
       const printHtml = buildPrintHtml(d, reportHtml);
       const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
       const nomFichier = `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf`;
-
-      const iframe = document.createElement('iframe');
-      iframe.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:794px;height:1123px;border:0;';
-      document.body.appendChild(iframe);
-      iframe.contentDocument.open();
-      iframe.contentDocument.write(printHtml);
-      iframe.contentDocument.close();
-      await new Promise(r => setTimeout(r, 500));
-
-      const pdfBlob = await html2pdf()
-        .set({
-          margin: 0,
-          filename: nomFichier,
-          image: { type: 'jpeg', quality: 0.92 },
-          html2canvas: { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        })
-        .from(iframe.contentDocument.body)
-        .outputPdf('blob');
-      document.body.removeChild(iframe);
+      const pdfBlob = await generatePdf(printHtml, nomFichier);
 
       const pdfBase64 = await new Promise((resolve, reject) => {
         const reader = new FileReader();
