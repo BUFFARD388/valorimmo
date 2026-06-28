@@ -167,7 +167,7 @@ export default async function handler(req, res) {
 <body>
 <div class="wrapper">
   <div class="header">
-    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
+    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="160" style="display:block;border:0;height:auto;" />
   </div>
   <div class="body">
     <h2>Votre dossier a bien été transmis</h2>
@@ -222,25 +222,4 @@ async function sendEmail({ to, subject, html }) {
 async function createBrevoContact({ email, nom, presc_code, presc_type, societe }) {
   const res = await fetch('https://api.brevo.com/v3/contacts', {
     method: 'POST',
-    headers: {
-      'api-key': process.env.BREVO_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email,
-      attributes: {
-        PRENOM: nom,
-        SOCIETE: societe,
-        PRESC_CODE: presc_code,
-        PRESC_TYPE: presc_type,
-        POINTS: 0,
-      },
-      listIds: [parseInt(process.env.BREVO_PRESCRIPTEUR_LIST_ID || '0')].filter(Boolean),
-      updateEnabled: true,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    console.error('Brevo createContact error:', err);
-  }
-}
+    heade

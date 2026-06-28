@@ -155,7 +155,7 @@ async function sendBonCadeau({ email, nom, prescCode, valeur, points }) {
 <body>
 <div class="wrapper">
   <div class="header">
-    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
+    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="160" style="display:block;border:0;height:auto;" />
   </div>
   <div class="body">
     <h2>🎁 Félicitations ${nom} !</h2>
@@ -215,7 +215,7 @@ async function sendNotifPoints({ email, nom, prescCode, pointsAjoutes, totalPoin
 <body>
 <div class="wrapper">
   <div class="header">
-    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
+    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="160" style="display:block;border:0;height:auto;" />
   </div>
   <div class="body">
     <h2>Votre compte fidélité a été crédité</h2>
@@ -253,4 +253,3 @@ async function sendNotifPoints({ email, nom, prescCode, pointsAjoutes, totalPoin
 }
 
 async function sendEmail({ to, subject, html }) {
-  const 

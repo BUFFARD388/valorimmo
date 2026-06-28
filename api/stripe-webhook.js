@@ -153,7 +153,7 @@ export default async function handler(req, res) {
 <body>
 <div class="wrapper">
   <div class="header">
-    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="200" height="50" style="display:block;border:0;" />
+    <img src="https://valorimmo.app/logo-original.png" alt="Valorimmo" width="160" style="display:block;border:0;height:auto;" />
   </div>
   <div class="intro">
     <h2>Merci pour votre paiement — voici votre rapport</h2>
