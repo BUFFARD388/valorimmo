@@ -20,16 +20,31 @@ export default async function handler(req, res) {
   }
 
   const prescripteurId = randomUUID();
-  const prescCode = genPrescrCode();
   const isNotaire = partenariat_notaire === true || partenariat_notaire === 'true';
+
+  // Determiner le code prescripteur (reutilise si deja connu dans Brevo)
+  let prescCode = genPrescrCode();
+  if (!isNotaire) {
+    try {
+      const existing = await fetch(
+        'https://api.brevo.com/v3/contacts/' + encodeURIComponent(presc_email),
+        { headers: { 'api-key': process.env.BREVO_API_KEY } }
+      );
+      if (existing.ok) {
+        const data = await existing.json();
+        const existingCode = data.attributes && data.attributes.PRESC_CODE;
+        if (existingCode) prescCode = existingCode;
+      }
+    } catch(e) { console.error('Brevo check existing error:', e); }
+  }
 
   // 1. Supabase prescripteur (non-bloquant)
   try {
-    await fetch(`${process.env.SUPABASE_URL}/rest/v1/prescripteurs`, {
+    await fetch(process.env.SUPABASE_URL + '/rest/v1/prescripteurs', {
       method: 'POST',
       headers: {
         'apikey': process.env.SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        'Authorization': 'Bearer ' + process.env.SUPABASE_ANON_KEY,
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal',
       },
@@ -48,23 +63,34 @@ export default async function handler(req, res) {
   // 2. Brevo contact (non-bloquant, uniquement non-notaire)
   if (!isNotaire) {
     try {
-      await createBrevoContact({
-        email: presc_email,
-        nom: presc_nom,
-        presc_code: prescCode,
-        presc_type: presc_type || '',
-        societe: presc_cabinet || '',
+      await fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: presc_email,
+          attributes: {
+            PRENOM: presc_nom,
+            SOCIETE: presc_cabinet || '',
+            PRESC_CODE: prescCode,
+            PRESC_TYPE: presc_type || '',
+            POINTS: 0,
+          },
+          updateEnabled: true,
+        }),
       });
     } catch(e) { console.error('Brevo contact error:', e); }
   }
 
   // 3. Supabase apport (non-bloquant)
   try {
-    await fetch(`${process.env.SUPABASE_URL}/rest/v1/apports`, {
+    await fetch(process.env.SUPABASE_URL + '/rest/v1/apports', {
       method: 'POST',
       headers: {
         'apikey': process.env.SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        'Authorization': 'Bearer ' + process.env.SUPABASE_ANON_KEY,
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal',
       },
@@ -73,7 +99,7 @@ export default async function handler(req, res) {
         nom_client: client_nom,
         adresse_bien: bien,
         statut: 'en_attente',
-        notes: `Email: ${client_email || 'nc'} | Tel: ${client_tel || 'nc'} | Formule: ${formule || 'nc'}`,
+        notes: 'Email: ' + (client_email || 'nc') + ' | Tel: ' + (client_tel || 'nc') + ' | Formule: ' + (formule || 'nc'),
       }),
     });
   } catch(e) { console.error('Supabase apport error:', e); }
@@ -83,11 +109,11 @@ export default async function handler(req, res) {
     const nomParts = client_nom.trim().split(' ');
     const clientPrenom = nomParts.slice(0, -1).join(' ') || client_nom;
     const clientNom = nomParts.slice(-1)[0] || '';
-    await fetch(`${process.env.SUPABASE_URL}/rest/v1/demandes`, {
+    await fetch(process.env.SUPABASE_URL + '/rest/v1/demandes', {
       method: 'POST',
       headers: {
         'apikey': process.env.SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+        'Authorization': 'Bearer ' + process.env.SUPABASE_ANON_KEY,
         'Content-Type': 'application/json',
         'Prefer': 'return=minimal',
       },
@@ -100,7 +126,7 @@ export default async function handler(req, res) {
         formule: formule || '',
         message: formule || '',
         statut: 'nouveau',
-        contexte: `Apport ${presc_nom} (${presc_type || presc_cabinet || 'Prescripteur'}) | ${presc_email} | Code: ${prescCode}`,
+        contexte: 'Apport ' + presc_nom + ' (' + (presc_type || presc_cabinet || 'Prescripteur') + ') | ' + presc_email + ' | Code: ' + prescCode,
       }),
     });
   } catch(e) { console.error('Supabase demande error:', e); }
@@ -109,27 +135,32 @@ export default async function handler(req, res) {
   try {
     await sendEmail({
       to: 'laurentbuffard69250@gmail.com',
-      subject: `[Valorimmo] ${isNotaire ? 'Recommandation notaire' : 'Nouveau prescripteur'} - ${presc_nom}`,
-      html: `<h2>Nouveau dossier prescripteur</h2>
-        <h3>Prescripteur</h3>
-        <p><strong>Nom :</strong> ${presc_nom}</p>
-        <p><strong>Profession :</strong> ${presc_type || 'nc'}</p>
-        <p><strong>Cabinet :</strong> ${presc_cabinet || 'nc'}</p>
-        <p><strong>Email :</strong> ${presc_email}</p>
-        <p><strong>Tel :</strong> ${presc_tel || 'nc'}</p>
-        <h3>Client</h3>
-        <p><strong>Nom :</strong> ${client_nom}</p>
-        <p><strong>Email :</strong> ${client_email || 'nc'}</p>
-        <p><strong>Tel :</strong> ${client_tel || 'nc'}</p>
-        <p><strong>Formule :</strong> ${formule || 'nc'}</p>
-        <p><strong>Bien :</strong> ${bien}</p>`,
+      subject: '[Valorimmo] ' + (isNotaire ? 'Recommandation notaire' : 'Nouveau prescripteur') + ' - ' + presc_nom,
+      html: '<h2>Nouveau dossier prescripteur</h2>'
+        + '<h3>Prescripteur</h3>'
+        + '<p><strong>Nom :</strong> ' + presc_nom + '</p>'
+        + '<p><strong>Profession :</strong> ' + (presc_type || 'nc') + '</p>'
+        + '<p><strong>Cabinet :</strong> ' + (presc_cabinet || 'nc') + '</p>'
+        + '<p><strong>Email :</strong> ' + presc_email + '</p>'
+        + '<p><strong>Tel :</strong> ' + (presc_tel || 'nc') + '</p>'
+        + '<p><strong>Code prescripteur :</strong> ' + prescCode + '</p>'
+        + '<h3>Client</h3>'
+        + '<p><strong>Nom :</strong> ' + client_nom + '</p>'
+        + '<p><strong>Email :</strong> ' + (client_email || 'nc') + '</p>'
+        + '<p><strong>Tel :</strong> ' + (client_tel || 'nc') + '</p>'
+        + '<p><strong>Formule :</strong> ' + (formule || 'nc') + '</p>'
+        + '<p><strong>Bien :</strong> ' + bien + '</p>',
     });
   } catch(e) { console.error('Email Laurent error:', e); }
 
   // 6. Confirmation prescripteur (non-bloquant)
   try {
     const fideliteBlock = !isNotaire
-      ? '<div style="background:#F0F7FF;border:1.5px solid #BFDBF7;border-radius:8px;padding:16px 20px;margin:20px 0;"><p style="margin:0 0 8px;font-size:0.82rem;font-weight:700;color:#1B2D5B;">PROGRAMME FIDELITE</p><p style="margin:0 0 6px;font-size:0.88rem;color:#1F2937;">Votre code : <strong style="color:#C8933A;">' + prescCode + '</strong></p><p style="margin:0;font-size:0.82rem;color:#4B5563;">Chaque client diagnostique vous rapporte des points.</p></div>'
+      ? '<div style="background:#F0F7FF;border:1.5px solid #BFDBF7;border-radius:8px;padding:16px 20px;margin:20px 0;">'
+        + '<p style="margin:0 0 8px;font-size:0.82rem;font-weight:700;color:#1B2D5B;">PROGRAMME FIDELITE</p>'
+        + '<p style="margin:0 0 6px;font-size:0.88rem;color:#1F2937;">Votre code prescripteur : <strong style="color:#C8933A;">' + prescCode + '</strong></p>'
+        + '<p style="margin:0;font-size:0.82rem;color:#4B5563;">Chaque client diagnostique vous rapporte des points echangeables en bons cadeaux.</p>'
+        + '</div>'
       : '';
 
     await sendEmail({
@@ -189,30 +220,5 @@ async function sendEmail({ to, subject, html }) {
   if (!res.ok) {
     const err = await res.text();
     console.error('Brevo sendEmail error:', err);
-  }
-}
-
-async function createBrevoContact({ email, nom, presc_code, presc_type, societe }) {
-  const res = await fetch('https://api.brevo.com/v3/contacts', {
-    method: 'POST',
-    headers: {
-      'api-key': process.env.BREVO_API_KEY,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email,
-      attributes: {
-        PRENOM: nom,
-        SOCIETE: societe,
-        PRESC_CODE: presc_code,
-        PRESC_TYPE: presc_type,
-        POINTS: 0,
-      },
-      updateEnabled: true,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    console.error('Brevo createContact error:', err);
   }
 }
