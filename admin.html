@@ -647,30 +647,42 @@
     }
   }
 
-  // ── GÉNÉRATION PDF via iframe srcdoc (même-origine, rendu complet garanti) ──
+  // ── GÉNÉRATION PDF via conteneur hors-écran (évite les problèmes de scroll d'iframe) ──
   async function generatePdf(printHtml, filename) {
     const loadingMsg = document.createElement('div');
     loadingMsg.textContent = 'Génération du PDF…';
     loadingMsg.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B2D5B;color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;font-family:Arial,sans-serif;z-index:999999;pointer-events:none;';
     document.body.appendChild(loadingMsg);
 
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText = 'position:fixed;top:0;left:0;width:794px;height:100%;border:0;z-index:999998;background:#fff;';
-    iframe.srcdoc = printHtml;
-    document.body.appendChild(iframe);
+    // Parser le HTML pour extraire styles + contenu body
+    const parser = new DOMParser();
+    const parsed = parser.parseFromString(printHtml, 'text/html');
+    const styleText = Array.from(parsed.querySelectorAll('style')).map(s => s.textContent).join('\n');
+    const bodyHtml = parsed.body.innerHTML;
 
-    await new Promise(resolve => {
-      iframe.addEventListener('load', resolve, { once: true });
-      setTimeout(resolve, 5000);
-    });
-    await new Promise(r => setTimeout(r, 1500));
+    // Créer un conteneur hors-écran dans le document principal
+    // html2canvas capture correctement le scroll du document courant
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'position:absolute;left:-9999px;top:0;width:794px;background:#fff;';
+
+    const styleEl = document.createElement('style');
+    styleEl.textContent = styleText;
+    wrapper.appendChild(styleEl);
+
+    const contentEl = document.createElement('div');
+    contentEl.innerHTML = bodyHtml;
+    wrapper.appendChild(contentEl);
+
+    document.body.appendChild(wrapper);
+
+    // Attendre le rendu complet (polices, images)
+    await new Promise(r => setTimeout(r, 2000));
 
     try {
-      const doc = iframe.contentDocument;
-      const body = doc.body;
-      const totalHeight = Math.max(body.scrollHeight, body.offsetHeight, 500);
+      const totalHeight = Math.max(wrapper.scrollHeight, wrapper.offsetHeight, 500);
+      console.log('[PDF] wrapper height:', totalHeight, '| width:', wrapper.offsetWidth);
 
-      const canvas = await html2canvas(body, {
+      const canvas = await html2canvas(wrapper, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
@@ -680,9 +692,13 @@
         height: totalHeight,
         windowWidth: 794,
         windowHeight: totalHeight,
+        x: 0,
+        y: 0,
         scrollX: 0,
-        scrollY: -window.scrollY,
+        scrollY: 0,
       });
+
+      console.log('[PDF] canvas:', canvas.width, 'x', canvas.height);
 
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
@@ -703,7 +719,7 @@
 
       return pdf.output('blob');
     } finally {
-      if (document.body.contains(iframe)) document.body.removeChild(iframe);
+      if (document.body.contains(wrapper)) document.body.removeChild(wrapper);
       if (document.body.contains(loadingMsg)) document.body.removeChild(loadingMsg);
     }
   }
