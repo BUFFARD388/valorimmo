@@ -674,6 +674,16 @@
     const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
     const dateFr = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
     const adresse = d.adresse_bien || '';
+    // Nettoyer le rapport HTML : supprimer les balises <style> et <script> que Claude peut générer
+    // ainsi que les balises html/head/body qui casseraient le document PDF
+    const cleanReportHtml = reportHtml
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<!DOCTYPE[^>]*>/gi, '')
+      .replace(/<\/?html[^>]*>/gi, '')
+      .replace(/<\/?head[^>]*>/gi, '')
+      .replace(/<\/?body[^>]*>/gi, '')
+      .trim();
     return `<!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -746,7 +756,7 @@
     <div>Formule : ${d.formule || d.message || 'Non précisée'}</div>
   </div>
 </div>
-<div class="pdf-body">${reportHtml}</div>
+<div class="pdf-body">${cleanReportHtml}</div>
 <div class="pdf-footer">
   <div>Valorimmo — Laurent Buffard · contact@valorimmo.app · valorimmo.app</div>
   <div>${dateFr}</div>
