@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { generatePdfBase64 } from '../lib/pdf-generator.js';
 
 export const config = {
   api: { bodyParser: false },
@@ -108,9 +109,9 @@ export default async function handler(req, res) {
     + '<a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a> - <a href="https://valorimmo.app">valorimmo.app</a></p></div>'
     + '</div></body></html>';
 
-  // Générer le PDF frais via api/generate-pdf (Puppeteer côté serveur)
+  // Générer le PDF directement (sans appel HTTP interne)
   const nomFichierPdf = 'rapport-valorimmo-' + nomComplet.replace(/\s+/g, '-') + '.pdf';
-  const pdfBase64 = await genererPdfServeur(d, req.headers.host);
+  const pdfBase64 = await genererPdfDirect(d);
 
   const emailPayload = {
     sender: { name: 'Laurent Buffard - Valorimmo', email: 'contact@valorimmo.app' },
@@ -224,27 +225,14 @@ async function crediterPoints({ email, points, note }) {
   }
 }
 
-// ── Génération PDF via api/generate-pdf (Puppeteer/Chromium) ──────────────────
+// ── Génération PDF directe (sans appel HTTP interne) ──────────────────────────
 
-async function genererPdfServeur(d, host) {
+async function genererPdfDirect(d) {
   try {
-    const printHtml = buildPrintHtmlServeur(d);
-    const protocol = (host || '').includes('localhost') ? 'http' : 'https';
-    const url = protocol + '://' + host + '/api/generate-pdf';
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-admin-password': process.env.ADMIN_PASSWORD,
-      },
-      body: JSON.stringify({ html: printHtml }),
-      signal: AbortSignal.timeout(25000),
-    });
-    if (!res.ok) { console.error('generate-pdf error:', await res.text()); return null; }
-    const { base64 } = await res.json();
-    return base64 || null;
+    const html = buildPrintHtmlServeur(d);
+    return await generatePdfBase64(html);
   } catch(e) {
-    console.error('genererPdfServeur exception:', e);
+    console.error('genererPdfDirect exception:', e);
     return null;
   }
 }
