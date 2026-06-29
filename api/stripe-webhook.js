@@ -110,6 +110,7 @@ export default async function handler(req, res) {
 
   // Récupérer le PDF pré-généré par l'admin (stocké dans Supabase)
   const pdfBase64 = d.rapport_pdf_base64 || null;
+  console.log('Webhook PDF base64 length:', pdfBase64 ? pdfBase64.length : 0);
   const nomFichierPdf = d.rapport_pdf_nom || ('rapport-valorimmo-' + nomComplet.replace(/\s+/g, '-') + '.pdf');
 
   const emailPayload = {
