@@ -702,19 +702,39 @@
 
       const { jsPDF } = window.jspdf;
       const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-      const pageW = pdf.internal.pageSize.getWidth();
-      const pageH = pdf.internal.pageSize.getHeight();
-      const pxToMm = pageW / canvas.width;
-      const imgTotalH = canvas.height * pxToMm;
-      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      const pageW = pdf.internal.pageSize.getWidth();   // 210 mm
+      const pageH = pdf.internal.pageSize.getHeight();  // 297 mm
 
-      let yPos = 0;
-      let remaining = imgTotalH;
-      while (remaining > 0) {
-        pdf.addImage(imgData, 'JPEG', 0, yPos, pageW, imgTotalH);
-        remaining -= pageH;
-        yPos -= pageH;
-        if (remaining > 0) pdf.addPage();
+      // Marges en mm
+      const mTop = 12, mBottom = 12, mLeft = 10, mRight = 10;
+      const contentW = pageW - mLeft - mRight;          // largeur utile en mm
+      const contentH = pageH - mTop - mBottom;          // hauteur utile en mm
+
+      // Pixels disponibles par page (même échelle que le canvas)
+      const pxPerMm = canvas.width / contentW;
+      const contentHpx = Math.floor(contentH * pxPerMm);
+
+      let srcY = 0;
+      let page = 0;
+      while (srcY < canvas.height) {
+        if (page > 0) pdf.addPage();
+
+        // Découper une tranche du canvas
+        const sliceH = Math.min(contentHpx, canvas.height - srcY);
+        const slice = document.createElement('canvas');
+        slice.width = canvas.width;
+        slice.height = sliceH;
+        const ctx = slice.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, slice.width, slice.height);
+        ctx.drawImage(canvas, 0, srcY, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+
+        const sliceData = slice.toDataURL('image/jpeg', 0.92);
+        const sliceHmm = sliceH / pxPerMm;
+        pdf.addImage(sliceData, 'JPEG', mLeft, mTop, contentW, sliceHmm);
+
+        srcY += contentHpx;
+        page++;
       }
 
       return pdf.output('blob');
