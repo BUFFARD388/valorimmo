@@ -159,6 +159,12 @@
   .btn-save:hover:not(:disabled) { background: #166534; }
   .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
   .save-status { font-size: 0.78rem; color: var(--text-muted); text-align: center; min-height: 18px; }
+  .photo-upload-row { margin-bottom: 12px; }
+  .photo-upload-row:last-child { margin-bottom: 0; }
+  .photo-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 5px; }
+  .photo-input { width: 100%; font-size: 0.82rem; color: var(--text-body); cursor: pointer; }
+  .photo-thumb { width: 100%; border-radius: 5px; margin-top: 6px; border: 1px solid var(--border); display: none; }
+  .photo-thumb.visible { display: block; }
   .btn-pdf {
     width: 100%; background: #475569; color: #fff; border: none; padding: 13px;
     font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
@@ -389,6 +395,20 @@
       </div>
 
       <div class="panel-card">
+        <div class="panel-card-title">📷 Photos du bien</div>
+        <div class="photo-upload-row">
+          <label class="photo-label">Photo du bien</label>
+          <input type="file" class="photo-input" id="input-photo-bien" accept="image/*" onchange="handlePhoto('bien', this)">
+          <img class="photo-thumb" id="thumb-photo-bien" alt="Photo du bien">
+        </div>
+        <div class="photo-upload-row">
+          <label class="photo-label">Plan cadastral</label>
+          <input type="file" class="photo-input" id="input-photo-cadastre" accept="image/*" onchange="handlePhoto('cadastre', this)">
+          <img class="photo-thumb" id="thumb-photo-cadastre" alt="Plan cadastral">
+        </div>
+      </div>
+
+      <div class="panel-card">
         <div class="panel-card-title">Notes internes</div>
         <textarea class="notes-textarea" id="notes-textarea" placeholder="Ajoutez vos observations, infos PLU, données de marché, remarques pour enrichir le rapport…"></textarea>
       </div>
@@ -461,6 +481,28 @@
   let currentPwd = sessionStorage.getItem('admin_pwd') || '';
   let currentDemande = null;
   let allDemandes = [];
+  let photoBienBase64 = null;
+  let photoCadastreBase64 = null;
+
+  function handlePhoto(type, input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      if (type === 'bien') {
+        photoBienBase64 = e.target.result;
+        const thumb = document.getElementById('thumb-photo-bien');
+        thumb.src = photoBienBase64;
+        thumb.classList.add('visible');
+      } else {
+        photoCadastreBase64 = e.target.result;
+        const thumb = document.getElementById('thumb-photo-cadastre');
+        thumb.src = photoCadastreBase64;
+        thumb.classList.add('visible');
+      }
+    };
+    reader.readAsDataURL(file);
+  }
 
   // ── AUTO LOGIN ──
   if (currentPwd) verifyAndEnter(currentPwd);
@@ -545,6 +587,16 @@
     show('view-detail');
 
     currentDemande = d;
+
+    // Réinitialiser les photos à chaque ouverture de dossier
+    photoBienBase64 = null;
+    photoCadastreBase64 = null;
+    document.getElementById('input-photo-bien').value = '';
+    document.getElementById('input-photo-cadastre').value = '';
+    const tb = document.getElementById('thumb-photo-bien');
+    const tc = document.getElementById('thumb-photo-cadastre');
+    tb.src = ''; tb.classList.remove('visible');
+    tc.src = ''; tc.classList.remove('visible');
 
     document.getElementById('d-nom').textContent = (d.prenom ? d.prenom + ' ' : '') + d.nom;
     document.getElementById('d-email').textContent = d.email;
@@ -745,7 +797,7 @@
   }
 
   // ── CONSTRUCTION HTML PDF (partagé entre download et envoi) ──
-  function buildPrintHtml(d, reportHtml) {
+  function buildPrintHtml(d, reportHtml, photoBien, photoCadastre) {
     const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
     const dateFr = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
     const adresse = d.adresse_bien || '';
@@ -831,7 +883,20 @@
     <div>Formule : ${d.formule || d.message || 'Non précisée'}</div>
   </div>
 </div>
-<div class="pdf-body">${cleanReportHtml}</div>
+<div class="pdf-body">
+${(photoBien || photoCadastre) ? `
+<div style="display:flex;gap:16px;margin-bottom:28px;page-break-inside:avoid;">
+  ${photoBien ? `<div style="flex:1;">
+    <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#6B7280;margin-bottom:6px;">Photo du bien</div>
+    <img src="${photoBien}" style="width:100%;border-radius:6px;border:1px solid #E5E7EB;">
+  </div>` : ''}
+  ${photoCadastre ? `<div style="flex:1;">
+    <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#6B7280;margin-bottom:6px;">Plan cadastral</div>
+    <img src="${photoCadastre}" style="width:100%;border-radius:6px;border:1px solid #E5E7EB;">
+  </div>` : ''}
+</div>` : ''}
+${cleanReportHtml}
+</div>
 <div class="pdf-footer">
   <div>Valorimmo — Laurent Buffard · contact@valorimmo.app · valorimmo.app</div>
   <div>${dateFr}</div>
@@ -851,7 +916,7 @@
     btn.disabled = true;
     btn.textContent = '⚙ Génération…';
     try {
-      const blob = await generatePdf(buildPrintHtml(d, reportHtml), nomFichier);
+      const blob = await generatePdf(buildPrintHtml(d, reportHtml, photoBienBase64, photoCadastreBase64), nomFichier);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = nomFichier;
@@ -872,7 +937,7 @@
     const reportHtml = document.getElementById('report-html-textarea').value;
     if (!reportHtml.trim()) { alert('Générez et sauvegardez d\'abord le rapport.'); return; }
     const win = window.open('', '_blank');
-    win.document.write(buildPrintHtml(currentDemande, reportHtml));
+    win.document.write(buildPrintHtml(currentDemande, reportHtml, photoBienBase64, photoCadastreBase64));
     win.document.close();
     win.focus();
     setTimeout(() => { win.print(); }, 600);
@@ -894,7 +959,7 @@
     try {
       // 1. Générer le PDF côté navigateur via html2pdf.js
       btn.textContent = '⚙ Génération du PDF…';
-      const printHtml = buildPrintHtml(d, reportHtml);
+      const printHtml = buildPrintHtml(d, reportHtml, photoBienBase64, photoCadastreBase64);
       const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
       const pdfBlob = await generatePdf(printHtml, `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf`);
 
@@ -976,7 +1041,7 @@
     try {
       // Générer le PDF
       btn.textContent = '⚙ Génération du PDF…';
-      const printHtml = buildPrintHtml(d, reportHtml);
+      const printHtml = buildPrintHtml(d, reportHtml, photoBienBase64, photoCadastreBase64);
       const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
       const nomFichier = `rapport-valorimmo-${nomClient.replace(/\s+/g, '-')}.pdf`;
       const pdfBlob = await generatePdf(printHtml, nomFichier);
