@@ -6,6 +6,8 @@
 <title>Valorimmo — Administration</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -646,27 +648,64 @@
   }
 
   // ── GÉNÉRATION PDF via iframe srcdoc (même-origine, rendu complet garanti) ──
-  // ── GÉNÉRATION PDF CÔTÉ SERVEUR (Puppeteer/Chromium via api/generate-pdf) ──
   async function generatePdf(printHtml, filename) {
-    const res = await fetch('/api/generate-pdf', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-admin-password': currentPwd,
-      },
-      body: JSON.stringify({ html: printHtml }),
+    const loadingMsg = document.createElement('div');
+    loadingMsg.textContent = 'Génération du PDF…';
+    loadingMsg.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1B2D5B;color:#fff;padding:10px 24px;border-radius:20px;font-size:14px;font-family:Arial,sans-serif;z-index:999999;pointer-events:none;';
+    document.body.appendChild(loadingMsg);
+
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:fixed;top:0;left:0;width:794px;height:100%;border:0;z-index:999998;background:#fff;';
+    iframe.srcdoc = printHtml;
+    document.body.appendChild(iframe);
+
+    await new Promise(resolve => {
+      iframe.addEventListener('load', resolve, { once: true });
+      setTimeout(resolve, 5000);
     });
+    await new Promise(r => setTimeout(r, 1500));
 
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error('Erreur génération PDF serveur : ' + err);
+    try {
+      const doc = iframe.contentDocument;
+      const body = doc.body;
+      const totalHeight = Math.max(body.scrollHeight, body.offsetHeight, 500);
+
+      const canvas = await html2canvas(body, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        width: 794,
+        height: totalHeight,
+        windowWidth: 794,
+        windowHeight: totalHeight,
+        scrollX: 0,
+        scrollY: -window.scrollY,
+      });
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      const pageW = pdf.internal.pageSize.getWidth();
+      const pageH = pdf.internal.pageSize.getHeight();
+      const pxToMm = pageW / canvas.width;
+      const imgTotalH = canvas.height * pxToMm;
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+      let yPos = 0;
+      let remaining = imgTotalH;
+      while (remaining > 0) {
+        pdf.addImage(imgData, 'JPEG', 0, yPos, pageW, imgTotalH);
+        remaining -= pageH;
+        yPos -= pageH;
+        if (remaining > 0) pdf.addPage();
+      }
+
+      return pdf.output('blob');
+    } finally {
+      if (document.body.contains(iframe)) document.body.removeChild(iframe);
+      if (document.body.contains(loadingMsg)) document.body.removeChild(loadingMsg);
     }
-
-    const { base64 } = await res.json();
-    const binary = atob(base64);
-    const bytes = new Uint8Array(binary.length);
-    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-    return new Blob([bytes], { type: 'application/pdf' });
   }
 
   // ── CONSTRUCTION HTML PDF (partagé entre download et envoi) ──
