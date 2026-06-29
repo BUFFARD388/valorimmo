@@ -14,6 +14,8 @@ export default async function handler(req, res) {
   if (!id) return res.status(400).json({ error: 'ID manquant' });
   if (!pdfBase64) return res.status(400).json({ error: 'PDF manquant' });
 
+  console.log('[admin-pay-request] PDF reçu — longueur base64:', pdfBase64.length, '| début:', pdfBase64.substring(0, 20));
+
   // 1. Récupérer la demande
   const supabaseRes = await fetch(
     `${process.env.SUPABASE_URL}/rest/v1/demandes?id=eq.${id}&select=*`,
@@ -26,7 +28,7 @@ export default async function handler(req, res) {
   if (!d.rapport_html) return res.status(400).json({ error: 'Aucun rapport généré' });
 
   // 2. Stocker le PDF
-  await fetch(`${process.env.SUPABASE_URL}/rest/v1/demandes?id=eq.${id}`, {
+  const patchRes = await fetch(`${process.env.SUPABASE_URL}/rest/v1/demandes?id=eq.${id}`, {
     method: 'PATCH',
     headers: {
       'apikey': process.env.SUPABASE_ANON_KEY,
@@ -40,6 +42,7 @@ export default async function handler(req, res) {
       statut: 'paiement_demande',
     }),
   });
+  console.log('[admin-pay-request] Supabase PATCH status:', patchRes.status);
 
   // 3. Lien Stripe selon formule
   const stripeLinks = {
