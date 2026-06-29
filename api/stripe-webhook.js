@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { generatePdfBase64 } from '../lib/pdf-generator.js';
 
 export const config = {
   api: { bodyParser: false },
@@ -109,9 +108,9 @@ export default async function handler(req, res) {
     + '<a href="mailto:contact@valorimmo.app">contact@valorimmo.app</a> - <a href="https://valorimmo.app">valorimmo.app</a></p></div>'
     + '</div></body></html>';
 
-  // Générer le PDF directement (sans appel HTTP interne)
-  const nomFichierPdf = 'rapport-valorimmo-' + nomComplet.replace(/\s+/g, '-') + '.pdf';
-  const pdfBase64 = await genererPdfDirect(d);
+  // Récupérer le PDF pré-généré par l'admin (stocké dans Supabase)
+  const pdfBase64 = d.rapport_pdf_base64 || null;
+  const nomFichierPdf = d.rapport_pdf_nom || ('rapport-valorimmo-' + nomComplet.replace(/\s+/g, '-') + '.pdf');
 
   const emailPayload = {
     sender: { name: 'Laurent Buffard - Valorimmo', email: 'contact@valorimmo.app' },
@@ -125,6 +124,8 @@ export default async function handler(req, res) {
       content: pdfBase64,
       name: nomFichierPdf,
     }];
+  } else {
+    console.warn('Webhook: rapport_pdf_base64 absent pour la demande', demandeId);
   }
 
   const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -223,98 +224,6 @@ async function crediterPoints({ email, points, note }) {
       + '</div>';
     await envoyerEmail({ to: email, subject: '+' + points + ' points - Programme Fidelite Valorimmo', html: notifHtml });
   }
-}
-
-// ── Génération PDF directe (sans appel HTTP interne) ──────────────────────────
-
-async function genererPdfDirect(d) {
-  try {
-    const html = buildPrintHtmlServeur(d);
-    return await generatePdfBase64(html);
-  } catch(e) {
-    console.error('genererPdfDirect exception:', e);
-    return null;
-  }
-}
-
-function buildPrintHtmlServeur(d) {
-  const nomClient = (d.prenom ? d.prenom + ' ' : '') + d.nom;
-  const dateFr = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-  return `<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Rapport Valorimmo — ${nomClient}</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1F2937; font-size: 13px; line-height: 1.6; background: #fff; }
-  .pdf-header { background: #1B2D5B; color: #fff; padding: 28px 40px; display: flex; justify-content: space-between; align-items: flex-start; }
-  .pdf-header-brand { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.06em; }
-  .pdf-header-brand span { color: #C8933A; }
-  .pdf-header-tagline { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: #93C5FD; margin-top: 3px; }
-  .pdf-header-meta { text-align: right; font-size: 0.78rem; color: #CBD5E1; line-height: 1.8; }
-  .pdf-header-meta strong { color: #fff; }
-  .pdf-body { padding: 32px 40px; }
-  .section { margin-bottom: 36px; page-break-inside: avoid; }
-  .section-num { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #2557A0; margin-bottom: 4px; }
-  .section-title { font-size: 1.05rem; color: #1B2D5B; font-weight: 600; border-bottom: 1.5px solid #BFDBF7; padding-bottom: 8px; margin-bottom: 14px; }
-  p { margin-bottom: 8px; color: #374151; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin: 12px 0; }
-  thead th { background: #EBF2FB; color: #1B2D5B; font-weight: 700; padding: 8px 12px; text-align: left; border-bottom: 2px solid #BFDBF7; }
-  tbody td { padding: 8px 12px; border-bottom: 1px solid #E5E7EB; color: #374151; vertical-align: top; }
-  tbody tr:last-child td { border-bottom: none; }
-  tbody tr:nth-child(even) td { background: #F9FAFB; }
-  td.oui { color: #15803D; font-weight: 600; }
-  td.non { color: #DC2626; font-weight: 600; }
-  .box { border-radius: 7px; padding: 14px 18px; margin: 12px 0; font-size: 0.84rem; line-height: 1.7; }
-  .box-blue { background: #EBF2FB; border: 1px solid #BFDBF7; color: #1F2937; }
-  .box-gold { background: #FEF3E2; border: 1px solid #F6D5A0; color: #92400E; }
-  .box-red { background: #FEF2F2; border: 1px solid #FECACA; color: #DC2626; }
-  .box-green { background: #F0FDF4; border: 1px solid #BBF7D0; color: #15803D; }
-  .box-title { font-weight: 700; margin-bottom: 5px; font-size: 0.78rem; }
-  .estimation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
-  .estimation-card { border-radius: 8px; padding: 18px 20px; text-align: center; border: 1.5px solid #E5E7EB; }
-  .estimation-card.low { background: #F8FAFF; border-color: #BFDBF7; }
-  .estimation-card.high { background: #1B2D5B; border-color: #1B2D5B; }
-  .estimation-card-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #6B7280; margin-bottom: 6px; }
-  .estimation-card.high .estimation-card-label { color: #93C5FD; }
-  .estimation-card-value { font-size: 1.7rem; color: #1B2D5B; line-height: 1; }
-  .estimation-card.high .estimation-card-value { color: #fff; }
-  .estimation-card-sub { font-size: 0.72rem; color: #6B7280; margin-top: 4px; }
-  .estimation-card.high .estimation-card-sub { color: #94A3B8; }
-  .conclusion-block { background: #1B2D5B; border-radius: 10px; padding: 24px 28px; color: #fff; margin-top: 8px; }
-  .conclusion-block h3 { font-size: 1rem; color: #fff; font-weight: 400; margin-bottom: 14px; }
-  .conclusion-rec { display: flex; flex-direction: column; gap: 8px; }
-  .conclusion-rec-item { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px 14px; display: flex; gap: 12px; align-items: flex-start; }
-  .conclusion-rec-num { background: #C8933A; color: #0F1F3D; font-size: 0.68rem; font-weight: 800; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-  .conclusion-rec-text { font-size: 0.82rem; color: #E2E8F0; line-height: 1.6; }
-  .conclusion-rec-text strong { color: #fff; }
-  .conclusion-quote { border-left: 3px solid #C8933A; padding: 10px 16px; margin-top: 18px; background: rgba(255,255,255,0.06); border-radius: 0 6px 6px 0; font-style: italic; font-size: 0.88rem; color: #CBD5E1; line-height: 1.7; }
-  .disclaimer { margin-top: 24px; padding: 12px 16px; background: #F9FAFB; border-radius: 6px; font-size: 0.72rem; color: #6B7280; line-height: 1.6; border: 1px solid #E5E7EB; font-style: italic; }
-  .pdf-footer { border-top: 1.5px solid #E5E7EB; margin: 0 40px; padding: 16px 0; display: flex; justify-content: space-between; font-size: 0.72rem; color: #9CA3AF; }
-  @media print { body { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
-</style>
-</head>
-<body>
-<div class="pdf-header">
-  <div>
-    <div class="pdf-header-brand">VALOR<span>IMMO</span></div>
-    <div class="pdf-header-tagline">Diagnostic expert immobilier</div>
-  </div>
-  <div class="pdf-header-meta">
-    <div><strong>${nomClient}</strong></div>
-    <div>${d.adresse_bien || ''}</div>
-    <div>Rapport du ${dateFr}</div>
-    <div>Formule : ${d.formule || d.message || 'Non précisée'}</div>
-  </div>
-</div>
-<div class="pdf-body">${d.rapport_html}</div>
-<div class="pdf-footer">
-  <div>Valorimmo — Laurent Buffard · contact@valorimmo.app · valorimmo.app</div>
-  <div>${dateFr}</div>
-</div>
-</body>
-</html>`;
 }
 
 async function envoyerEmail({ to, subject, html }) {
